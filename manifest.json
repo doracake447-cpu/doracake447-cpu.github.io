@@ -22,5 +22,13 @@
     "category": "Computer Science",
     "file": "assets/dbms-interview-notes.html",
     "date": "2026-08-07"
+  },
+  {
+    "id": "linux-notes",
+    "title": "Linux Notes",
+    "description": "Linux from a systems software engineer's perspective — kernel architecture, process/memory internals, syscalls, IPC, threading & futexes, the page cache, filesystems, epoll/io_uring, sockets, ELF/linking, cgroups & namespaces, and the debugging toolkit (strace, gdb, perf, valgrind).",
+    "category": "Computer Science",
+    "file": "assets/linux-notes.html",
+    "date": "2026-08-07"
   }
 ]

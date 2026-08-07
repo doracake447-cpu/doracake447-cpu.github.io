@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Linux Notes — Systems Engineer Reference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bp-0:#081826; --bp-1:#0b2238; --bp-2:#0f2d4d; --bp-3:#123655;
+  --line:#7fdbff; --line-dim:rgba(127,219,255,0.16); --line-dim2:rgba(127,219,255,0.28);
+  --cyan:#7fe0ff; --amber:#f2b84b; --amber-dim:rgba(242,184,75,0.35);
+  --ink:#eaf4fc; --ink-dim:#9fb8cc; --ink-faint:#5f7d95;
+  --mono:'JetBrains Mono', ui-monospace, monospace;
+  --disp:'Space Grotesk', sans-serif;
+  --body:'Inter', sans-serif;
+  --sidebar-w: 300px;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:
+    linear-gradient(var(--bp-0), var(--bp-0)) fixed,
+    repeating-linear-gradient(0deg, var(--line-dim) 0 1px, transparent 1px 40px),
+    repeating-linear-gradient(90deg, var(--line-dim) 0 1px, transparent 1px 40px);
+  background-color:var(--bp-0); color:var(--ink); font-family:var(--body); min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{ background:var(--amber-dim); color:var(--ink);}
+a{color:inherit;}
+code{ font-family:var(--mono); background:var(--bp-1); padding:1px 5px; border:1px solid var(--line-dim2); font-size:0.9em; color:var(--cyan); }
+b, strong{ color:var(--ink); font-weight:600; }
+::-webkit-scrollbar{width:10px;height:10px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--bp-3); border-radius:6px; border:2px solid var(--bp-0);}
+::-webkit-scrollbar-thumb:hover{background:var(--line-dim2);}
+
+.app{ display:flex; min-height:100vh; }
+
+/* ---------- sidebar ---------- */
+.sidebar{
+  width:var(--sidebar-w); min-width:var(--sidebar-w);
+  border-right:1px solid var(--line-dim2); padding:28px 20px 40px;
+  position:sticky; top:0; align-self:flex-start; height:100vh; overflow-y:auto;
+  background:linear-gradient(180deg, rgba(15,45,77,0.5), rgba(10,31,51,0.2));
+}
+.back-link{
+  font-family:var(--mono); font-size:10.5px; color:var(--ink-faint); display:inline-block; margin-bottom:18px;
+}
+.back-link:hover{ color:var(--cyan); }
+.brand{ display:flex; align-items:flex-start; gap:12px; margin-bottom:6px; }
+.brand-mark{
+  width:38px;height:38px; flex:none; border:1.5px solid var(--cyan); position:relative;
+  display:flex; align-items:center; justify-content:center; font-family:var(--mono); font-size:11px; color:var(--cyan);
+}
+.brand-mark::before, .brand-mark::after{ content:""; position:absolute; width:6px; height:6px; border:1px solid var(--cyan); }
+.brand-mark::before{ top:-4px; left:-4px; border-right:none; border-bottom:none; }
+.brand-mark::after{ bottom:-4px; right:-4px; border-left:none; border-top:none; }
+.brand-text h1{ font-family:var(--disp); font-size:19px; font-weight:700; margin:0 0 2px; letter-spacing:0.01em; }
+.brand-text p{ margin:0; font-family:var(--mono); font-size:10.5px; color:var(--ink-faint); letter-spacing:0.08em; text-transform:uppercase; }
+.brand-sub{
+  font-family:var(--mono); font-size:11px; color:var(--ink-faint); margin:14px 0 22px;
+  padding-top:14px; border-top:1px dashed var(--line-dim2); line-height:1.6;
+}
+.brand-sub b{ color:var(--ink-dim); font-weight:600; }
+
+.search-wrap{ position:relative; margin-bottom:22px; }
+.search-wrap input{
+  width:100%; background:var(--bp-1); border:1px solid var(--line-dim2); color:var(--ink);
+  font-family:var(--mono); font-size:12.5px; padding:10px 12px 10px 30px; outline:none; transition:border-color .15s;
+}
+.search-wrap input:focus{ border-color:var(--cyan); }
+.search-wrap input::placeholder{ color:var(--ink-faint); }
+.search-icon{ position:absolute; left:10px; top:50%; transform:translateY(-50%); width:11px; height:11px; border:1.5px solid var(--ink-faint); border-radius:50%; }
+.search-icon::after{ content:""; position:absolute; width:5px; height:1.5px; background:var(--ink-faint); transform:rotate(45deg); right:-5px; bottom:-1px; }
+
+.nav-label{ font-family:var(--mono); font-size:10px; letter-spacing:0.12em; color:var(--ink-faint); text-transform:uppercase; margin:0 0 10px; }
+.nav-list{ list-style:none; margin:0 0 24px; padding:0; }
+.nav-item{
+  display:flex; align-items:center; gap:10px; padding:8px 8px; cursor:pointer; border:1px solid transparent;
+  font-size:12.5px; color:var(--ink-dim); transition:all .12s;
+}
+.nav-item:hover{ color:var(--ink); border-color:var(--line-dim2); }
+.nav-item.active{ color:var(--ink); background:var(--bp-2); border-color:var(--cyan); }
+.nav-item.active .nav-num{ color:var(--amber); }
+.nav-num{ font-family:var(--mono); font-size:11px; color:var(--ink-faint); width:20px; flex:none; }
+.nav-name{ flex:1; font-family:var(--disp); font-weight:500; }
+.nav-count{ font-family:var(--mono); font-size:10px; color:var(--ink-faint); border:1px solid var(--line-dim2); padding:1px 5px; border-radius:2px; }
+.nav-item.active .nav-count{ border-color:var(--amber-dim); color:var(--amber); }
+
+.legend{ font-family:var(--mono); font-size:10.5px; color:var(--ink-faint); line-height:1.9; padding-top:16px; border-top:1px dashed var(--line-dim2); }
+.legend div{ display:flex; gap:8px; align-items:center; }
+.legend .sw{ width:9px; height:9px; border:1px solid var(--cyan); flex:none;}
+.legend .sw.amber{ border-color:var(--amber); }
+</style>
+</head>
+<body>
+<style>
+.main{ flex:1; min-width:0; padding:36px 44px 80px; max-width:1180px; }
+
+.topbar{ display:flex; justify-content:space-between; align-items:baseline; gap:20px; margin-bottom:6px; flex-wrap:wrap; }
+.crumb{ font-family:var(--mono); font-size:11px; color:var(--ink-faint); letter-spacing:.06em; text-transform:uppercase;}
+.crumb b{ color:var(--cyan); font-weight:600; }
+.result-count{ font-family:var(--mono); font-size:11px; color:var(--ink-faint); }
+
+.section-header{ margin:18px 0 30px; padding-bottom:22px; border-bottom:1px solid var(--line-dim2); }
+.section-header .plate{ font-family:var(--mono); font-size:11px; color:var(--amber); letter-spacing:.1em; margin-bottom:8px; }
+.section-header h2{ font-family:var(--disp); font-size:34px; margin:0 0 10px; font-weight:700; letter-spacing:-0.01em; }
+.section-header p{ font-family:var(--body); font-size:14.5px; color:var(--ink-dim); max-width:640px; margin:0; line-height:1.6; }
+
+.grid{ display:grid; grid-template-columns:1fr; gap:22px; }
+
+.card{
+  border:1px solid var(--line-dim2);
+  background:linear-gradient(180deg, rgba(15,45,77,0.35), rgba(10,31,51,0.15));
+  position:relative;
+}
+.card::before{ content:""; position:absolute; top:-1px; left:-1px; width:9px; height:9px; border-top:1.5px solid var(--cyan); border-left:1.5px solid var(--cyan); }
+.card::after{ content:""; position:absolute; bottom:-1px; right:-1px; width:9px; height:9px; border-bottom:1.5px solid var(--cyan); border-right:1.5px solid var(--cyan); }
+.card-head{
+  display:flex; justify-content:space-between; align-items:flex-start; gap:16px;
+  padding:18px 22px 14px; border-bottom:1px dashed var(--line-dim2);
+}
+.card-title-wrap{ display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; }
+.card-fig{ font-family:var(--mono); font-size:11px; color:var(--ink-faint); }
+.card-title{ font-family:var(--disp); font-size:19px; font-weight:600; margin:0; }
+.card-tag{
+  font-family:var(--mono); font-size:9.5px; color:var(--ink-faint); text-transform:uppercase;
+  letter-spacing:.08em; border:1px solid var(--line-dim2); padding:3px 7px; white-space:nowrap;
+}
+.card-body{ padding:16px 22px 20px; }
+.card-text{ font-family:var(--body); font-size:13.5px; color:var(--ink-dim); line-height:1.7; margin:0 0 14px; }
+.card-text:last-child{ margin-bottom:0; }
+
+.card-points{ list-style:none; margin:0 0 4px; padding:0; }
+.card-points li{
+  font-family:var(--body); font-size:13.3px; color:var(--ink-dim); line-height:1.65;
+  padding:7px 0 7px 18px; position:relative; border-top:1px dashed var(--line-dim2);
+}
+.card-points li:first-child{ border-top:none; }
+.card-points li::before{
+  content:""; position:absolute; left:0; top:14px; width:6px; height:1.5px; background:var(--cyan);
+}
+
+.card-note{
+  font-family:var(--mono); font-size:12px; color:var(--amber); background:rgba(242,184,75,0.06);
+  border-left:2px solid var(--amber); padding:10px 14px; margin-top:14px; line-height:1.6;
+}
+
+.table-wrap{ overflow-x:auto; margin-top:2px; }
+table{ width:100%; border-collapse:collapse; font-size:12.8px; }
+th{
+  font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--amber);
+  text-align:left; padding:9px 12px; border-bottom:1px solid var(--line-dim2); white-space:nowrap;
+}
+td{
+  font-family:var(--body); color:var(--ink-dim); padding:10px 12px; border-bottom:1px solid var(--line-dim);
+  vertical-align:top; line-height:1.55;
+}
+tr:last-child td{ border-bottom:none; }
+td:first-child{ color:var(--ink); font-weight:500; white-space:nowrap; }
+
+.empty-state{ padding:80px 20px; text-align:center; color:var(--ink-faint); font-family:var(--mono); font-size:13px; }
+.footer-note{
+  margin-top:50px; padding-top:20px; border-top:1px dashed var(--line-dim2);
+  font-family:var(--mono); font-size:10.5px; color:var(--ink-faint); line-height:1.8;
+}
+
+@media (max-width: 880px){
+  .app{ flex-direction:column; }
+  .sidebar{ width:100%; min-width:0; height:auto; position:relative; border-right:none; border-bottom:1px solid var(--line-dim2); }
+  .main{ padding:28px 20px 60px; }
+  .section-header h2{ font-size:26px; }
+}
+@media (prefers-reduced-motion: reduce){ *{ transition:none !important; animation:none !important; } }
+</style>
+
+<div class="app">
+  <aside class="sidebar">
+    <a class="back-link" href="../index.html">← Back to Learn</a>
+    <div class="brand">
+      <div class="brand-mark">LX</div>
+      <div class="brand-text">
+        <h1>Linux Notes</h1>
+        <p>Systems Engineer Reference</p>
+      </div>
+    </div>
+    <div class="brand-sub">62 topics across <b>15 plates</b> — kernel internals, syscalls, IPC, concurrency, filesystems, containers, and debugging tools.</div>
+
+    <div class="search-wrap">
+      <span class="search-icon"></span>
+      <input id="searchInput" type="text" placeholder="Search topics…" autocomplete="off" />
+    </div>
+
+    <div class="nav-label">Index</div>
+    <ul class="nav-list" id="navList"></ul>
+
+    <div class="legend">
+      <div><span class="sw"></span> Plate — a topic area</div>
+      <div><span class="sw amber"></span> Card — one concept</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="crumb">Linux Notes / <b id="crumbSection">—</b></div>
+      <div class="result-count" id="resultCount"></div>
+    </div>
+    <div class="section-header" id="sectionHeader">
+      <div class="plate" id="plateLabel">PLATE 01</div>
+      <h2 id="sectionTitle">—</h2>
+      <p id="sectionDesc"></p>
+    </div>
+    <div class="grid" id="cardGrid"></div>
+    <div class="footer-note">Systems-engineering revision notes — condensed for recall speed. Behavior can vary by kernel version and distro; verify exact flags/paths against your target system before relying on them.</div>
+  </main>
+</div>
+
+<script id="os-data" type="application/json">
+[{"num": 1, "title": "Architecture & Boot", "intro": "What actually happens between power-on and a running shell, and how the kernel is put together.", "cards": [{"title": "The Boot Sequence", "tag": "Frequently asked", "body": "The path from powering on the machine to a usable userspace.", "points": ["**Firmware (BIOS/UEFI)** \u2014 runs POST, initializes minimal hardware, hands off to a bootloader on disk.", "**Bootloader (GRUB, systemd-boot)** \u2014 loads the kernel image and initramfs into memory, passes kernel command-line parameters, jumps to the kernel entry point.", "**Kernel init** \u2014 sets up memory management, interrupt handling, device drivers; mounts the real root filesystem (using the temporary **initramfs** to load drivers needed to reach it, e.g. disk/RAID/LVM drivers).", "**init/systemd (PID 1)** \u2014 the first userspace process; brings up services, mounts remaining filesystems, starts targets/runlevels, eventually spawns a login prompt or display manager."]}, {"title": "Monolithic Kernel with Loadable Modules", "tag": "Design", "body": "Linux is a monolithic kernel \u2014 core OS services (scheduler, memory manager, filesystem, network stack) run in a single privileged address space for performance \u2014 but it supports **loadable kernel modules (LKMs)** to add drivers/features without recompiling or rebooting.", "points": ["`lsmod` \u2014 list loaded modules.", "`modprobe <name>` \u2014 load a module and its dependencies.", "`insmod` / `rmmod` \u2014 load/remove a single module file directly (no dependency resolution).", "Modules trade microkernel-style isolation for near-native performance \u2014 a buggy module can still crash or corrupt the whole kernel."]}, {"title": "User Space vs Kernel Space", "tag": "Core concept", "body": "The CPU's privilege rings enforce a hard boundary the whole OS security model rests on.", "points": ["**Kernel space (ring 0)** \u2014 unrestricted access to hardware and all memory; where the kernel, drivers, and modules run.", "**User space (ring 3)** \u2014 restricted; processes can only touch their own memory and must go through system calls to request kernel services.", "Crossing the boundary (a syscall, page fault, interrupt) is relatively expensive \u2014 it involves a trap, a mode switch, and often a TLB/cache-unfriendly context change, which is why syscall-heavy hot loops (e.g. tiny repeated `read()`s) hurt throughput."]}, {"title": "systemd Basics", "tag": "Practical", "body": "The init system used by most modern distros \u2014 manages services, mounts, sockets, and device availability as dependency-ordered **units**.", "points": ["`systemctl status <service>` / `start` / `stop` / `restart` / `enable` \u2014 inspect and control services.", "`journalctl -u <service>` \u2014 view a service's logs from the systemd journal.", "Unit files (`.service`, `.socket`, `.mount`, `.target`) declare dependencies (`After=`, `Requires=`) so systemd can parallelize startup safely.", "**Socket activation** \u2014 systemd can hold a listening socket and only start the service on the first connection, speeding up boot and enabling on-demand services."]}]}, {"num": 2, "title": "Process & Memory Model", "intro": "How Linux represents a running program, and how it lays out that program's address space.", "cards": [{"title": "task_struct \u2014 the Kernel's View of a Process", "tag": "Kernel internals", "body": "In Linux, the kernel doesn't sharply distinguish processes from threads internally \u2014 both are represented by a `task_struct`, and threads are 'tasks that share an address space' with their parent.", "points": ["Fields include: PID/TID, state, scheduling info, memory descriptor (`mm_struct`), open file table, signal handlers, credentials (UID/GID).", "`clone()` is the actual syscall behind both `fork()` and thread creation \u2014 the difference is just which resources (`CLONE_VM`, `CLONE_FILES`, `CLONE_SIGHAND`, ...) are shared with the parent versus copied."]}, {"title": "Process Memory Layout", "tag": "Must memorize", "body": "The virtual address space of a typical Linux process, from low to high addresses.", "points": ["**Text segment** \u2014 the compiled machine code, read-only and shared between processes running the same binary.", "**Data segment** \u2014 initialized global/static variables.", "**BSS segment** \u2014 uninitialized global/static variables, zero-filled at load time.", "**Heap** \u2014 grows upward, managed by `malloc`/`free` via `brk()`/`sbrk()` or `mmap()` for large allocations.", "**Memory-mapped region** \u2014 shared libraries, `mmap()`-ed files, anonymous mappings.", "**Stack** \u2014 grows downward, holds local variables, function call frames, return addresses.", "Between heap and stack sits a guard gap that also holds ASLR-randomized offsets, making the exact layout unpredictable between runs \u2014 a deliberate security measure."]}, {"title": "fork(), exec(), and Copy-on-Write", "tag": "Frequently asked", "body": "`fork()` looks expensive (duplicate an entire address space) but Linux makes it cheap via **copy-on-write (COW)**.", "points": ["On `fork()`, the child gets its own page tables, but they initially point at the *same* physical pages as the parent, marked read-only.", "A write by either process triggers a page fault; the kernel then allocates a real private copy of just that page \u2014 most pages, especially in a fork-then-exec pattern, are never actually copied.", "`exec()` family replaces the process image entirely (new text/data/BSS/stack), but keeps the same PID and most process attributes \u2014 the classic `fork()` + `exec()` pattern is how shells launch commands."]}, {"title": "vfork() and posix_spawn()", "tag": "Optimization", "body": "Variants that avoid `fork()`'s COW setup cost entirely when the child is just going to `exec()` immediately anyway.", "points": ["`vfork()` \u2014 child shares the parent's address space directly (no COW page tables at all) and the parent is suspended until the child calls `exec()` or `_exit()`. Fast, but dangerous if misused (child must not modify memory before exec).", "`posix_spawn()` \u2014 a higher-level, portable API that internally picks the most efficient mechanism available; the modern recommended choice for 'just run this other program'."]}, {"title": "Process States in /proc", "tag": "Practical", "body": "Linux-specific state letters you'll see in `ps` or `top` output, a superset of the textbook Ready/Running/Waiting model.", "table": {"headers": ["Code", "Meaning"], "rows": [["R", "Running or runnable (on run queue)"], ["S", "Interruptible sleep (waiting for an event, can be woken by a signal)"], ["D", "Uninterruptible sleep (usually waiting on I/O; can't be killed or interrupted \u2014 common in disk-hung processes)"], ["T", "Stopped (by a job-control signal like SIGSTOP, or being traced)"], ["Z", "Zombie (terminated, exit status not yet reaped by parent)"]]}}]}, {"num": 3, "title": "System Calls & the Kernel Boundary", "intro": "The actual mechanism by which user-space code asks the kernel to do something on its behalf.", "cards": [{"title": "How a Syscall Actually Executes", "tag": "Core mechanism", "body": "On x86-64 Linux, a syscall is triggered by the `syscall` instruction (older 32-bit used `int 0x80`), not a normal `call`.", "points": ["Arguments go in registers (`rdi`, `rsi`, `rdx`, `r10`, `r8`, `r9`), the syscall number in `rax`.", "The CPU switches to ring 0, jumps to a fixed kernel entry point, the kernel dispatches via a syscall table indexed by number, executes the handler, and returns the result in `rax`.", "`strace` intercepts exactly this boundary \u2014 it's how you can see every syscall a program makes without modifying it (via `ptrace()`)."]}, {"title": "vDSO \u2014 Avoiding the Syscall Cost", "tag": "Optimization", "body": "The **virtual Dynamic Shared Object** is a small piece of kernel code mapped read-only into every process's address space, letting some 'syscalls' run entirely in user space.", "points": ["Used for calls like `gettimeofday()`, `clock_gettime()`, `getcpu()` \u2014 frequently called, latency-sensitive, and don't strictly need kernel privilege for a fast path.", "Avoids the full trap/mode-switch cost, which matters a lot for code that timestamps or checks the clock in a hot loop."]}, {"title": "glibc Wrappers vs Raw Syscalls", "tag": "Practical", "body": "Application code almost never issues the `syscall` instruction directly \u2014 it calls a libc function that wraps it.", "points": ["glibc functions like `read()`, `write()`, `open()` set up registers correctly, issue the syscall, and translate the kernel's negative error-code convention into `errno` + return value -1.", "`syscall(2)` (the libc function, not the instruction) lets you invoke a raw syscall by number when no wrapper exists yet \u2014 useful right after a new kernel syscall lands, before glibc adds support."]}, {"title": "errno and Error Handling Convention", "tag": "Must memorize", "body": "Linux syscalls signal failure by returning a negative value internally; the glibc wrapper converts that into the POSIX convention of returning -1 and setting the thread-local `errno`.", "points": ["Always check the return value before trusting `errno` \u2014 a prior successful call doesn't reset it, so a stale `errno` can mislead you if you check it out of order.", "Common codes: `EAGAIN`/`EWOULDBLOCK` (non-blocking op would block), `EINTR` (interrupted by a signal \u2014 often needs a retry loop), `ENOENT` (no such file/directory), `EACCES` (permission denied)."]}]}, {"num": 4, "title": "Process Creation, Signals & IPC", "intro": "How independent processes get created, notified of events, and exchange data \u2014 the practical toolkit.", "cards": [{"title": "Signals", "tag": "Frequently asked", "body": "Asynchronous notifications delivered to a process \u2014 a lightweight interrupt mechanism at the process level.", "table": {"headers": ["Signal", "Default action", "Typical use"], "rows": [["SIGHUP", "Terminate", "Terminal disconnected, or 'reload config' by convention"], ["SIGINT", "Terminate", "Ctrl+C from the terminal"], ["SIGKILL", "Terminate (uncatchable)", "Force kill \u2014 cannot be caught, blocked, or ignored"], ["SIGSEGV", "Terminate + core dump", "Invalid memory access"], ["SIGTERM", "Terminate", "Polite request to shut down (the default for `kill`)"], ["SIGSTOP", "Stop (uncatchable)", "Suspend the process \u2014 cannot be caught or ignored"], ["SIGCHLD", "Ignore", "Sent to a parent when a child terminates or stops"]]}}, {"title": "Signal Handling & Async-Signal-Safety", "tag": "Core concept", "body": "A process can install a handler via `sigaction()` to run custom code when a signal arrives \u2014 but that handler runs in a very constrained context.", "points": ["A signal handler can interrupt the main program at almost any point, including mid-`malloc()` \u2014 calling non-reentrant functions inside a handler can corrupt state.", "**Async-signal-safe** functions (a specific POSIX-defined list, e.g. `write()`, `_exit()`, `signal()`) are safe to call from a handler; `malloc()`, `printf()`, and most of libc are not.", "Common safe pattern: the handler just sets a `volatile sig_atomic_t` flag, and the main loop checks it and does real work outside the handler."]}, {"title": "Pipes & FIFOs", "tag": "IPC mechanism", "body": "The simplest IPC \u2014 a unidirectional byte stream.", "points": ["**Anonymous pipe** (`pipe()`) \u2014 only usable between related processes (e.g. parent/child after `fork()`), since it's passed via inherited file descriptors.", "**Named pipe / FIFO** (`mkfifo()`) \u2014 has a path in the filesystem, so unrelated processes can open and use it.", "Kernel buffers pipe data (default 64KB on Linux); writing past a full pipe blocks (or returns `EAGAIN` in non-blocking mode)."]}, {"title": "Shared Memory & Message Queues", "tag": "IPC mechanism", "body": "Higher-throughput IPC for when a pipe's copy-through-kernel model is too slow.", "points": ["**POSIX shared memory** (`shm_open()` + `mmap()`) \u2014 maps the same physical memory into multiple processes' address spaces; fastest IPC since there's no data copying through the kernel, but requires explicit synchronization (semaphores/mutexes in the shared region).", "**Message queues** (`mq_open()`, or older SysV `msgget()`) \u2014 kernel-managed queues of discrete messages with priorities, decoupling producer/consumer timing without needing manual synchronization."]}, {"title": "Unix Domain Sockets", "tag": "IPC mechanism", "body": "Socket-API-based IPC scoped to a single machine, addressed by filesystem path instead of an IP/port.", "points": ["Supports both `SOCK_STREAM` (reliable, ordered byte stream) and `SOCK_DGRAM` (message-based) semantics, like TCP/UDP but local-only.", "Faster than a TCP loopback connection since it skips the network stack entirely \u2014 the standard choice for high-performance local daemons (e.g. Docker's API socket, systemd, X11).", "Uniquely supports passing open file descriptors between unrelated processes via `SCM_RIGHTS` ancillary messages."]}]}, {"num": 5, "title": "Threading & Synchronization", "intro": "pthreads on top of Linux's clone()-based task model, and the primitives that make shared-memory concurrency safe.", "cards": [{"title": "pthreads", "tag": "Practical API", "body": "The POSIX threading API \u2014 on Linux, each pthread is a `clone()`-created task sharing the parent's address space, file descriptors, and signal handlers.", "points": ["`pthread_create()` / `pthread_join()` \u2014 spawn and wait on a thread.", "`pthread_mutex_lock()` / `unlock()` \u2014 mutual exclusion.", "`pthread_cond_wait()` / `signal()` / `broadcast()` \u2014 condition variables for waiting on a predicate change.", "`pthread_rwlock_*` \u2014 reader-writer locks, letting concurrent readers but exclusive writers."]}, {"title": "futex \u2014 the Primitive Underneath the Primitives", "tag": "Kernel internals", "body": "**Fast userspace mutex** \u2014 the actual kernel mechanism that makes glibc's mutexes, condition variables, and semaphores efficient.", "points": ["The key insight: in the uncontended case (no other thread is waiting), lock/unlock happens entirely in user space with a single atomic CPU instruction \u2014 no syscall at all.", "Only when there's actual contention does the thread make a `futex()` syscall to actually sleep/wake via the kernel \u2014 this is why uncontended locking is nearly free on Linux, unlike older 'always trap to the kernel' mutex designs."]}, {"title": "Memory Ordering & Atomics", "tag": "Frequently asked", "body": "On multicore systems, both the compiler and the CPU can reorder memory operations for performance \u2014 correctness under concurrency requires explicit control over that reordering.", "points": ["**Atomic operations** (`__atomic_*` builtins, `std::atomic` in C++, or `<stdatomic.h>` in C) guarantee a read-modify-write happens as one indivisible step, avoiding lost updates.", "**Memory barriers/fences** constrain reordering around a point in the code \u2014 necessary because 'atomic' alone doesn't guarantee *other* threads observe operations in program order.", "Lock-free code is notoriously easy to get subtly wrong; for most application code, a mutex is the right default, with lock-free structures reserved for measured hot paths."]}, {"title": "Spinlocks vs Mutexes", "tag": "Design tradeoff", "body": "Both provide mutual exclusion, but with very different costs depending on expected hold time.", "points": ["**Spinlock** \u2014 a waiting thread busy-loops checking the lock, burning CPU but avoiding a context switch. Good only when the critical section is very short and you're on a multicore system (so the lock holder is actually making progress on another core).", "**Mutex** \u2014 a waiting thread is put to sleep by the kernel/futex and rescheduled only when the lock becomes free; better when hold times are longer or unpredictable, since spinning would just waste CPU.", "The Linux kernel itself uses spinlocks internally for very short critical sections (e.g. protecting a few fields), precisely because it can't sleep in some contexts (like interrupt handlers)."]}]}, {"num": 6, "title": "Virtual Memory & the Page Cache", "intro": "How Linux manages RAM across every running process, and why 'free' memory looks used.", "cards": [{"title": "The Page Cache", "tag": "Frequently asked", "body": "Linux aggressively uses otherwise-idle RAM to cache file data read from or written to disk, transparently to applications.", "points": ["A `read()` first checks if the page is already cached; if so, no disk I/O at all \u2014 this is why a second run of the same command over the same file is often much faster.", "This is why `free -h` shows most RAM as 'used' on a healthy system \u2014 it's mostly reclaimable page cache, not truly unavailable memory.", "**Dirty pages** \u2014 pages modified in the cache but not yet written back to disk; `pdflush`/`writeback` kernel threads flush them periodically or under memory pressure."]}, {"title": "mmap() \u2014 Memory-Mapped Files", "tag": "Core mechanism", "body": "Maps a file (or anonymous memory) directly into a process's address space, letting file I/O happen via normal memory reads/writes instead of `read()`/`write()` calls.", "points": ["Pages are loaded lazily on first access via page faults (demand paging) \u2014 no need to read the whole file upfront.", "**MAP_SHARED** \u2014 changes are visible to other processes mapping the same file and are eventually written back to disk.", "**MAP_PRIVATE** \u2014 copy-on-write; changes are private to this process and never written back (used for loading executable code/shared libraries).", "Widely used for large files (databases, log processing) since it avoids explicit buffering and lets the kernel's page cache do the work."]}, {"title": "Overcommit and the OOM Killer", "tag": "Frequently asked", "body": "Linux, by default, allows processes to *allocate* more virtual memory than physically exists (**overcommit**), betting that most allocated memory is never fully touched.", "points": ["When physical memory (+ swap) actually runs out under real pressure, the kernel invokes the **OOM (Out-Of-Memory) killer** to forcibly terminate a process and free memory, rather than letting the whole system deadlock.", "The OOM killer picks a victim using a heuristic 'badness' score (roughly: memory usage weighted by other factors) \u2014 `/proc/<pid>/oom_score_adj` lets you bias this per-process.", "Overcommit behavior is tunable via `/proc/sys/vm/overcommit_memory` (0 = heuristic, 1 = always allow, 2 = strict accounting, never overcommit)."]}, {"title": "Swap & Memory Pressure", "tag": "Core concept", "body": "When physical RAM is under pressure, the kernel can move less-recently-used anonymous pages out to disk (**swap**) to make room.", "points": ["Unlike file-backed pages (which can just be dropped and re-read from their original file), anonymous pages (heap, stack) have nowhere else to go, so they must be written to a swap device/file first.", "Swapping is orders of magnitude slower than RAM \u2014 heavy swap activity ('thrashing') is one of the most common real-world performance symptoms to diagnose.", "`vm.swappiness` (0\u2013100) tunes how aggressively the kernel prefers reclaiming page cache versus swapping out anonymous pages."]}]}, {"num": 7, "title": "File Systems & the VFS Layer", "intro": "How Linux abstracts wildly different storage backends behind one uniform filesystem interface.", "cards": [{"title": "The Virtual File System (VFS)", "tag": "Core mechanism", "body": "An abstraction layer inside the kernel that lets `open()`, `read()`, `write()` work identically regardless of the underlying filesystem (ext4, XFS, Btrfs, NFS, tmpfs, procfs...).", "points": ["Every filesystem driver implements a common set of operations (`inode_operations`, `file_operations`) that the VFS calls into \u2014 application code never talks to ext4 or XFS directly.", "This is also what makes 'everything is a file' work in practice: `/proc`, `/sys`, and even some device interfaces are filesystems that generate content dynamically rather than reading disk blocks."]}, {"title": "Inodes", "tag": "Must memorize", "body": "An **inode** stores a file's metadata (permissions, owner, size, timestamps, pointers to data blocks) \u2014 everything except the filename and the actual data.", "points": ["A directory is just a mapping of names to inode numbers \u2014 this is why **hard links** work: multiple directory entries can point at the same inode (same data, shared link count).", "Deleting a file actually just removes a directory entry and decrements the inode's link count; the data blocks are only freed once the link count hits zero *and* no process has the file open.", "**Symbolic links** are different \u2014 a small file whose content is a path string, resolved fresh on each access; they can dangle (point at nothing) or cross filesystems, unlike hard links."]}, {"title": "Journaling", "tag": "Frequently asked", "body": "Most modern Linux filesystems (ext4, XFS) are journaling filesystems \u2014 they log intended metadata changes before applying them, to survive a crash mid-write without full corruption.", "points": ["On boot after an unclean shutdown, the filesystem replays the journal to bring metadata to a consistent state, instead of running a slow full `fsck` scan.", "Journaling protects metadata consistency; it doesn't inherently guarantee your actual file *data* survived the crash unless the filesystem is configured for full data journaling (rare, since it costs performance)."]}, {"title": "File Descriptors", "tag": "Core concept", "body": "A small non-negative integer, per-process, that indexes into that process's open file table \u2014 the handle every read/write/close syscall operates on.", "points": ["0, 1, 2 are conventionally stdin, stdout, stderr.", "`dup()`/`dup2()` \u2014 duplicate a file descriptor, the mechanism behind shell redirection (`>`, `2>&1`) and pipes.", "File descriptors are inherited across `fork()` (both processes now reference the same underlying open file description, sharing the file offset) but are typically closed across `exec()` if marked `FD_CLOEXEC` \u2014 important for not leaking descriptors into child processes."]}]}, {"num": 8, "title": "I/O Multiplexing & Async I/O", "intro": "How a single thread services thousands of concurrent connections \u2014 the core trick behind every high-performance server.", "cards": [{"title": "The Blocking I/O Problem", "tag": "Motivation", "body": "A naive server calling blocking `read()` on each socket needs one thread per connection to stay responsive \u2014 that doesn't scale to tens of thousands of connections (thread stacks and context-switch overhead dominate).", "points": []}, {"title": "select() and poll()", "tag": "Classic approach", "body": "Both let a single thread ask the kernel 'wake me up when any of these file descriptors are ready', instead of blocking on one at a time.", "points": ["**select()** \u2014 takes fixed-size bitmasks of fds; limited by `FD_SETSIZE` (often 1024), and the kernel must linearly re-scan the entire set on every call.", "**poll()** \u2014 takes a dynamically-sized array of `struct pollfd`, removing the fd-count limit, but still requires an O(n) scan of all fds on every call \u2014 doesn't scale well past a few thousand connections."]}, {"title": "epoll", "tag": "Frequently asked", "body": "Linux's scalable solution: instead of re-describing your whole fd set on every call, you register interest once and the kernel notifies you only about fds that actually became ready.", "points": ["`epoll_create()` \u2014 make an epoll instance. `epoll_ctl()` \u2014 register/modify/remove interest in an fd. `epoll_wait()` \u2014 block until at least one registered fd is ready, returning only the ready ones.", "O(1) per ready event instead of O(n) per poll \u2014 this is the mechanism underneath nginx, Redis, most async runtimes (e.g. Node.js's libuv on Linux).", "**Edge-triggered vs level-triggered** \u2014 level-triggered (default) keeps notifying while data remains unread; edge-triggered notifies only on the transition to ready, requiring you to drain the fd completely each time (more efficient, but easier to get wrong)."]}, {"title": "io_uring", "tag": "Modern addition", "body": "A newer (2019+) async I/O interface that goes further than epoll \u2014 it works for disk I/O too (which epoll fundamentally can't handle well) and minimizes syscalls even further.", "points": ["Uses two ring buffers shared between kernel and userspace \u2014 a submission queue (SQ) and completion queue (CQ) \u2014 letting an application submit many I/O requests and reap many completions with very few (sometimes zero) syscalls.", "Increasingly used by high-performance databases and storage engines as a replacement for both epoll (network) and POSIX AIO (disk), since it unifies both under one efficient model."]}]}, {"num": 9, "title": "Networking Stack & Sockets", "intro": "The socket API and enough of the underlying stack to reason about a system's network behavior.", "cards": [{"title": "The Socket API", "tag": "Practical API", "body": "BSD sockets are the standard interface for network I/O \u2014 a socket is just a special file descriptor.", "points": ["`socket()` \u2192 `bind()` \u2192 `listen()` \u2192 `accept()` \u2192 `read()`/`write()` \u2014 the server-side sequence for a TCP server.", "`socket()` \u2192 `connect()` \u2192 `read()`/`write()` \u2014 the client-side sequence.", "`SOCK_STREAM` (TCP) \u2014 reliable, ordered, connection-oriented byte stream. `SOCK_DGRAM` (UDP) \u2014 unreliable, unordered, connectionless messages, lower overhead."]}, {"title": "TCP Handshake & Connection Lifecycle", "tag": "Must memorize", "body": "The three-way handshake that establishes a TCP connection, and the state machine a socket moves through.", "points": ["**SYN** (client \u2192 server) \u2192 **SYN-ACK** (server \u2192 client) \u2192 **ACK** (client \u2192 server) \u2014 connection established.", "Closing is asymmetric and slower: FIN \u2192 ACK from each side independently, since either end can still have data to send after the other has finished.", "**TIME_WAIT** \u2014 after closing, the side that initiated the close holds the connection in this state for a while (2\u00d7MSL) to catch any delayed duplicate packets \u2014 a well-known source of 'address already in use' errors on servers that restart frequently (`SO_REUSEADDR` addresses this)."]}, {"title": "Nagle's Algorithm & TCP_NODELAY", "tag": "Performance gotcha", "body": "By default, TCP tries to batch small writes into fewer, larger packets (Nagle's algorithm) to reduce network overhead \u2014 great for bulk transfer, bad for latency-sensitive request/response traffic.", "points": ["Combined with delayed ACKs on the receiving side, this can add up to hundreds of milliseconds of avoidable latency for small, frequent messages.", "`setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, ...)` disables Nagle's algorithm \u2014 standard practice for latency-sensitive services (RPC, gaming, interactive protocols)."]}, {"title": "Common Diagnostic Tools", "tag": "Practical", "body": "What you actually reach for to debug networking issues on a Linux box.", "points": ["`ss -tulpn` \u2014 list listening/established sockets with owning process (modern replacement for `netstat`).", "`tcpdump` \u2014 capture and inspect raw packets on an interface.", "`ip addr` / `ip route` \u2014 inspect interface addresses and routing table (modern replacement for `ifconfig`/`route`).", "`curl -v` / `nc` (netcat) \u2014 manually probe an endpoint at the protocol level."]}]}, {"num": 10, "title": "ELF, Linking & Loading", "intro": "How source code becomes a runnable binary, and how that binary actually gets into memory and running.", "cards": [{"title": "ELF \u2014 Executable and Linkable Format", "tag": "Core concept", "body": "The standard binary format for executables, shared libraries, and object files on Linux.", "points": ["Contains a header (entry point, architecture, type), a **program header table** (describes segments the loader maps into memory \u2014 text, data, dynamic linking info), and a **section header table** (finer-grained info used mainly by linkers/debuggers \u2014 `.text`, `.data`, `.bss`, `.symtab`).", "`readelf -h` / `-l` / `-S` \u2014 inspect ELF headers, program headers, and section headers respectively.", "`file <binary>` \u2014 quick summary of an ELF file's type and architecture."]}, {"title": "Static vs Dynamic Linking", "tag": "Frequently asked", "body": "The tradeoff between bundling a library's code into your binary versus referencing a shared copy at runtime.", "table": {"headers": ["", "Static linking", "Dynamic linking"], "rows": [["Binary size", "Larger (library code embedded)", "Smaller (references only)"], ["Startup", "Faster (no runtime symbol resolution)", "Slower (loader must resolve symbols)"], ["Memory", "Each process has its own copy", "Shared library's code pages are shared across processes"], ["Updates", "Must recompile to pick up a library fix", "Replacing the .so updates all consumers automatically"]]}}, {"title": "The Dynamic Linker (ld.so)", "tag": "Kernel/runtime internals", "body": "For dynamically-linked binaries, the kernel doesn't jump straight to your `main()` \u2014 it first runs the dynamic linker/loader (`ld-linux.so`) to resolve and map dependencies.", "points": ["Reads the binary's list of needed shared libraries (`ldd <binary>` shows this), locates each `.so` (search order: `RPATH`/`RUNPATH`, `LD_LIBRARY_PATH`, `/etc/ld.so.cache`, default system paths), and maps them into the process.", "**Symbol resolution** \u2014 patches up call sites referencing functions in shared libraries to point at their actual runtime addresses; can be done eagerly at load time or lazily on first call (`LD_BIND_NOW` controls this).", "`LD_PRELOAD` \u2014 force a specific shared library to load before others, letting you override/intercept specific symbols; a common technique for debugging (e.g. custom `malloc` implementations) or dependency injection without recompiling."]}, {"title": "Static Libraries vs Shared Libraries \u2014 File Types", "tag": "Practical", "body": "The concrete files behind the two linking strategies.", "points": ["**`.a` (archive)** \u2014 a static library; just a bundle of `.o` object files, resolved and copied into the final binary at link time.", "**`.so` (shared object)** \u2014 a dynamic library; loaded and linked at runtime (or at exec time by `ld.so`), can be shared in memory across every process using it."]}]}, {"num": 11, "title": "cgroups & Namespaces \u2014 the Container Foundation", "intro": "The two Linux kernel primitives that Docker, Kubernetes, and every other container runtime are built on top of \u2014 there's no separate 'container' kernel object.", "cards": [{"title": "Namespaces \u2014 Isolating What a Process Can See", "tag": "Must memorize", "body": "A namespace wraps a global system resource so that processes inside the namespace see their own isolated instance of it.", "table": {"headers": ["Namespace", "Isolates"], "rows": [["PID", "Process IDs \u2014 a process can be PID 1 inside its namespace, invisible from outside"], ["Mount (mnt)", "Filesystem mount points \u2014 its own view of what's mounted where"], ["Network (net)", "Network interfaces, routing tables, ports \u2014 its own virtual network stack"], ["UTS", "Hostname and domain name"], ["IPC", "System V IPC objects and POSIX message queues"], ["User", "UID/GID mappings \u2014 a process can be root inside the namespace but an unprivileged user outside"], ["Cgroup", "Which cgroup hierarchy the process sees as its root"]]}}, {"title": "cgroups \u2014 Limiting What a Process Can Use", "tag": "Must memorize", "body": "**Control groups** limit, account for, and isolate resource usage (CPU, memory, disk I/O, network) for a group of processes \u2014 namespaces control visibility, cgroups control consumption.", "points": ["Organized as a hierarchy \u2014 processes are attached to cgroup nodes, and limits set on a parent cascade to children.", "**cgroups v2** (the current unified hierarchy) exposes controllers like `cpu`, `memory`, `io` under a single tree at `/sys/fs/cgroup`, replacing v1's per-controller separate hierarchies.", "This is exactly the mechanism behind `docker run --memory=512m --cpus=2` \u2014 Docker is just writing to cgroup limit files on your behalf."]}, {"title": "So What Actually *Is* a Container?", "tag": "Synthesis", "body": "A container is not a kernel object \u2014 it's a regular Linux process that a container runtime (containerd, runc) starts inside a fresh set of namespaces, with cgroup limits applied, and (usually) a different root filesystem via `chroot`/`pivot_root`.", "points": ["This is why `ps aux` on the host shows container processes as ordinary processes with ordinary PIDs \u2014 because that's exactly what they are.", "It's also why containers share the host kernel (unlike a VM, which runs its own kernel on virtualized hardware) \u2014 a kernel vulnerability can potentially be exploited to escape a container, which VMs are more resistant to."]}, {"title": "chroot vs pivot_root", "tag": "Practical", "body": "Two ways to change a process's apparent filesystem root \u2014 used to give a container its own root filesystem view.", "points": ["**chroot()** \u2014 changes the apparent root directory for the calling process, but the old root is still reachable via relative paths in some edge cases, and it wasn't designed as a security boundary.", "**pivot_root()** \u2014 swaps the entire root filesystem, moving the old root to a location that can then be unmounted entirely, making it properly unreachable \u2014 the mechanism container runtimes actually use."]}]}, {"num": 12, "title": "Kernel Modules & Device Drivers", "intro": "The interface between hardware and the rest of the OS, and how the kernel exposes it.", "cards": [{"title": "Character vs Block Devices", "tag": "Core concept", "body": "The two broad classes of device driver, exposed as special files under `/dev`.", "points": ["**Character devices** \u2014 data accessed as a stream of bytes, no fixed block structure (e.g. `/dev/tty`, `/dev/random`, most sensors and serial devices).", "**Block devices** \u2014 data accessed in fixed-size blocks, randomly addressable, typically backed by storage hardware (e.g. `/dev/sda`) and go through the kernel's block I/O layer and scheduler."]}, {"title": "Device Files & Major/Minor Numbers", "tag": "Practical", "body": "Under Unix's 'everything is a file' philosophy, devices are accessed through special files in `/dev`, identified internally by a pair of numbers rather than a driver name.", "points": ["**Major number** \u2014 identifies which driver handles the device.", "**Minor number** \u2014 identifies the specific device instance that driver should operate on (e.g. which of several disks).", "`ls -l /dev/sda` shows these numbers in place of a file size for device files."]}, {"title": "udev", "tag": "Practical", "body": "The userspace daemon that dynamically manages `/dev` \u2014 creating and removing device nodes as hardware is plugged in or removed, based on kernel `uevent` notifications.", "points": ["Replaces the old static, pre-populated `/dev` directory with one that reflects currently-present hardware.", "Rule files let you customize device naming (e.g. persistent names for USB drives regardless of enumeration order) and trigger actions on device events."]}]}, {"num": 13, "title": "Debugging & Performance Tools", "intro": "The toolkit a systems engineer actually reaches for when something is broken or slow in production.", "cards": [{"title": "strace \u2014 Syscall Tracing", "tag": "Frequently used", "body": "Traces every syscall a process makes (and their arguments/return values) by attaching via `ptrace()` \u2014 the fastest way to answer 'what is this program actually doing at the kernel boundary'.", "points": ["`strace -f -e trace=network ./prog` \u2014 trace only network-related syscalls, following forked children.", "`strace -c ./prog` \u2014 summarize syscall counts and time spent, useful for spotting a hot syscall (e.g. excessive `read()` calls from an unbuffered loop).", "`strace -p <pid>` \u2014 attach to an already-running process, invaluable for debugging something stuck in production without restarting it."]}, {"title": "ltrace \u2014 Library Call Tracing", "tag": "Frequently used", "body": "Like `strace`, but traces calls into shared library functions (e.g. libc calls like `malloc`, `strcpy`) instead of syscalls \u2014 useful when the issue is above the kernel boundary.", "points": ["Higher overhead than `strace` since it has to intercept far more call sites; generally more useful for narrowing down *which* library call misbehaves before reaching for a full debugger."]}, {"title": "gdb \u2014 The Debugger", "tag": "Core tool", "body": "The standard interactive debugger for compiled binaries.", "points": ["`gdb ./prog core` \u2014 load a crashed process's core dump for post-mortem analysis (requires `ulimit -c unlimited` to have been set beforehand to actually get a core file).", "`gdb -p <pid>` \u2014 attach to a live running process.", "`bt` (backtrace) \u2014 show the call stack; `bt full` includes local variables at each frame.", "`watch <expr>` \u2014 a watchpoint, stopping execution the moment a variable's value changes, powerful for tracking down unexpected mutation."]}, {"title": "perf \u2014 CPU Profiling", "tag": "Core tool", "body": "Linux's built-in profiler, using hardware performance counters and kernel tracepoints for very low-overhead sampling.", "points": ["`perf record -g ./prog` then `perf report` \u2014 sample where CPU time is actually going, with call-graph attribution.", "`perf top` \u2014 a live, continuously-updating view of the hottest functions system-wide, similar in spirit to `top` but for CPU instructions rather than process CPU%.", "`perf stat ./prog` \u2014 high-level counters: instructions per cycle, cache misses, branch mispredictions \u2014 useful for understanding *why* code is slow at a micro-architectural level, not just *where*."]}, {"title": "valgrind \u2014 Memory & Correctness Analysis", "tag": "Core tool", "body": "Runs your program on a synthetic CPU (heavy overhead \u2014 often 10-50x slower) to catch memory errors that would otherwise silently corrupt state.", "points": ["**memcheck** (default tool) \u2014 catches use-after-free, buffer overruns, reads of uninitialized memory, and memory leaks.", "Because of its overhead, it's a development/CI tool, not something you run in production \u2014 pair with sanitizers (`-fsanitize=address`, `-fsanitize=thread`) built into gcc/clang for lower-overhead alternatives that can sometimes be run in staging."]}, {"title": "/proc-based Quick Diagnostics", "tag": "Practical", "body": "Often the fastest first step before reaching for a heavier tool \u2014 see the '/proc and /sys' section for the full picture.", "points": ["`top` / `htop` \u2014 live overview of CPU/memory usage per process.", "`vmstat 1` \u2014 system-wide memory, swap, and CPU stats sampled every second, good for spotting swapping or CPU saturation at a glance.", "`iostat -x 1` \u2014 per-device disk I/O utilization and latency, good first check when something feels 'stuck on disk'."]}]}, {"num": 14, "title": "/proc and /sys \u2014 Live Kernel Introspection", "intro": "Pseudo-filesystems that expose live kernel and process state as ordinary files \u2014 no special tooling required to read them.", "cards": [{"title": "/proc \u2014 Process & Kernel State", "tag": "Must memorize", "body": "A virtual filesystem where file contents are generated on-the-fly by the kernel when read, rather than stored on disk.", "points": ["`/proc/<pid>/status` \u2014 human-readable process state summary (memory usage, signal masks, thread count).", "`/proc/<pid>/maps` \u2014 the process's memory mappings (exactly what's mapped where \u2014 libraries, heap, stack, anonymous regions); pairs well with understanding the process memory layout.", "`/proc/<pid>/fd/` \u2014 symlinks to every file descriptor the process has open, letting you see exactly what files/sockets/pipes a running process is holding.", "`/proc/cpuinfo`, `/proc/meminfo`, `/proc/loadavg` \u2014 system-wide info that tools like `top`/`free` are themselves just reading and formatting."]}, {"title": "/sys \u2014 the Kernel Object Model", "tag": "Core concept", "body": "**sysfs** exposes the kernel's internal device/driver object hierarchy as a browsable filesystem, and \u2014 unlike most of `/proc` \u2014 many files here are writable, letting you tune kernel behavior live.", "points": ["`/sys/class/`, `/sys/devices/`, `/sys/bus/` \u2014 organize the same underlying device objects by different views (by device class, physical topology, or bus type).", "`/sys/fs/cgroup/` \u2014 where cgroup v2 controllers and limits actually live, as covered in the cgroups section.", "Writing to files here is how many low-level tunables are set without a reboot, e.g. `echo 1 > /sys/class/leds/.../brightness`, or CPU frequency governors under `/sys/devices/system/cpu/`."]}, {"title": "Reading These Safely", "tag": "Practical", "body": "A few practical notes before treating these like regular files.", "points": ["Values in `/proc` are a snapshot at read time, not a live stream \u2014 re-read to get updated numbers (this is exactly what `watch cat /proc/...` or polling tools do).", "Some values need unit conversion \u2014 e.g. many memory figures in `/proc/meminfo` are in KB, and some `/sys` tunables expect specific unit-less integers (like microseconds or raw counts) documented in kernel docs, not assumed."]}]}, {"num": 15, "title": "Quick Revision \u2014 Rapid Fire Q&A", "intro": "The last-hour pass, phrased the way a systems-engineering interviewer actually asks it.", "cards": [{"title": "Process & Memory Q&A", "tag": "Rapid fire", "body": "", "points": ["**Q: Why is `fork()` cheap even though it 'copies' the whole address space?** \u2014 Copy-on-write: pages are shared read-only until either process writes to one, at which point only that single page is actually duplicated.", "**Q: What's the practical difference between `fork()`+`exec()` and `posix_spawn()`?** \u2014 `posix_spawn()` avoids the overhead of setting up COW page tables for an address space that's about to be thrown away by `exec()` anyway; it picks the fastest mechanism internally (often `vfork()`-like behavior).", "**Q: What does it mean that Linux threads and processes both come from `clone()`?** \u2014 There's no separate kernel concept of 'thread' \u2014 a thread is just a `task_struct` created with flags telling the kernel to share the address space, file descriptors, and signal handlers with its 'parent' instead of copying them."]}, {"title": "Concurrency & Syscalls Q&A", "tag": "Rapid fire", "body": "", "points": ["**Q: Why is an uncontended mutex lock/unlock almost free on Linux?** \u2014 futex: the fast path is a single atomic instruction in userspace with no syscall at all; the kernel only gets involved when there's actual contention to arbitrate.", "**Q: Why would you disable Nagle's algorithm with `TCP_NODELAY`?** \u2014 For latency-sensitive request/response traffic, where Nagle's batching (combined with delayed ACKs) can add up to hundreds of milliseconds of avoidable delay for small messages.", "**Q: Why does epoll scale better than select()/poll() for many connections?** \u2014 select/poll require an O(n) re-scan of every registered fd on every call; epoll registers interest once and the kernel only reports fds that actually became ready, making each wait call O(number of ready events), not O(total fds)."]}, {"title": "Filesystems & Linking Q&A", "tag": "Rapid fire", "body": "", "points": ["**Q: Why do hard links share data but not survive across filesystems, while symlinks can point anywhere?** \u2014 A hard link is just another directory entry pointing at the same inode number, and inode numbers are only meaningful within one filesystem; a symlink just stores a path string, resolved fresh on each access, so it can point anywhere including across filesystems.", "**Q: What's actually happening when a dynamically-linked binary starts?** \u2014 The kernel loads the ELF and hands control to the dynamic linker (`ld.so`) first, which resolves and maps the binary's shared library dependencies and patches up symbol references before your `main()` ever runs.", "**Q: What's `LD_PRELOAD` typically used for?** \u2014 Forcing a specific shared library to load first so it can intercept/override symbols another library or the binary would otherwise resolve to \u2014 common for debugging allocators or dependency injection without recompiling."]}, {"title": "Containers & Systems Q&A", "tag": "Rapid fire", "body": "", "points": ["**Q: What's the actual difference between a container and a VM at the kernel level?** \u2014 A container is a normal process isolated by namespaces (what it can see) and constrained by cgroups (what it can use), sharing the host kernel; a VM virtualizes hardware and runs its own separate kernel entirely.", "**Q: Which kernel primitive limits how much CPU/memory a container can use, and which one hides other processes from it?** \u2014 cgroups limit resource consumption; the PID (and other) namespaces control visibility/isolation. They're independent mechanisms that container runtimes combine.", "**Q: Why does a process stuck in D-state ignore `kill -9`?** \u2014 Uninterruptible sleep means it's blocked in a kernel-mode operation (typically waiting on I/O) that can't safely be interrupted by a signal \u2014 even `SIGKILL` has to wait for the kernel operation to complete or time out first."]}]}]
+</script>
+<script>
+(function(){
+  const raw = document.getElementById('os-data').textContent;
+  const SECTIONS = JSON.parse(raw);
+
+  let activeSection = 1;
+  let query = '';
+
+  function escapeHtml(s){
+    return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  // very small markdown-lite: **bold** and `code`
+  function inline(s){
+    let out = escapeHtml(s);
+    out = out.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+    out = out.replace(/`(.+?)`/g, '<code>$1</code>');
+    return out;
+  }
+
+  function buildNav(){
+    const navList = document.getElementById('navList');
+    navList.innerHTML = '';
+    SECTIONS.forEach(sec => {
+      const li = document.createElement('li');
+      li.className = 'nav-item' + (sec.num === activeSection && !query ? ' active' : '');
+      li.innerHTML = `<span class="nav-num">${String(sec.num).padStart(2,'0')}</span><span class="nav-name">${escapeHtml(sec.title)}</span><span class="nav-count">${sec.cards.length}</span>`;
+      li.addEventListener('click', () => {
+        query = '';
+        document.getElementById('searchInput').value = '';
+        activeSection = sec.num;
+        render();
+        window.scrollTo({top:0, behavior:'smooth'});
+      });
+      navList.appendChild(li);
+    });
+  }
+
+  function matchesQuery(card, q){
+    if(!q) return true;
+    const hay = [
+      card.title || '',
+      card.body || '',
+      (card.points || []).join(' '),
+      card.note || '',
+      card.table ? JSON.stringify(card.table) : ''
+    ].join(' ').toLowerCase();
+    return hay.includes(q);
+  }
+
+  function tableHtml(table){
+    if(!table) return '';
+    const head = `<tr>${table.headers.map(h => `<th>${inline(h)}</th>`).join('')}</tr>`;
+    const rows = table.rows.map(r => `<tr>${r.map(c => `<td>${inline(c)}</td>`).join('')}</tr>`).join('');
+    return `<div class="table-wrap"><table><thead>${head}</thead><tbody>${rows}</tbody></table></div>`;
+  }
+
+  function cardHtml(sec, card, idx){
+    const fig = `FIG ${sec.num}.${String(idx+1).padStart(2,'0')}`;
+    let body = '';
+    if(card.body){
+      body += card.body.split('\n\n').map(p => `<p class="card-text">${inline(p)}</p>`).join('');
+    }
+    if(card.points && card.points.length){
+      body += `<ul class="card-points">${card.points.map(p => `<li>${inline(p)}</li>`).join('')}</ul>`;
+    }
+    if(card.table){
+      body += tableHtml(card.table);
+    }
+    if(card.note){
+      body += `<div class="card-note">${inline(card.note)}</div>`;
+    }
+    return `<div class="card" id="topic-${sec.num}-${idx}">
+      <div class="card-head">
+        <div class="card-title-wrap">
+          <span class="card-fig">${fig}</span>
+          <h3 class="card-title">${escapeHtml(card.title)}</h3>
+        </div>
+        ${card.tag ? `<span class="card-tag">${escapeHtml(card.tag)}</span>` : ''}
+      </div>
+      <div class="card-body">${body}</div>
+    </div>`;
+  }
+
+  function render(){
+    buildNav();
+    const grid = document.getElementById('cardGrid');
+    const crumb = document.getElementById('crumbSection');
+    const resultCount = document.getElementById('resultCount');
+
+    if(query){
+      document.getElementById('plateLabel').textContent = 'SEARCH';
+      document.getElementById('sectionTitle').textContent = `Results for "${query}"`;
+      document.getElementById('sectionDesc').textContent = 'Matches across every plate in these notes.';
+      crumb.textContent = 'Search';
+
+      let html = '';
+      let count = 0;
+      SECTIONS.forEach(sec => {
+        sec.cards.forEach((card, idx) => {
+          if(matchesQuery(card, query)){
+            html += cardHtml(sec, card, idx);
+            count++;
+          }
+        });
+      });
+      resultCount.textContent = `${count} match${count===1?'':'es'}`;
+      grid.innerHTML = html || `<div class="empty-state">No topics match “${escapeHtml(query)}”. Try a shorter term.</div>`;
+    } else {
+      const sec = SECTIONS.find(s => s.num === activeSection) || SECTIONS[0];
+      document.getElementById('plateLabel').textContent = `PLATE ${String(sec.num).padStart(2,'0')} / ${sec.cards.length} TOPICS`;
+      document.getElementById('sectionTitle').textContent = sec.title;
+      document.getElementById('sectionDesc').textContent = sec.intro || '';
+      crumb.textContent = sec.title;
+      resultCount.textContent = '';
+      grid.innerHTML = sec.cards.map((c,i) => cardHtml(sec, c, i)).join('');
+    }
+  }
+
+  document.getElementById('searchInput').addEventListener('input', (e) => {
+    query = e.target.value.trim().toLowerCase();
+    render();
+  });
+
+  render();
+})();
+
+</script>
+</body>
+</html>
