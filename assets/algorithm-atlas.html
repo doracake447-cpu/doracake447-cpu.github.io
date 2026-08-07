@@ -1,0 +1,469 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Algorithm Atlas — C++ Interview Reference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/base16/tomorrow-night.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+<style>
+:root{
+  --bp-0:#081826;
+  --bp-1:#0b2238;
+  --bp-2:#0f2d4d;
+  --bp-3:#123655;
+  --line:#7fdbff;
+  --line-dim:rgba(127,219,255,0.16);
+  --line-dim2:rgba(127,219,255,0.28);
+  --cyan:#7fe0ff;
+  --amber:#f2b84b;
+  --amber-dim:rgba(242,184,75,0.35);
+  --ink:#eaf4fc;
+  --ink-dim:#9fb8cc;
+  --ink-faint:#5f7d95;
+  --mono: 'JetBrains Mono', ui-monospace, monospace;
+  --disp: 'Space Grotesk', sans-serif;
+  --body: 'Inter', sans-serif;
+  --sidebar-w: 300px;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:
+    linear-gradient(var(--bp-0), var(--bp-0)) fixed,
+    repeating-linear-gradient(0deg, var(--line-dim) 0 1px, transparent 1px 40px),
+    repeating-linear-gradient(90deg, var(--line-dim) 0 1px, transparent 1px 40px);
+  background-color:var(--bp-0);
+  color:var(--ink);
+  font-family:var(--body);
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{ background:var(--amber-dim); color:var(--ink);}
+a{color:inherit;}
+::-webkit-scrollbar{width:10px;height:10px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--bp-3); border-radius:6px; border:2px solid var(--bp-0);}
+::-webkit-scrollbar-thumb:hover{background:var(--line-dim2);}
+
+/* ---------- layout ---------- */
+.app{ display:flex; min-height:100vh; }
+
+/* ---------- sidebar ---------- */
+.sidebar{
+  width:var(--sidebar-w);
+  min-width:var(--sidebar-w);
+  border-right:1px solid var(--line-dim2);
+  padding:28px 20px 40px;
+  position:sticky; top:0; align-self:flex-start;
+  height:100vh; overflow-y:auto;
+  background:linear-gradient(180deg, rgba(15,45,77,0.5), rgba(10,31,51,0.2));
+}
+.brand{
+  display:flex; align-items:flex-start; gap:12px; margin-bottom:6px;
+}
+.brand-mark{
+  width:38px;height:38px; flex:none;
+  border:1.5px solid var(--cyan);
+  position:relative;
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--mono); font-size:11px; color:var(--cyan);
+}
+.brand-mark::before, .brand-mark::after{
+  content:""; position:absolute; width:6px; height:6px; border:1px solid var(--cyan);
+}
+.brand-mark::before{ top:-4px; left:-4px; border-right:none; border-bottom:none; }
+.brand-mark::after{ bottom:-4px; right:-4px; border-left:none; border-top:none; }
+.brand-text h1{
+  font-family:var(--disp); font-size:19px; font-weight:700; margin:0 0 2px; letter-spacing:0.01em;
+}
+.brand-text p{
+  margin:0; font-family:var(--mono); font-size:10.5px; color:var(--ink-faint); letter-spacing:0.08em; text-transform:uppercase;
+}
+.brand-sub{
+  font-family:var(--mono); font-size:11px; color:var(--ink-faint); margin:14px 0 22px;
+  padding-top:14px; border-top:1px dashed var(--line-dim2);
+  line-height:1.6;
+}
+.brand-sub b{ color:var(--ink-dim); font-weight:600; }
+
+.search-wrap{ position:relative; margin-bottom:22px; }
+.search-wrap input{
+  width:100%; background:var(--bp-1); border:1px solid var(--line-dim2);
+  color:var(--ink); font-family:var(--mono); font-size:12.5px;
+  padding:10px 12px 10px 30px; outline:none; transition:border-color .15s;
+}
+.search-wrap input:focus{ border-color:var(--cyan); }
+.search-wrap input::placeholder{ color:var(--ink-faint); }
+.search-icon{
+  position:absolute; left:10px; top:50%; transform:translateY(-50%);
+  width:11px; height:11px; border:1.5px solid var(--ink-faint); border-radius:50%;
+}
+.search-icon::after{
+  content:""; position:absolute; width:5px; height:1.5px; background:var(--ink-faint);
+  transform:rotate(45deg); right:-5px; bottom:-1px;
+}
+
+.nav-label{
+  font-family:var(--mono); font-size:10px; letter-spacing:0.12em; color:var(--ink-faint);
+  text-transform:uppercase; margin:0 0 10px;
+}
+.nav-list{ list-style:none; margin:0 0 24px; padding:0; }
+.nav-item{
+  display:flex; align-items:center; gap:10px;
+  padding:8px 8px; cursor:pointer; border:1px solid transparent;
+  font-size:13px; color:var(--ink-dim); transition:all .12s;
+  position:relative;
+}
+.nav-item:hover{ color:var(--ink); border-color:var(--line-dim2); }
+.nav-item.active{
+  color:var(--ink); background:var(--bp-2); border-color:var(--cyan);
+}
+.nav-item.active .nav-num{ color:var(--amber); }
+.nav-num{
+  font-family:var(--mono); font-size:11px; color:var(--ink-faint); width:20px; flex:none;
+}
+.nav-name{ flex:1; font-family:var(--disp); font-weight:500; }
+.nav-count{
+  font-family:var(--mono); font-size:10px; color:var(--ink-faint);
+  border:1px solid var(--line-dim2); padding:1px 5px; border-radius:2px;
+}
+.nav-item.active .nav-count{ border-color:var(--amber-dim); color:var(--amber); }
+
+.legend{
+  font-family:var(--mono); font-size:10.5px; color:var(--ink-faint); line-height:1.9;
+  padding-top:16px; border-top:1px dashed var(--line-dim2);
+}
+.legend div{ display:flex; gap:8px; align-items:center; }
+.legend .sw{ width:9px; height:9px; border:1px solid var(--cyan); flex:none;}
+.legend .sw.amber{ border-color:var(--amber); }
+
+</style>
+</head>
+<body>
+<style>
+/* ---------- main ---------- */
+.main{ flex:1; min-width:0; padding:36px 44px 80px; max-width:1180px; }
+
+.topbar{
+  display:flex; justify-content:space-between; align-items:baseline; gap:20px;
+  margin-bottom:6px; flex-wrap:wrap;
+}
+.crumb{ font-family:var(--mono); font-size:11px; color:var(--ink-faint); letter-spacing:.06em; text-transform:uppercase;}
+.crumb b{ color:var(--cyan); font-weight:600; }
+.result-count{ font-family:var(--mono); font-size:11px; color:var(--ink-faint); }
+
+.section-header{
+  margin:18px 0 30px; padding-bottom:22px; border-bottom:1px solid var(--line-dim2);
+  position:relative;
+}
+.section-header .plate{
+  font-family:var(--mono); font-size:11px; color:var(--amber); letter-spacing:.1em; margin-bottom:8px;
+}
+.section-header h2{
+  font-family:var(--disp); font-size:34px; margin:0 0 10px; font-weight:700; letter-spacing:-0.01em;
+}
+.section-header p{
+  font-family:var(--body); font-size:14.5px; color:var(--ink-dim); max-width:640px; margin:0; line-height:1.6;
+}
+
+.grid{
+  display:grid; grid-template-columns:1fr; gap:22px;
+}
+
+.card{
+  border:1px solid var(--line-dim2);
+  background:linear-gradient(180deg, rgba(15,45,77,0.35), rgba(10,31,51,0.15));
+  position:relative;
+}
+.card::before{
+  content:""; position:absolute; top:-1px; left:-1px; width:9px; height:9px;
+  border-top:1.5px solid var(--cyan); border-left:1.5px solid var(--cyan);
+}
+.card::after{
+  content:""; position:absolute; bottom:-1px; right:-1px; width:9px; height:9px;
+  border-bottom:1.5px solid var(--cyan); border-right:1.5px solid var(--cyan);
+}
+.card-head{
+  display:flex; justify-content:space-between; align-items:flex-start; gap:16px;
+  padding:18px 22px 14px; border-bottom:1px dashed var(--line-dim2);
+}
+.card-title-wrap{ display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; }
+.card-fig{ font-family:var(--mono); font-size:11px; color:var(--ink-faint); }
+.card-title{ font-family:var(--disp); font-size:19px; font-weight:600; margin:0; }
+.card-cat{
+  font-family:var(--mono); font-size:9.5px; color:var(--ink-faint); text-transform:uppercase;
+  letter-spacing:.08em; border:1px solid var(--line-dim2); padding:3px 7px; white-space:nowrap;
+}
+.card-body{ padding:16px 22px 20px; }
+.card-usecase{
+  font-family:var(--body); font-size:13.5px; color:var(--ink-dim); line-height:1.65; margin:0 0 16px;
+}
+.card-usecase b, .card-usecase strong{ color:var(--ink); }
+.card-ref{
+  font-family:var(--mono); font-size:12px; color:var(--cyan); cursor:pointer; text-decoration:underline; text-underline-offset:3px;
+}
+
+.code-wrap{ position:relative; }
+.code-toolbar{
+  display:flex; justify-content:space-between; align-items:center;
+  font-family:var(--mono); font-size:10px; color:var(--ink-faint);
+  padding:0 0 6px;
+}
+.copy-btn{
+  font-family:var(--mono); font-size:10.5px; color:var(--ink-faint);
+  background:transparent; border:1px solid var(--line-dim2); padding:4px 9px; cursor:pointer;
+  transition:all .12s; letter-spacing:.04em;
+}
+.copy-btn:hover{ color:var(--cyan); border-color:var(--cyan); }
+.copy-btn.copied{ color:var(--amber); border-color:var(--amber); }
+
+pre{
+  margin:0; background:var(--bp-0) !important; border:1px solid var(--line-dim);
+  padding:16px 18px !important; overflow-x:auto; font-size:12.5px; line-height:1.6;
+}
+pre code.hljs{ background:transparent !important; padding:0 !important; font-family:var(--mono) !important; }
+
+.empty-state{
+  padding:80px 20px; text-align:center; color:var(--ink-faint); font-family:var(--mono); font-size:13px;
+}
+
+.footer-note{
+  margin-top:50px; padding-top:20px; border-top:1px dashed var(--line-dim2);
+  font-family:var(--mono); font-size:10.5px; color:var(--ink-faint); line-height:1.8;
+}
+
+@media (max-width: 880px){
+  .app{ flex-direction:column; }
+  .sidebar{ width:100%; min-width:0; height:auto; position:relative; border-right:none; border-bottom:1px solid var(--line-dim2); }
+  .main{ padding:28px 20px 60px; }
+  .section-header h2{ font-size:26px; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{ transition:none !important; animation:none !important; }
+}
+</style>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">A</div>
+      <div class="brand-text">
+        <h1>Algorithm Atlas</h1>
+        <p>C++ Interview Reference</p>
+      </div>
+    </div>
+    <div class="brand-sub">126 algorithms &amp; data structures, indexed across <b>18 plates</b>. Companion to the NeetCode 150.</div>
+
+    <div class="search-wrap">
+      <span class="search-icon"></span>
+      <input id="searchInput" type="text" placeholder="Search algorithms…" autocomplete="off" />
+    </div>
+
+    <div class="nav-label">Index</div>
+    <ul class="nav-list" id="navList"></ul>
+
+    <div class="legend">
+      <div><span class="sw"></span> Plate — a topic area</div>
+      <div><span class="sw amber"></span> Fig. — one algorithm</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="crumb">Algorithm Atlas / <b id="crumbSection">—</b></div>
+      <div class="result-count" id="resultCount"></div>
+    </div>
+    <div class="section-header" id="sectionHeader">
+      <div class="plate" id="plateLabel">PLATE 01</div>
+      <h2 id="sectionTitle">—</h2>
+      <p id="sectionDesc"></p>
+    </div>
+    <div class="grid" id="cardGrid"></div>
+    <div class="footer-note">Generated reference — code favors clarity over micro-optimization; verify complexity constraints before using in production or contest settings.</div>
+  </main>
+</div>
+
+<script id="algo-data" type="application/json">
+[{"num": 1, "title": "Arrays & Prefix Sum", "algos": [{"name": "Prefix Sum", "usecase": "Answer range-sum queries in O(1) after O(n) preprocessing (e.g. \"sum of subarray [l, r]\").", "code": "vector<long long> buildPrefix(const vector<int>& a) {\n    vector<long long> pre(a.size() + 1, 0);\n    for (int i = 0; i < (int)a.size(); i++) pre[i + 1] = pre[i] + a[i];\n    return pre;\n}\n// sum of a[l..r] inclusive:\nlong long rangeSum(const vector<long long>& pre, int l, int r) {\n    return pre[r + 1] - pre[l];\n}", "ref": null}, {"name": "Difference Array", "usecase": "Apply many range-increment updates in O(1) each, then materialize the final array in O(n) (e.g. \"add v to every element in [l, r], m times\").", "code": "vector<long long> diff;\nvoid init(int n) { diff.assign(n + 1, 0); }\nvoid rangeAdd(int l, int r, long long v) {\n    diff[l] += v;\n    diff[r + 1] -= v;\n}\nvector<long long> materialize(int n) {\n    vector<long long> a(n);\n    long long cur = 0;\n    for (int i = 0; i < n; i++) { cur += diff[i]; a[i] = cur; }\n    return a;\n}", "ref": null}, {"name": "Kadane's Algorithm", "usecase": "Maximum subarray sum in O(n) (e.g. \"best time to buy/sell with one contiguous run\", \"max subarray\").", "code": "long long kadane(const vector<int>& a) {\n    long long best = a[0], cur = a[0];\n    for (int i = 1; i < (int)a.size(); i++) {\n        cur = max<long long>(a[i], cur + a[i]);\n        best = max(best, cur);\n    }\n    return best;\n}", "ref": null}, {"name": "Kadane's 2D Algorithm", "usecase": "Maximum-sum rectangle in a 2D matrix (image processing, submatrix optimization).", "code": "int maxSumRectangle(vector<vector<int>>& mat) {\n    int rows = mat.size(), cols = mat[0].size();\n    int best = INT_MIN;\n    for (int top = 0; top < rows; top++) {\n        vector<int> colSum(cols, 0);\n        for (int bottom = top; bottom < rows; bottom++) {\n            for (int c = 0; c < cols; c++) colSum[c] += mat[bottom][c];\n            // 1D kadane on colSum\n            int cur = colSum[0], localBest = colSum[0];\n            for (int c = 1; c < cols; c++) {\n                cur = max(colSum[c], cur + colSum[c]);\n                localBest = max(localBest, cur);\n            }\n            best = max(best, localBest);\n        }\n    }\n    return best;\n}", "ref": null}, {"name": "Sliding Window", "usecase": "Find best contiguous window satisfying a condition (max sum of size k, longest substring without repeats).", "code": "int longestSubstringNoRepeat(const string& s) {\n    unordered_map<char, int> lastSeen;\n    int best = 0, left = 0;\n    for (int right = 0; right < (int)s.size(); right++) {\n        if (lastSeen.count(s[right]) && lastSeen[s[right]] >= left)\n            left = lastSeen[s[right]] + 1;\n        lastSeen[s[right]] = right;\n        best = max(best, right - left + 1);\n    }\n    return best;\n}", "ref": null}, {"name": "Two Pointers", "usecase": "Sorted-array pair/triplet search, in-place partitioning (e.g. \"two sum sorted\", \"container with most water\").", "code": "bool twoSumSorted(const vector<int>& a, int target, int& i, int& j) {\n    i = 0; j = (int)a.size() - 1;\n    while (i < j) {\n        int s = a[i] + a[j];\n        if (s == target) return true;\n        else if (s < target) i++;\n        else j--;\n    }\n    return false;\n}", "ref": null}, {"name": "Monotonic Queue", "usecase": "Sliding window maximum/minimum in O(n) total.", "code": "vector<int> slidingWindowMax(const vector<int>& a, int k) {\n    deque<int> dq; // stores indices, values decreasing\n    vector<int> res;\n    for (int i = 0; i < (int)a.size(); i++) {\n        while (!dq.empty() && dq.front() <= i - k) dq.pop_front();\n        while (!dq.empty() && a[dq.back()] <= a[i]) dq.pop_back();\n        dq.push_back(i);\n        if (i >= k - 1) res.push_back(a[dq.front()]);\n    }\n    return res;\n}", "ref": null}]}, {"num": 2, "title": "Sorting", "algos": [{"name": "Merge Sort", "usecase": "Stable O(n log n) sort; basis for counting inversions, external sorting.", "code": "void merge(vector<int>& a, int l, int m, int r) {\n    vector<int> tmp;\n    int i = l, j = m + 1;\n    while (i <= m && j <= r) tmp.push_back(a[i] <= a[j] ? a[i++] : a[j++]);\n    while (i <= m) tmp.push_back(a[i++]);\n    while (j <= r) tmp.push_back(a[j++]);\n    copy(tmp.begin(), tmp.end(), a.begin() + l);\n}\nvoid mergeSort(vector<int>& a, int l, int r) {\n    if (l >= r) return;\n    int m = l + (r - l) / 2;\n    mergeSort(a, l, m);\n    mergeSort(a, m + 1, r);\n    merge(a, l, m, r);\n}", "ref": null}, {"name": "Quick Sort", "usecase": "In-place average O(n log n) sort; general-purpose default sort.", "code": "int partition(vector<int>& a, int l, int r) {\n    int pivot = a[r], i = l;\n    for (int j = l; j < r; j++)\n        if (a[j] < pivot) swap(a[i++], a[j]);\n    swap(a[i], a[r]);\n    return i;\n}\nvoid quickSort(vector<int>& a, int l, int r) {\n    if (l >= r) return;\n    int p = partition(a, l, r);\n    quickSort(a, l, p - 1);\n    quickSort(a, p + 1, r);\n}", "ref": null}, {"name": "Heap Sort", "usecase": "In-place O(n log n) sort with no extra memory, guaranteed worst case.", "code": "void siftDown(vector<int>& a, int n, int i) {\n    while (true) {\n        int largest = i, l = 2 * i + 1, r = 2 * i + 2;\n        if (l < n && a[l] > a[largest]) largest = l;\n        if (r < n && a[r] > a[largest]) largest = r;\n        if (largest == i) break;\n        swap(a[i], a[largest]);\n        i = largest;\n    }\n}\nvoid heapSort(vector<int>& a) {\n    int n = a.size();\n    for (int i = n / 2 - 1; i >= 0; i--) siftDown(a, n, i);\n    for (int i = n - 1; i > 0; i--) {\n        swap(a[0], a[i]);\n        siftDown(a, i, 0);\n    }\n}", "ref": null}, {"name": "Counting Sort", "usecase": "O(n + k) sort when keys are small integers in range [0, k] (e.g. sort ages, grades).", "code": "vector<int> countingSort(const vector<int>& a, int maxVal) {\n    vector<int> count(maxVal + 1, 0);\n    for (int x : a) count[x]++;\n    vector<int> res;\n    res.reserve(a.size());\n    for (int v = 0; v <= maxVal; v++)\n        for (int c = 0; c < count[v]; c++) res.push_back(v);\n    return res;\n}", "ref": null}, {"name": "Radix Sort", "usecase": "Linear-time sort for fixed-width integers (e.g. sorting 32-bit ints, strings of equal length).", "code": "void radixSort(vector<int>& a) {\n    if (a.empty()) return;\n    int maxVal = *max_element(a.begin(), a.end());\n    for (int exp = 1; maxVal / exp > 0; exp *= 10) {\n        vector<int> output(a.size());\n        int count[10] = {0};\n        for (int x : a) count[(x / exp) % 10]++;\n        for (int i = 1; i < 10; i++) count[i] += count[i - 1];\n        for (int i = (int)a.size() - 1; i >= 0; i--) {\n            int digit = (a[i] / exp) % 10;\n            output[--count[digit]] = a[i];\n        }\n        a = output;\n    }\n}", "ref": null}, {"name": "Bucket Sort", "usecase": "O(n) average sort for uniformly distributed floats/ints (e.g. sort scores in [0,1)).", "code": "void bucketSort(vector<float>& a) {\n    int n = a.size();\n    vector<vector<float>> buckets(n);\n    for (float x : a) buckets[min(n - 1, (int)(x * n))].push_back(x);\n    for (auto& b : buckets) sort(b.begin(), b.end());\n    int idx = 0;\n    for (auto& b : buckets) for (float x : b) a[idx++] = x;\n}", "ref": null}, {"name": "Dutch National Flag Algorithm", "usecase": "Sort an array of 3 distinct values in one pass (e.g. \"sort colors\", 3-way partition for quicksort).", "code": "void sortColors(vector<int>& a) { // values are 0, 1, 2\n    int low = 0, mid = 0, high = (int)a.size() - 1;\n    while (mid <= high) {\n        if (a[mid] == 0) swap(a[low++], a[mid++]);\n        else if (a[mid] == 1) mid++;\n        else swap(a[mid], a[high--]);\n    }\n}", "ref": null}, {"name": "Quick Select", "usecase": "Find the k-th smallest/largest element in O(n) average without fully sorting.", "code": "int quickSelect(vector<int>& a, int l, int r, int k) { // k = 0-indexed rank\n    if (l == r) return a[l];\n    int p = partition(a, l, r);\n    if (k == p) return a[k];\n    else if (k < p) return quickSelect(a, l, p - 1, k);\n    else return quickSelect(a, p + 1, r, k);\n}", "ref": null}]}, {"num": 3, "title": "Binary Search", "algos": [{"name": "Binary Search on Answer", "usecase": "When the answer space is monotonic (feasible/infeasible), binary search the answer itself (e.g. \"minimize max distance\", \"Koko eating bananas\", \"capacity to ship packages\").", "code": "bool feasible(int x); // problem-specific predicate, monotonic in x\n\nint binarySearchAnswer(int lo, int hi) {\n    while (lo < hi) {\n        int mid = lo + (hi - lo) / 2;\n        if (feasible(mid)) hi = mid;\n        else lo = mid + 1;\n    }\n    return lo;\n}", "ref": null}, {"name": "Ternary Search (rare)", "usecase": "Find the extremum of a strictly unimodal function over a range (e.g. minimize a convex cost function).", "code": "double ternarySearchMin(function<double(double)> f, double lo, double hi) {\n    for (int iter = 0; iter < 200; iter++) {\n        double m1 = lo + (hi - lo) / 3;\n        double m2 = hi - (hi - lo) / 3;\n        if (f(m1) < f(m2)) hi = m2; else lo = m1;\n    }\n    return (lo + hi) / 2;\n}", "ref": null}]}, {"num": 4, "title": "Linked List", "algos": [{"name": "Floyd's Cycle Detection", "usecase": "Detect a cycle in a linked list / functional graph in O(n) time, O(1) space (e.g. \"linked list cycle\", \"find duplicate number\").", "code": "struct ListNode { int val; ListNode* next; };\n\nbool hasCycle(ListNode* head) {\n    ListNode* slow = head;\n    ListNode* fast = head;\n    while (fast && fast->next) {\n        slow = slow->next;\n        fast = fast->next->next;\n        if (slow == fast) return true;\n    }\n    return false;\n}", "ref": null}, {"name": "Fast & Slow Pointer", "usecase": "Find middle of a list, detect cycle start, palindrome check without extra memory.", "code": "ListNode* findMiddle(ListNode* head) {\n    ListNode* slow = head;\n    ListNode* fast = head;\n    while (fast && fast->next) {\n        slow = slow->next;\n        fast = fast->next->next;\n    }\n    return slow;\n}", "ref": null}, {"name": "Merge Two Lists", "usecase": "Merge step of merge sort on linked lists, combine two sorted lists (e.g. \"merge k sorted lists\").", "code": "ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {\n    ListNode dummy{0, nullptr};\n    ListNode* tail = &dummy;\n    while (l1 && l2) {\n        if (l1->val <= l2->val) { tail->next = l1; l1 = l1->next; }\n        else { tail->next = l2; l2 = l2->next; }\n        tail = tail->next;\n    }\n    tail->next = l1 ? l1 : l2;\n    return dummy.next;\n}", "ref": null}, {"name": "Reverse Linked List", "usecase": "Building block for many list problems (palindrome check, reorder list, add two numbers).", "code": "ListNode* reverseList(ListNode* head) {\n    ListNode* prev = nullptr;\n    while (head) {\n        ListNode* nxt = head->next;\n        head->next = prev;\n        prev = head;\n        head = nxt;\n    }\n    return prev;\n}", "ref": null}, {"name": "Reverse K Groups", "usecase": "Reverse a linked list in chunks of size k (e.g. \"reverse nodes in k-group\").", "code": "ListNode* reverseKGroup(ListNode* head, int k) {\n    ListNode* node = head;\n    int count = 0;\n    while (node && count < k) { node = node->next; count++; }\n    if (count < k) return head; // fewer than k left, leave as-is\n    ListNode* prev = reverseKGroup(node, k); // recurse first\n    ListNode* cur = head;\n    for (int i = 0; i < k; i++) {\n        ListNode* nxt = cur->next;\n        cur->next = prev;\n        prev = cur;\n        cur = nxt;\n    }\n    return prev;\n}", "ref": null}, {"name": "LRU Cache (DLL + HashMap)", "usecase": "O(1) get/put cache eviction policy (classic system-design + interview staple).", "code": "class LRUCache {\n    int capacity;\n    list<pair<int,int>> order; // front = most recently used\n    unordered_map<int, list<pair<int,int>>::iterator> pos;\npublic:\n    LRUCache(int cap) : capacity(cap) {}\n    int get(int key) {\n        auto it = pos.find(key);\n        if (it == pos.end()) return -1;\n        order.splice(order.begin(), order, it->second);\n        return it->second->second;\n    }\n    void put(int key, int value) {\n        auto it = pos.find(key);\n        if (it != pos.end()) {\n            it->second->second = value;\n            order.splice(order.begin(), order, it->second);\n            return;\n        }\n        if ((int)order.size() == capacity) {\n            pos.erase(order.back().first);\n            order.pop_back();\n        }\n        order.emplace_front(key, value);\n        pos[key] = order.begin();\n    }\n};", "ref": null}]}, {"num": 5, "title": "Stack & Queue", "algos": [{"name": "Monotonic Stack", "usecase": "Next greater/smaller element, histogram area, daily temperatures \u2014 O(n) instead of O(n^2).", "code": "vector<int> nextGreaterElement(const vector<int>& a) {\n    int n = a.size();\n    vector<int> res(n, -1);\n    stack<int> st; // indices, values decreasing\n    for (int i = 0; i < n; i++) {\n        while (!st.empty() && a[st.top()] < a[i]) {\n            res[st.top()] = a[i];\n            st.pop();\n        }\n        st.push(i);\n    }\n    return res;\n}", "ref": null}, {"name": "Monotonic Queue", "usecase": "", "code": "", "ref": "Monotonic Queue"}, {"name": "Min Stack", "usecase": "Stack that supports O(1) retrieval of the current minimum (e.g. \"min stack\" LeetCode classic).", "code": "class MinStack {\n    stack<int> st, minSt;\npublic:\n    void push(int v) {\n        st.push(v);\n        minSt.push(minSt.empty() ? v : min(v, minSt.top()));\n    }\n    void pop() { st.pop(); minSt.pop(); }\n    int top() { return st.top(); }\n    int getMin() { return minSt.top(); }\n};", "ref": null}, {"name": "Queue using Stacks", "usecase": "Simulate FIFO with only LIFO primitives (interview classic, useful when only stack API is available).", "code": "class MyQueue {\n    stack<int> in, out;\n    void transfer() {\n        if (out.empty()) while (!in.empty()) { out.push(in.top()); in.pop(); }\n    }\npublic:\n    void push(int x) { in.push(x); }\n    int pop() { transfer(); int v = out.top(); out.pop(); return v; }\n    int peek() { transfer(); return out.top(); }\n    bool empty() { return in.empty() && out.empty(); }\n};", "ref": null}, {"name": "Stack using Queues", "usecase": "Simulate LIFO with only FIFO primitives.", "code": "class MyStack {\n    queue<int> q;\npublic:\n    void push(int x) {\n        q.push(x);\n        for (int i = 0; i + 1 < (int)q.size(); i++) {\n            q.push(q.front());\n            q.pop();\n        }\n    }\n    int pop() { int v = q.front(); q.pop(); return v; }\n    int top() { return q.front(); }\n    bool empty() { return q.empty(); }\n};", "ref": null}]}, {"num": 6, "title": "Heap", "algos": [{"name": "Priority Queue", "usecase": "Always access the min/max element in O(log n) (event scheduling, Dijkstra, task ordering).", "code": "priority_queue<int> maxHeap;                              // max-heap by default\npriority_queue<int, vector<int>, greater<int>> minHeap;    // min-heap", "ref": null}, {"name": "K-way Merge", "usecase": "Merge k sorted lists/arrays efficiently (e.g. \"merge k sorted lists\", \"smallest range covering k lists\").", "code": "ListNode* mergeKLists(vector<ListNode*>& lists) {\n    auto cmp = [](ListNode* a, ListNode* b) { return a->val > b->val; };\n    priority_queue<ListNode*, vector<ListNode*>, decltype(cmp)> pq(cmp);\n    for (auto* l : lists) if (l) pq.push(l);\n    ListNode dummy{0, nullptr};\n    ListNode* tail = &dummy;\n    while (!pq.empty()) {\n        ListNode* node = pq.top(); pq.pop();\n        tail->next = node;\n        tail = tail->next;\n        if (node->next) pq.push(node->next);\n    }\n    return dummy.next;\n}", "ref": null}, {"name": "Top K Elements", "usecase": "Find k largest/smallest/most-frequent elements in O(n log k) (e.g. \"top k frequent words\").", "code": "vector<int> topKFrequent(vector<int>& nums, int k) {\n    unordered_map<int,int> freq;\n    for (int x : nums) freq[x]++;\n    priority_queue<pair<int,int>, vector<pair<int,int>>, greater<>> pq; // (freq, val)\n    for (auto& [val, f] : freq) {\n        pq.push({f, val});\n        if ((int)pq.size() > k) pq.pop();\n    }\n    vector<int> res;\n    while (!pq.empty()) { res.push_back(pq.top().second); pq.pop(); }\n    return res;\n}", "ref": null}, {"name": "Running Median (Two Heaps)", "usecase": "Maintain the median of a data stream in O(log n) per insertion (e.g. \"find median from data stream\").", "code": "class MedianFinder {\n    priority_queue<int> lo;                              // max-heap, lower half\n    priority_queue<int, vector<int>, greater<int>> hi;    // min-heap, upper half\npublic:\n    void addNum(int num) {\n        lo.push(num);\n        hi.push(lo.top()); lo.pop();\n        if (hi.size() > lo.size()) { lo.push(hi.top()); hi.pop(); }\n    }\n    double findMedian() {\n        if (lo.size() > hi.size()) return lo.top();\n        return (lo.top() + hi.top()) / 2.0;\n    }\n};", "ref": null}]}, {"num": 7, "title": "Hashing", "algos": [{"name": "Frequency Map", "usecase": "Count occurrences for anagram checks, majority element, grouping (e.g. \"group anagrams\").", "code": "unordered_map<char,int> freq;\nfor (char c : s) freq[c]++;", "ref": null}, {"name": "Coordinate Compression", "usecase": "Map large/sparse coordinate values to a dense small range for indexing into arrays/BITs.", "code": "vector<int> compress(vector<int> a) {\n    vector<int> sorted_a = a;\n    sort(sorted_a.begin(), sorted_a.end());\n    sorted_a.erase(unique(sorted_a.begin(), sorted_a.end()), sorted_a.end());\n    for (int& x : a)\n        x = lower_bound(sorted_a.begin(), sorted_a.end(), x) - sorted_a.begin();\n    return a; // now values are in [0, distinct_count)\n}", "ref": null}, {"name": "Rolling Hash", "usecase": "Compute substring hashes in O(1) after O(n) preprocessing (string matching, deduping substrings).", "code": "struct RollingHash {\n    vector<long long> h, p;\n    long long mod = 1'000'000'007, base = 131;\n    RollingHash(const string& s) {\n        int n = s.size();\n        h.assign(n + 1, 0); p.assign(n + 1, 1);\n        for (int i = 0; i < n; i++) {\n            h[i+1] = (h[i]*base + s[i]) % mod;\n            p[i+1] = (p[i]*base) % mod;\n        }\n    }\n    long long get(int l, int r) { // hash of s[l..r], inclusive\n        return ((h[r+1] - h[l]*p[r-l+1]) % mod + mod) % mod;\n    }\n};", "ref": null}, {"name": "Double Hashing", "usecase": "Reduce collision probability by combining two independent rolling hashes (competitive programming, string dedup at scale).", "code": "struct DoubleHash {\n    RollingHash h1, h2;\n    DoubleHash(const string& s) : h1(s), h2(s) { h2.mod = 998244353; h2.base = 137; }\n    pair<long long,long long> get(int l, int r) { return {h1.get(l,r), h2.get(l,r)}; }\n};", "ref": null}]}, {"num": 8, "title": "Trees", "algos": [{"name": "DFS", "usecase": "Explore tree/graph depth-first \u2014 path finding, subtree aggregation, connectivity.", "code": "struct TreeNode { int val; TreeNode *left, *right; };\n\nvoid dfs(TreeNode* root) {\n    if (!root) return;\n    // process root\n    dfs(root->left);\n    dfs(root->right);\n}", "ref": null}, {"name": "BFS", "usecase": "Level-order traversal, shortest path in unweighted trees/graphs.", "code": "void bfs(TreeNode* root) {\n    if (!root) return;\n    queue<TreeNode*> q;\n    q.push(root);\n    while (!q.empty()) {\n        int sz = q.size();\n        for (int i = 0; i < sz; i++) {\n            TreeNode* node = q.front(); q.pop();\n            // process node\n            if (node->left) q.push(node->left);\n            if (node->right) q.push(node->right);\n        }\n    }\n}", "ref": null}, {"name": "BST Operations", "usecase": "O(log n) average insert/search/delete for ordered data (e.g. \"validate BST\", \"insert into BST\").", "code": "TreeNode* insertBST(TreeNode* root, int val) {\n    if (!root) return new TreeNode{val, nullptr, nullptr};\n    if (val < root->val) root->left = insertBST(root->left, val);\n    else root->right = insertBST(root->right, val);\n    return root;\n}\nTreeNode* searchBST(TreeNode* root, int val) {\n    if (!root || root->val == val) return root;\n    return val < root->val ? searchBST(root->left, val) : searchBST(root->right, val);\n}", "ref": null}, {"name": "Lowest Common Ancestor", "usecase": "Find the deepest node that is an ancestor of two given nodes (e.g. \"LCA of a binary tree\").", "code": "TreeNode* lca(TreeNode* root, TreeNode* p, TreeNode* q) {\n    if (!root || root == p || root == q) return root;\n    TreeNode* l = lca(root->left, p, q);\n    TreeNode* r = lca(root->right, p, q);\n    if (l && r) return root;\n    return l ? l : r;\n}", "ref": null}, {"name": "Binary Lifting", "usecase": "Answer \"k-th ancestor\" / LCA queries in O(log n) per query after O(n log n) preprocessing (e.g. LCA on large trees, tree jumping games).", "code": "const int LOG = 20;\nvector<vector<int>> up; // up[k][v] = 2^k-th ancestor of v\nvector<int> depth;\nvector<vector<int>> adj;\n\nvoid dfsLift(int v, int parent) {\n    up[0][v] = parent;\n    for (int k = 1; k < LOG; k++)\n        up[k][v] = (up[k-1][v] == -1) ? -1 : up[k-1][up[k-1][v]];\n    for (int to : adj[v]) if (to != parent) { depth[to] = depth[v] + 1; dfsLift(to, v); }\n}\n\nint kthAncestor(int v, int k) {\n    for (int i = 0; i < LOG && v != -1; i++)\n        if (k & (1 << i)) v = up[i][v];\n    return v;\n}\n\nint lcaBinaryLifting(int u, int v) {\n    if (depth[u] < depth[v]) swap(u, v);\n    u = kthAncestor(u, depth[u] - depth[v]);\n    if (u == v) return u;\n    for (int k = LOG - 1; k >= 0; k--)\n        if (up[k][u] != up[k][v]) { u = up[k][u]; v = up[k][v]; }\n    return up[0][u];\n}", "ref": null}, {"name": "Euler Tour", "usecase": "Flatten a tree into an array to answer subtree-range queries with a Segment Tree/BIT.", "code": "vector<int> tin, tout;\nint timer = 0;\nvoid eulerTour(int v, int parent) {\n    tin[v] = timer++;\n    for (int to : adj[v]) if (to != parent) eulerTour(to, v);\n    tout[v] = timer - 1; // subtree of v occupies [tin[v], tout[v]]\n}\nbool isAncestor(int u, int v) { return tin[u] <= tin[v] && tout[v] <= tout[u]; }", "ref": null}, {"name": "Morris Traversal", "usecase": "In-order tree traversal in O(1) extra space (no stack/recursion) \u2014 used when memory is constrained.", "code": "vector<int> morrisInorder(TreeNode* root) {\n    vector<int> res;\n    TreeNode* cur = root;\n    while (cur) {\n        if (!cur->left) { res.push_back(cur->val); cur = cur->right; }\n        else {\n            TreeNode* pred = cur->left;\n            while (pred->right && pred->right != cur) pred = pred->right;\n            if (!pred->right) { pred->right = cur; cur = cur->left; }\n            else { pred->right = nullptr; res.push_back(cur->val); cur = cur->right; }\n        }\n    }\n    return res;\n}", "ref": null}, {"name": "Tree DP", "usecase": "Compute aggregate values over subtrees (e.g. \"house robber III\", \"max path sum\", \"diameter\").", "code": "int maxPathSum(TreeNode* root, int& best) {\n    if (!root) return 0;\n    int l = max(0, maxPathSum(root->left, best));\n    int r = max(0, maxPathSum(root->right, best));\n    best = max(best, root->val + l + r);\n    return root->val + max(l, r);\n}", "ref": null}, {"name": "Diameter of Tree", "usecase": "Longest path between any two nodes in a tree (e.g. \"diameter of binary tree\").", "code": "int diameter(TreeNode* root, int& best) {\n    if (!root) return 0;\n    int l = diameter(root->left, best);\n    int r = diameter(root->right, best);\n    best = max(best, l + r);\n    return 1 + max(l, r);\n}", "ref": null}, {"name": "Centroid (basic idea)", "usecase": "Find a node whose removal minimizes the largest resulting subtree \u2014 used in centroid decomposition, tree DP optimization.", "code": "int n;\nvector<int> subtreeSize;\nvector<vector<int>> tree;\nvector<bool> removed;\n\nint getSubtreeSize(int v, int parent) {\n    subtreeSize[v] = 1;\n    for (int to : tree[v]) if (to != parent && !removed[to])\n        subtreeSize[v] += getSubtreeSize(to, v);\n    return subtreeSize[v];\n}\n\nint getCentroid(int v, int parent, int treeSize) {\n    for (int to : tree[v]) if (to != parent && !removed[to])\n        if (subtreeSize[to] > treeSize / 2) return getCentroid(to, v, treeSize);\n    return v;\n}\n// usage: getSubtreeSize(root, -1); int centroid = getCentroid(root, -1, subtreeSize[root]);", "ref": null}]}, {"num": 9, "title": "Binary Indexed Tree / Segment Tree", "algos": [{"name": "Fenwick Tree (BIT)", "usecase": "Point update + prefix-sum query in O(log n) \u2014 simpler and faster-constant than a segment tree for sums.", "code": "struct Fenwick {\n    vector<long long> tree;\n    int n;\n    Fenwick(int n) : n(n), tree(n + 1, 0) {}\n    void update(int i, long long delta) { // 1-indexed\n        for (; i <= n; i += i & (-i)) tree[i] += delta;\n    }\n    long long query(int i) { // prefix sum [1..i]\n        long long s = 0;\n        for (; i > 0; i -= i & (-i)) s += tree[i];\n        return s;\n    }\n    long long rangeQuery(int l, int r) { return query(r) - query(l - 1); }\n};", "ref": null}, {"name": "Segment Tree", "usecase": "Range query (sum/min/max) + range/point update in O(log n) \u2014 more general than a BIT.", "code": "struct SegTree {\n    int n;\n    vector<long long> tree;\n    SegTree(int n) : n(n), tree(4 * n, 0) {}\n    void build(vector<int>& a, int node, int l, int r) {\n        if (l == r) { tree[node] = a[l]; return; }\n        int m = (l + r) / 2;\n        build(a, 2*node, l, m);\n        build(a, 2*node+1, m+1, r);\n        tree[node] = tree[2*node] + tree[2*node+1];\n    }\n    void update(int node, int l, int r, int idx, int val) {\n        if (l == r) { tree[node] = val; return; }\n        int m = (l + r) / 2;\n        if (idx <= m) update(2*node, l, m, idx, val);\n        else update(2*node+1, m+1, r, idx, val);\n        tree[node] = tree[2*node] + tree[2*node+1];\n    }\n    long long query(int node, int l, int r, int ql, int qr) {\n        if (qr < l || r < ql) return 0;\n        if (ql <= l && r <= qr) return tree[node];\n        int m = (l + r) / 2;\n        return query(2*node, l, m, ql, qr) + query(2*node+1, m+1, r, ql, qr);\n    }\n};", "ref": null}, {"name": "Lazy Propagation", "usecase": "Range update + range query in O(log n) (e.g. \"add v to range [l,r]\", \"range sum after many range updates\").", "code": "struct LazySegTree {\n    int n;\n    vector<long long> tree, lazy;\n    LazySegTree(int n) : n(n), tree(4*n, 0), lazy(4*n, 0) {}\n    void push(int node, int l, int r) {\n        if (lazy[node] == 0) return;\n        tree[node] += (r - l + 1) * lazy[node];\n        if (l != r) { lazy[2*node] += lazy[node]; lazy[2*node+1] += lazy[node]; }\n        lazy[node] = 0;\n    }\n    void update(int node, int l, int r, int ql, int qr, long long val) {\n        push(node, l, r);\n        if (qr < l || r < ql) return;\n        if (ql <= l && r <= qr) { lazy[node] += val; push(node, l, r); return; }\n        int m = (l + r) / 2;\n        update(2*node, l, m, ql, qr, val);\n        update(2*node+1, m+1, r, ql, qr, val);\n        tree[node] = tree[2*node] + tree[2*node+1];\n    }\n    long long query(int node, int l, int r, int ql, int qr) {\n        push(node, l, r);\n        if (qr < l || r < ql) return 0;\n        if (ql <= l && r <= qr) return tree[node];\n        int m = (l + r) / 2;\n        return query(2*node, l, m, ql, qr) + query(2*node+1, m+1, r, ql, qr);\n    }\n};", "ref": null}, {"name": "Sparse Table", "usecase": "Answer idempotent range queries (min/max/gcd) in O(1) after O(n log n) preprocessing, when the array is static (no updates).", "code": "struct SparseTable {\n    vector<vector<int>> table;\n    vector<int> logTable;\n    SparseTable(vector<int>& a) {\n        int n = a.size();\n        int LOG = 32 - __builtin_clz(n);\n        table.assign(LOG, vector<int>(n));\n        logTable.assign(n + 1, 0);\n        for (int i = 2; i <= n; i++) logTable[i] = logTable[i/2] + 1;\n        table[0] = a;\n        for (int k = 1; k < LOG; k++)\n            for (int i = 0; i + (1 << k) <= n; i++)\n                table[k][i] = min(table[k-1][i], table[k-1][i + (1 << (k-1))]);\n    }\n    int queryMin(int l, int r) { // inclusive\n        int k = logTable[r - l + 1];\n        return min(table[k][l], table[k][r - (1 << k) + 1]);\n    }\n};", "ref": null}]}, {"num": 10, "title": "Graph Algorithms", "algos": [{"name": "Traversals \u2014 BFS", "usecase": "Shortest path in unweighted graphs, level-order exploration, connectivity check.", "code": "vector<int> bfsGraph(int src, vector<vector<int>>& adj, int n) {\n    vector<int> dist(n, -1);\n    queue<int> q;\n    dist[src] = 0; q.push(src);\n    while (!q.empty()) {\n        int u = q.front(); q.pop();\n        for (int v : adj[u]) if (dist[v] == -1) { dist[v] = dist[u] + 1; q.push(v); }\n    }\n    return dist;\n}", "ref": null}, {"name": "Traversals \u2014 DFS", "usecase": "Connectivity, cycle detection, topological sort, path existence.", "code": "void dfsGraph(int u, vector<vector<int>>& adj, vector<bool>& visited) {\n    visited[u] = true;\n    for (int v : adj[u]) if (!visited[v]) dfsGraph(v, adj, visited);\n}", "ref": null}, {"name": "Dijkstra", "usecase": "Single-source shortest path with non-negative weights, O((V+E) log V).", "code": "vector<long long> dijkstra(int src, vector<vector<pair<int,int>>>& adj, int n) {\n    vector<long long> dist(n, LLONG_MAX);\n    priority_queue<pair<long long,int>, vector<pair<long long,int>>, greater<>> pq;\n    dist[src] = 0; pq.push({0, src});\n    while (!pq.empty()) {\n        auto [d, u] = pq.top(); pq.pop();\n        if (d > dist[u]) continue;\n        for (auto [v, w] : adj[u]) {\n            if (dist[u] + w < dist[v]) {\n                dist[v] = dist[u] + w;\n                pq.push({dist[v], v});\n            }\n        }\n    }\n    return dist;\n}", "ref": null}, {"name": "Bellman-Ford", "usecase": "Single-source shortest path with negative edge weights, detects negative cycles, O(VE).", "code": "struct Edge { int u, v, w; };\n\nvector<long long> bellmanFord(int src, vector<Edge>& edges, int n, bool& hasNegCycle) {\n    vector<long long> dist(n, LLONG_MAX);\n    dist[src] = 0;\n    for (int i = 0; i < n - 1; i++)\n        for (auto& e : edges)\n            if (dist[e.u] != LLONG_MAX && dist[e.u] + e.w < dist[e.v])\n                dist[e.v] = dist[e.u] + e.w;\n    hasNegCycle = false;\n    for (auto& e : edges)\n        if (dist[e.u] != LLONG_MAX && dist[e.u] + e.w < dist[e.v]) hasNegCycle = true;\n    return dist;\n}", "ref": null}, {"name": "Floyd-Warshall", "usecase": "All-pairs shortest paths, O(V^3), works with negative weights (no negative cycles).", "code": "void floydWarshall(vector<vector<long long>>& dist, int n) {\n    for (int k = 0; k < n; k++)\n        for (int i = 0; i < n; i++)\n            for (int j = 0; j < n; j++)\n                if (dist[i][k] < LLONG_MAX && dist[k][j] < LLONG_MAX)\n                    dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j]);\n}", "ref": null}, {"name": "0-1 BFS", "usecase": "Shortest path when edge weights are only 0 or 1, O(V+E) using a deque instead of a priority queue.", "code": "vector<int> zeroOneBFS(int src, vector<vector<pair<int,int>>>& adj, int n) { // (neighbor, weight 0/1)\n    vector<int> dist(n, INT_MAX);\n    deque<int> dq;\n    dist[src] = 0; dq.push_back(src);\n    while (!dq.empty()) {\n        int u = dq.front(); dq.pop_front();\n        for (auto [v, w] : adj[u]) {\n            if (dist[u] + w < dist[v]) {\n                dist[v] = dist[u] + w;\n                if (w == 0) dq.push_front(v); else dq.push_back(v);\n            }\n        }\n    }\n    return dist;\n}", "ref": null}, {"name": "Prim (MST)", "usecase": "Minimum spanning tree via greedy vertex growth, O(E log V) \u2014 good for dense graphs.", "code": "long long primMST(vector<vector<pair<int,int>>>& adj, int n) {\n    vector<bool> inMST(n, false);\n    priority_queue<pair<int,int>, vector<pair<int,int>>, greater<>> pq; // (weight, node)\n    pq.push({0, 0});\n    long long total = 0;\n    int count = 0;\n    while (!pq.empty() && count < n) {\n        auto [w, u] = pq.top(); pq.pop();\n        if (inMST[u]) continue;\n        inMST[u] = true; total += w; count++;\n        for (auto [v, wt] : adj[u]) if (!inMST[v]) pq.push({wt, v});\n    }\n    return total;\n}", "ref": null}, {"name": "Kruskal (MST)", "usecase": "Minimum spanning tree via greedy edge sorting + Union-Find, O(E log E) \u2014 good for sparse graphs.", "code": "struct DSU {\n    vector<int> parent, rnk;\n    DSU(int n) : parent(n), rnk(n, 0) { iota(parent.begin(), parent.end(), 0); }\n    int find(int x) { return parent[x] == x ? x : parent[x] = find(parent[x]); }\n    bool unite(int a, int b) {\n        a = find(a); b = find(b);\n        if (a == b) return false;\n        if (rnk[a] < rnk[b]) swap(a, b);\n        parent[b] = a;\n        if (rnk[a] == rnk[b]) rnk[a]++;\n        return true;\n    }\n};\n\nlong long kruskalMST(vector<Edge>& edges, int n) {\n    sort(edges.begin(), edges.end(), [](const Edge& a, const Edge& b) { return a.w < b.w; });\n    DSU dsu(n);\n    long long total = 0;\n    for (auto& e : edges) if (dsu.unite(e.u, e.v)) total += e.w;\n    return total;\n}", "ref": null}, {"name": "Union Find (DSU)", "usecase": "Track connected components under unions, cycle detection in undirected graphs, Kruskal's MST.", "code": "", "ref": null}, {"name": "Tarjan Bridge", "usecase": "Find edges whose removal disconnects the graph (critical connections / network reliability).", "code": "vector<int> disc, low;\nint timerB = 0;\nvector<vector<pair<int,int>>> adjB; // (neighbor, edge_id)\nvector<array<int,2>> bridges;\n\nvoid bridgeDFS(int u, int parentEdge) {\n    disc[u] = low[u] = timerB++;\n    for (auto [v, id] : adjB[u]) {\n        if (id == parentEdge) continue;\n        if (disc[v] != -1) low[u] = min(low[u], disc[v]);\n        else {\n            bridgeDFS(v, id);\n            low[u] = min(low[u], low[v]);\n            if (low[v] > disc[u]) bridges.push_back({u, v});\n        }\n    }\n}", "ref": null}, {"name": "Tarjan Articulation Point", "usecase": "Find vertices whose removal disconnects the graph (critical nodes in a network).", "code": "vector<bool> isArticulation;\nvoid articulationDFS(int u, int parent) {\n    disc[u] = low[u] = timerB++;\n    int children = 0;\n    for (auto [v, id] : adjB[u]) {\n        if (v == parent) continue;\n        if (disc[v] != -1) low[u] = min(low[u], disc[v]);\n        else {\n            children++;\n            articulationDFS(v, u);\n            low[u] = min(low[u], low[v]);\n            if (parent != -1 && low[v] >= disc[u]) isArticulation[u] = true;\n        }\n    }\n    if (parent == -1 && children > 1) isArticulation[u] = true;\n}", "ref": null}, {"name": "Kosaraju SCC", "usecase": "Find strongly connected components in O(V+E) using two DFS passes.", "code": "vector<vector<int>> adjK, adjKRev;\nvector<bool> visitedK;\nvector<int> order, component;\n\nvoid dfs1(int u) {\n    visitedK[u] = true;\n    for (int v : adjK[u]) if (!visitedK[v]) dfs1(v);\n    order.push_back(u);\n}\nvoid dfs2(int u, int compId) {\n    component[u] = compId;\n    for (int v : adjKRev[u]) if (component[v] == -1) dfs2(v, compId);\n}\nint kosaraju(int n) {\n    visitedK.assign(n, false);\n    component.assign(n, -1);\n    for (int i = 0; i < n; i++) if (!visitedK[i]) dfs1(i);\n    int compId = 0;\n    for (int i = n - 1; i >= 0; i--) {\n        int u = order[i];\n        if (component[u] == -1) dfs2(u, compId++);\n    }\n    return compId; // number of SCCs\n}", "ref": null}, {"name": "Tarjan SCC", "usecase": "Find strongly connected components in a single DFS pass, O(V+E).", "code": "vector<int> discT, lowT, sccId;\nvector<bool> onStack;\nstack<int> stT;\nint timerT = 0, sccCount = 0;\n\nvoid tarjanSCC(int u, vector<vector<int>>& adj) {\n    discT[u] = lowT[u] = timerT++;\n    stT.push(u); onStack[u] = true;\n    for (int v : adj[u]) {\n        if (discT[v] == -1) { tarjanSCC(v, adj); lowT[u] = min(lowT[u], lowT[v]); }\n        else if (onStack[v]) lowT[u] = min(lowT[u], discT[v]);\n    }\n    if (lowT[u] == discT[u]) {\n        while (true) {\n            int v = stT.top(); stT.pop(); onStack[v] = false;\n            sccId[v] = sccCount;\n            if (v == u) break;\n        }\n        sccCount++;\n    }\n}", "ref": null}, {"name": "Topological Sort (DFS)", "usecase": "Order nodes of a DAG so every edge points forward (e.g. \"course schedule\", build dependency order).", "code": "void topoDFS(int u, vector<vector<int>>& adj, vector<bool>& visited, stack<int>& st) {\n    visited[u] = true;\n    for (int v : adj[u]) if (!visited[v]) topoDFS(v, adj, visited, st);\n    st.push(u);\n}\nvector<int> topologicalSortDFS(vector<vector<int>>& adj, int n) {\n    vector<bool> visited(n, false);\n    stack<int> st;\n    for (int i = 0; i < n; i++) if (!visited[i]) topoDFS(i, adj, visited, st);\n    vector<int> res;\n    while (!st.empty()) { res.push_back(st.top()); st.pop(); }\n    return res;\n}", "ref": null}, {"name": "Kahn's Algorithm", "usecase": "Topological sort via BFS + in-degree counting; also detects cycles in a DAG.", "code": "vector<int> kahnTopoSort(vector<vector<int>>& adj, int n) {\n    vector<int> indeg(n, 0);\n    for (int u = 0; u < n; u++) for (int v : adj[u]) indeg[v]++;\n    queue<int> q;\n    for (int i = 0; i < n; i++) if (indeg[i] == 0) q.push(i);\n    vector<int> order;\n    while (!q.empty()) {\n        int u = q.front(); q.pop();\n        order.push_back(u);\n        for (int v : adj[u]) if (--indeg[v] == 0) q.push(v);\n    }\n    return order; // if order.size() < n, a cycle exists\n}", "ref": null}, {"name": "Euler Path / Euler Circuit / Hierholzer's Algorithm", "usecase": "Find a path/circuit that traverses every edge exactly once (route planning, DNA sequencing, \"reconstruct itinerary\").", "code": "unordered_map<int, multiset<int>> adjE;\nvoid hierholzer(int u, vector<int>& circuit) {\n    while (!adjE[u].empty()) {\n        int v = *adjE[u].begin();\n        adjE[u].erase(adjE[u].begin());\n        hierholzer(v, circuit);\n    }\n    circuit.push_back(u);\n}\n// Call hierholzer(start, circuit) then reverse(circuit.begin(), circuit.end());", "ref": null}, {"name": "Bipartite Check", "usecase": "Determine if a graph can be 2-colored (e.g. matching problems, \"is graph bipartite\").", "code": "bool isBipartite(vector<vector<int>>& adj, int n) {\n    vector<int> color(n, -1);\n    for (int start = 0; start < n; start++) {\n        if (color[start] != -1) continue;\n        queue<int> q; q.push(start); color[start] = 0;\n        while (!q.empty()) {\n            int u = q.front(); q.pop();\n            for (int v : adj[u]) {\n                if (color[v] == -1) { color[v] = color[u] ^ 1; q.push(v); }\n                else if (color[v] == color[u]) return false;\n            }\n        }\n    }\n    return true;\n}", "ref": null}, {"name": "Cycle Detection", "usecase": "Detect cycles in directed (via coloring/DFS state) or undirected (via DSU/visited-parent) graphs.", "code": "// Directed graph cycle detection using 3-color DFS\nbool cycleDFS(int u, vector<vector<int>>& adj, vector<int>& state) {\n    state[u] = 1; // visiting\n    for (int v : adj[u]) {\n        if (state[v] == 1) return true;               // back edge -> cycle\n        if (state[v] == 0 && cycleDFS(v, adj, state)) return true;\n    }\n    state[u] = 2; // done\n    return false;\n}", "ref": null}, {"name": "Multi-source BFS", "usecase": "Simultaneous BFS from multiple starting nodes (e.g. \"rotting oranges\", \"walls and gates\", nearest-source distance maps).", "code": "vector<int> multiSourceBFS(vector<int>& sources, vector<vector<int>>& adj, int n) {\n    vector<int> dist(n, -1);\n    queue<int> q;\n    for (int s : sources) { dist[s] = 0; q.push(s); }\n    while (!q.empty()) {\n        int u = q.front(); q.pop();\n        for (int v : adj[u]) if (dist[v] == -1) { dist[v] = dist[u] + 1; q.push(v); }\n    }\n    return dist;\n}", "ref": null}]}, {"num": 11, "title": "Dynamic Programming", "algos": [{"name": "1D DP", "usecase": "State depends on a single index (e.g. \"climbing stairs\", \"house robber\").", "code": "int climbStairs(int n) {\n    if (n <= 2) return n;\n    vector<int> dp(n + 1);\n    dp[1] = 1; dp[2] = 2;\n    for (int i = 3; i <= n; i++) dp[i] = dp[i-1] + dp[i-2];\n    return dp[n];\n}", "ref": null}, {"name": "2D DP", "usecase": "State depends on two indices (e.g. \"unique paths\", \"minimum path sum\").", "code": "int uniquePaths(int m, int n) {\n    vector<vector<int>> dp(m, vector<int>(n, 1));\n    for (int i = 1; i < m; i++)\n        for (int j = 1; j < n; j++)\n            dp[i][j] = dp[i-1][j] + dp[i][j-1];\n    return dp[m-1][n-1];\n}", "ref": null}, {"name": "Knapsack (0/1)", "usecase": "Choose items with weight/value constraints to maximize value under a capacity (resource allocation).", "code": "int knapsack01(vector<int>& weights, vector<int>& values, int capacity) {\n    int n = weights.size();\n    vector<vector<int>> dp(n + 1, vector<int>(capacity + 1, 0));\n    for (int i = 1; i <= n; i++)\n        for (int w = 0; w <= capacity; w++) {\n            dp[i][w] = dp[i-1][w];\n            if (weights[i-1] <= w)\n                dp[i][w] = max(dp[i][w], dp[i-1][w - weights[i-1]] + values[i-1]);\n        }\n    return dp[n][capacity];\n}", "ref": null}, {"name": "LIS (Longest Increasing Subsequence)", "usecase": "Find the longest strictly increasing subsequence in O(n log n) (e.g. patience sorting, stock analysis).", "code": "int lengthOfLIS(vector<int>& nums) {\n    vector<int> tails;\n    for (int x : nums) {\n        auto it = lower_bound(tails.begin(), tails.end(), x);\n        if (it == tails.end()) tails.push_back(x);\n        else *it = x;\n    }\n    return tails.size();\n}", "ref": null}, {"name": "LCS (Longest Common Subsequence)", "usecase": "Find the longest subsequence common to two strings (diff tools, DNA alignment).", "code": "int longestCommonSubsequence(const string& a, const string& b) {\n    int n = a.size(), m = b.size();\n    vector<vector<int>> dp(n + 1, vector<int>(m + 1, 0));\n    for (int i = 1; i <= n; i++)\n        for (int j = 1; j <= m; j++)\n            dp[i][j] = (a[i-1] == b[j-1]) ? dp[i-1][j-1] + 1 : max(dp[i-1][j], dp[i][j-1]);\n    return dp[n][m];\n}", "ref": null}, {"name": "Edit Distance", "usecase": "Minimum operations (insert/delete/replace) to transform one string into another (spell-check, diffing).", "code": "int editDistance(const string& a, const string& b) {\n    int n = a.size(), m = b.size();\n    vector<vector<int>> dp(n + 1, vector<int>(m + 1));\n    for (int i = 0; i <= n; i++) dp[i][0] = i;\n    for (int j = 0; j <= m; j++) dp[0][j] = j;\n    for (int i = 1; i <= n; i++)\n        for (int j = 1; j <= m; j++)\n            dp[i][j] = (a[i-1] == b[j-1]) ? dp[i-1][j-1]\n                        : 1 + min({dp[i-1][j], dp[i][j-1], dp[i-1][j-1]});\n    return dp[n][m];\n}", "ref": null}, {"name": "Coin Change", "usecase": "Minimum coins to make an amount (or count ways) \u2014 classic unbounded knapsack variant.", "code": "int coinChange(vector<int>& coins, int amount) {\n    vector<int> dp(amount + 1, INT_MAX);\n    dp[0] = 0;\n    for (int a = 1; a <= amount; a++)\n        for (int c : coins)\n            if (c <= a && dp[a-c] != INT_MAX) dp[a] = min(dp[a], dp[a-c] + 1);\n    return dp[amount] == INT_MAX ? -1 : dp[amount];\n}", "ref": null}, {"name": "Bitmask DP", "usecase": "State includes a subset of items encoded as bits \u2014 traveling salesman, assignment problems.", "code": "int tsp(vector<vector<int>>& dist, int n) {\n    vector<vector<int>> dp(1 << n, vector<int>(n, INT_MAX));\n    dp[1][0] = 0; // start at node 0\n    for (int mask = 1; mask < (1 << n); mask++)\n        for (int u = 0; u < n; u++) {\n            if (!(mask & (1 << u)) || dp[mask][u] == INT_MAX) continue;\n            for (int v = 0; v < n; v++) {\n                if (mask & (1 << v)) continue;\n                int nmask = mask | (1 << v);\n                dp[nmask][v] = min(dp[nmask][v], dp[mask][u] + dist[u][v]);\n            }\n        }\n    int best = INT_MAX;\n    for (int u = 1; u < n; u++)\n        if (dp[(1<<n)-1][u] != INT_MAX) best = min(best, dp[(1<<n)-1][u] + dist[u][0]);\n    return best;\n}", "ref": null}, {"name": "Digit DP", "usecase": "Count numbers in a range satisfying a digit-wise property (e.g. \"count numbers with no repeated digits \u2264 N\").", "code": "string numStr;\nvector<vector<int>> memo;\nint digitDP(int pos, int mask, bool tight) {\n    if (pos == (int)numStr.size()) return 1;\n    if (!tight && memo[pos][mask] != -1) return memo[pos][mask];\n    int limit = tight ? numStr[pos] - '0' : 9;\n    int res = 0;\n    for (int d = 0; d <= limit; d++) {\n        if (mask & (1 << d)) continue; // example constraint: no repeated digits\n        res += digitDP(pos + 1, mask | (1 << d), tight && d == limit);\n    }\n    if (!tight) memo[pos][mask] = res;\n    return res;\n}", "ref": null}, {"name": "Tree DP", "usecase": "", "code": "", "ref": "Tree DP"}, {"name": "Interval DP", "usecase": "State depends on a subarray [i, j] \u2014 merging/partitioning problems (e.g. \"burst balloons\", \"matrix chain multiplication\").", "code": "int matrixChainOrder(vector<int>& dims) { // dims.size() = n+1 for n matrices\n    int n = dims.size() - 1;\n    vector<vector<int>> dp(n, vector<int>(n, 0));\n    for (int len = 2; len <= n; len++)\n        for (int i = 0; i + len - 1 < n; i++) {\n            int j = i + len - 1;\n            dp[i][j] = INT_MAX;\n            for (int k = i; k < j; k++)\n                dp[i][j] = min(dp[i][j], dp[i][k] + dp[k+1][j] + dims[i]*dims[k+1]*dims[j+1]);\n        }\n    return dp[0][n-1];\n}", "ref": null}, {"name": "State DP", "usecase": "General term for DP where the state captures extra context beyond position (e.g. \"best time to buy/sell stock with cooldown\" \u2014 state = holding/not holding).", "code": "int maxProfitCooldown(vector<int>& prices) {\n    int n = prices.size();\n    if (n == 0) return 0;\n    vector<int> hold(n), sold(n), rest(n);\n    hold[0] = -prices[0];\n    for (int i = 1; i < n; i++) {\n        hold[i] = max(hold[i-1], rest[i-1] - prices[i]);\n        sold[i] = hold[i-1] + prices[i];\n        rest[i] = max(rest[i-1], sold[i-1]);\n    }\n    return max(sold[n-1], rest[n-1]);\n}", "ref": null}]}, {"num": 12, "title": "Greedy", "algos": [{"name": "Interval Scheduling", "usecase": "Select the maximum number of non-overlapping intervals (meeting room scheduling).", "code": "int maxNonOverlapping(vector<pair<int,int>> intervals) { // (start, end)\n    sort(intervals.begin(), intervals.end(), [](auto& a, auto& b) { return a.second < b.second; });\n    int count = 0, lastEnd = INT_MIN;\n    for (auto& [s, e] : intervals)\n        if (s >= lastEnd) { count++; lastEnd = e; }\n    return count;\n}", "ref": null}, {"name": "Activity Selection", "usecase": "Same greedy pattern as interval scheduling \u2014 maximize activities given one shared resource.", "code": "", "ref": null}, {"name": "Huffman Coding", "usecase": "Build a prefix-free binary code minimizing expected code length (data compression).", "code": "struct HuffNode { int freq; char ch; HuffNode *l = nullptr, *r = nullptr; };\nstruct Cmp { bool operator()(HuffNode* a, HuffNode* b) { return a->freq > b->freq; } };\n\nHuffNode* buildHuffman(unordered_map<char,int>& freq) {\n    priority_queue<HuffNode*, vector<HuffNode*>, Cmp> pq;\n    for (auto& [c, f] : freq) pq.push(new HuffNode{f, c});\n    while (pq.size() > 1) {\n        HuffNode* a = pq.top(); pq.pop();\n        HuffNode* b = pq.top(); pq.pop();\n        HuffNode* parent = new HuffNode{a->freq + b->freq, '\\0', a, b};\n        pq.push(parent);\n    }\n    return pq.top();\n}\nvoid buildCodes(HuffNode* node, string code, unordered_map<char,string>& codes) {\n    if (!node) return;\n    if (!node->l && !node->r) { codes[node->ch] = code; return; }\n    buildCodes(node->l, code + \"0\", codes);\n    buildCodes(node->r, code + \"1\", codes);\n}", "ref": null}, {"name": "Job Scheduling", "usecase": "Schedule jobs with deadlines/profits to maximize total profit (e.g. \"job sequencing problem\").", "code": "struct Job { int deadline, profit; };\nint jobScheduling(vector<Job>& jobs, int maxDeadline) {\n    sort(jobs.begin(), jobs.end(), [](Job& a, Job& b) { return a.profit > b.profit; });\n    vector<bool> slot(maxDeadline + 1, false);\n    int total = 0;\n    for (auto& j : jobs)\n        for (int t = min(j.deadline, maxDeadline); t > 0; t--)\n            if (!slot[t]) { slot[t] = true; total += j.profit; break; }\n    return total;\n}", "ref": null}, {"name": "Gas Station", "usecase": "Find a starting index to complete a circular tour, if one exists (e.g. \"gas station\" LeetCode).", "code": "int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {\n    int total = 0, tank = 0, start = 0;\n    for (int i = 0; i < (int)gas.size(); i++) {\n        int diff = gas[i] - cost[i];\n        total += diff; tank += diff;\n        if (tank < 0) { start = i + 1; tank = 0; }\n    }\n    return total >= 0 ? start : -1;\n}", "ref": null}, {"name": "Fractional Knapsack", "usecase": "Maximize value when items can be split (unlike 0/1 knapsack) \u2014 greedy by value/weight ratio.", "code": "double fractionalKnapsack(vector<pair<int,int>>& items, int capacity) { // (weight, value)\n    sort(items.begin(), items.end(), [](auto& a, auto& b) {\n        return (double)a.second / a.first > (double)b.second / b.first;\n    });\n    double total = 0;\n    for (auto& [w, v] : items) {\n        if (capacity <= 0) break;\n        int take = min(w, capacity);\n        total += (double)v * take / w;\n        capacity -= take;\n    }\n    return total;\n}", "ref": null}]}, {"num": 13, "title": "Backtracking", "algos": [{"name": "Subsets", "usecase": "Generate all subsets of a set (power set), 2^n possibilities.", "code": "void subsetsHelper(vector<int>& nums, int idx, vector<int>& cur, vector<vector<int>>& res) {\n    res.push_back(cur);\n    for (int i = idx; i < (int)nums.size(); i++) {\n        cur.push_back(nums[i]);\n        subsetsHelper(nums, i + 1, cur, res);\n        cur.pop_back();\n    }\n}", "ref": null}, {"name": "Permutations", "usecase": "Generate all orderings of a set, n! possibilities (e.g. scheduling all task orders).", "code": "void permuteHelper(vector<int>& nums, vector<bool>& used, vector<int>& cur, vector<vector<int>>& res) {\n    if (cur.size() == nums.size()) { res.push_back(cur); return; }\n    for (int i = 0; i < (int)nums.size(); i++) {\n        if (used[i]) continue;\n        used[i] = true; cur.push_back(nums[i]);\n        permuteHelper(nums, used, cur, res);\n        cur.pop_back(); used[i] = false;\n    }\n}", "ref": null}, {"name": "N Queens", "usecase": "Place n queens on an n\u00d7n board so none attack each other \u2014 classic constraint satisfaction backtracking.", "code": "bool isSafe(vector<int>& cols, int row, int col) {\n    for (int r = 0; r < row; r++)\n        if (cols[r] == col || abs(cols[r] - col) == row - r) return false;\n    return true;\n}\nvoid solveNQueens(vector<int>& cols, int row, int n, int& count) {\n    if (row == n) { count++; return; }\n    for (int col = 0; col < n; col++)\n        if (isSafe(cols, row, col)) {\n            cols[row] = col;\n            solveNQueens(cols, row + 1, n, count);\n        }\n}", "ref": null}, {"name": "Sudoku", "usecase": "Fill a partially-completed 9x9 grid satisfying row/col/box constraints \u2014 constraint backtracking.", "code": "bool isValidSudoku(vector<vector<char>>& board, int row, int col, char c) {\n    for (int i = 0; i < 9; i++) {\n        if (board[row][i] == c || board[i][col] == c) return false;\n        if (board[3*(row/3) + i/3][3*(col/3) + i%3] == c) return false;\n    }\n    return true;\n}\nbool solveSudoku(vector<vector<char>>& board) {\n    for (int r = 0; r < 9; r++)\n        for (int c = 0; c < 9; c++)\n            if (board[r][c] == '.') {\n                for (char d = '1'; d <= '9'; d++)\n                    if (isValidSudoku(board, r, c, d)) {\n                        board[r][c] = d;\n                        if (solveSudoku(board)) return true;\n                        board[r][c] = '.';\n                    }\n                return false;\n            }\n    return true;\n}", "ref": null}, {"name": "Combination Sum", "usecase": "Find all combinations of numbers that sum to a target, with reuse allowed (e.g. \"combination sum\").", "code": "void combinationSumHelper(vector<int>& candidates, int target, int idx,\n                            vector<int>& cur, vector<vector<int>>& res) {\n    if (target == 0) { res.push_back(cur); return; }\n    if (target < 0) return;\n    for (int i = idx; i < (int)candidates.size(); i++) {\n        cur.push_back(candidates[i]);\n        combinationSumHelper(candidates, target - candidates[i], i, cur, res);\n        cur.pop_back();\n    }\n}", "ref": null}]}, {"num": 14, "title": "String Algorithms", "algos": [{"name": "Trie", "usecase": "Prefix search, autocomplete, word dictionaries in O(word length) per operation.", "code": "struct TrieNode {\n    TrieNode* children[26] = {};\n    bool isEnd = false;\n};\nclass Trie {\n    TrieNode* root = new TrieNode();\npublic:\n    void insert(const string& word) {\n        TrieNode* node = root;\n        for (char c : word) {\n            int i = c - 'a';\n            if (!node->children[i]) node->children[i] = new TrieNode();\n            node = node->children[i];\n        }\n        node->isEnd = true;\n    }\n    bool search(const string& word) {\n        TrieNode* node = root;\n        for (char c : word) {\n            int i = c - 'a';\n            if (!node->children[i]) return false;\n            node = node->children[i];\n        }\n        return node->isEnd;\n    }\n    bool startsWith(const string& prefix) {\n        TrieNode* node = root;\n        for (char c : prefix) {\n            int i = c - 'a';\n            if (!node->children[i]) return false;\n            node = node->children[i];\n        }\n        return true;\n    }\n};", "ref": null}, {"name": "KMP (Knuth-Morris-Pratt)", "usecase": "Substring search in O(n + m) using a failure function to avoid re-scanning (text editors, DNA search).", "code": "vector<int> buildLPS(const string& pat) {\n    int m = pat.size();\n    vector<int> lps(m, 0);\n    int len = 0, i = 1;\n    while (i < m) {\n        if (pat[i] == pat[len]) lps[i++] = ++len;\n        else if (len) len = lps[len - 1];\n        else lps[i++] = 0;\n    }\n    return lps;\n}\nvector<int> kmpSearch(const string& text, const string& pat) {\n    vector<int> lps = buildLPS(pat), matches;\n    int i = 0, j = 0;\n    while (i < (int)text.size()) {\n        if (text[i] == pat[j]) { i++; j++; }\n        if (j == (int)pat.size()) { matches.push_back(i - j); j = lps[j - 1]; }\n        else if (i < (int)text.size() && text[i] != pat[j]) {\n            if (j) j = lps[j - 1]; else i++;\n        }\n    }\n    return matches;\n}", "ref": null}, {"name": "Z Algorithm", "usecase": "Compute, for each position, the length of the longest prefix match with the string itself \u2014 pattern matching, string periodicity.", "code": "vector<int> zFunction(const string& s) {\n    int n = s.size();\n    vector<int> z(n, 0);\n    int l = 0, r = 0;\n    for (int i = 1; i < n; i++) {\n        if (i < r) z[i] = min(r - i, z[i - l]);\n        while (i + z[i] < n && s[z[i]] == s[i + z[i]]) z[i]++;\n        if (i + z[i] > r) { l = i; r = i + z[i]; }\n    }\n    return z;\n}\n// To find pattern P in text T: run zFunction(P + '#' + T)", "ref": null}, {"name": "Rabin-Karp", "usecase": "Substring search using rolling hash, O(n + m) average \u2014 good for multi-pattern matching.", "code": "vector<int> rabinKarp(const string& text, const string& pat) {\n    int n = text.size(), m = pat.size();\n    if (m > n) return {};\n    const long long base = 131, mod = 1'000'000'007;\n    long long patHash = 0, curHash = 0, power = 1;\n    for (int i = 0; i < m - 1; i++) power = (power * base) % mod;\n    for (int i = 0; i < m; i++) {\n        patHash = (patHash * base + pat[i]) % mod;\n        curHash = (curHash * base + text[i]) % mod;\n    }\n    vector<int> matches;\n    for (int i = 0; i <= n - m; i++) {\n        if (curHash == patHash && text.substr(i, m) == pat) matches.push_back(i);\n        if (i < n - m) {\n            curHash = (curHash - text[i] * power % mod + mod) % mod;\n            curHash = (curHash * base + text[i + m]) % mod;\n        }\n    }\n    return matches;\n}", "ref": null}, {"name": "Rolling Hash", "usecase": "", "code": "", "ref": "Rolling Hash"}, {"name": "Manacher's Algorithm", "usecase": "Find the longest palindromic substring in O(n) (string processing, DNA palindrome detection).", "code": "string longestPalindrome(const string& s) {\n    string t = \"#\";\n    for (char c : s) { t += c; t += '#'; }\n    int n = t.size();\n    vector<int> p(n, 0);\n    int center = 0, right = 0;\n    for (int i = 0; i < n; i++) {\n        if (i < right) p[i] = min(right - i, p[2*center - i]);\n        while (i - p[i] - 1 >= 0 && i + p[i] + 1 < n && t[i - p[i] - 1] == t[i + p[i] + 1]) p[i]++;\n        if (i + p[i] > right) { center = i; right = i + p[i]; }\n    }\n    int maxLen = 0, centerIdx = 0;\n    for (int i = 0; i < n; i++) if (p[i] > maxLen) { maxLen = p[i]; centerIdx = i; }\n    int start = (centerIdx - maxLen) / 2;\n    return s.substr(start, maxLen);\n}", "ref": null}, {"name": "Prefix Function", "usecase": "Same as KMP's LPS array \u2014 used standalone for string period detection, string compression.", "code": "", "ref": null}, {"name": "Suffix Array (basic)", "usecase": "Sorted array of all suffixes \u2014 supports substring search, LCP queries, string matching (O(n log n) build).", "code": "vector<int> buildSuffixArray(const string& s) {\n    int n = s.size();\n    vector<int> sa(n), rank_(n), tmp(n);\n    iota(sa.begin(), sa.end(), 0);\n    for (int i = 0; i < n; i++) rank_[i] = s[i];\n    for (int k = 1; k < n; k <<= 1) {\n        auto cmp = [&](int a, int b) {\n            if (rank_[a] != rank_[b]) return rank_[a] < rank_[b];\n            int ra = a + k < n ? rank_[a + k] : -1;\n            int rb = b + k < n ? rank_[b + k] : -1;\n            return ra < rb;\n        };\n        sort(sa.begin(), sa.end(), cmp);\n        tmp[sa[0]] = 0;\n        for (int i = 1; i < n; i++)\n            tmp[sa[i]] = tmp[sa[i-1]] + (cmp(sa[i-1], sa[i]) ? 1 : 0);\n        rank_ = tmp;\n    }\n    return sa;\n}", "ref": null}, {"name": "Suffix Automaton (advanced)", "usecase": "Compact automaton representing all substrings of a string \u2014 counting distinct substrings, longest common substring across many strings, O(n) states.", "code": "struct SuffixAutomaton {\n    struct State { int len, link; map<char,int> next; };\n    vector<State> st;\n    int last;\n    SuffixAutomaton() { st.push_back({0, -1, {}}); last = 0; }\n    void extend(char c) {\n        int cur = st.size();\n        st.push_back({st[last].len + 1, -1, {}});\n        int p = last;\n        while (p != -1 && !st[p].next.count(c)) { st[p].next[c] = cur; p = st[p].link; }\n        if (p == -1) st[cur].link = 0;\n        else {\n            int q = st[p].next[c];\n            if (st[p].len + 1 == st[q].len) st[cur].link = q;\n            else {\n                int clone = st.size();\n                st.push_back({st[p].len + 1, st[q].link, st[q].next});\n                while (p != -1 && st[p].next[c] == q) { st[p].next[c] = clone; p = st[p].link; }\n                st[q].link = st[cur].link = clone;\n            }\n        }\n        last = cur;\n    }\n};", "ref": null}]}, {"num": 15, "title": "Bit Manipulation", "algos": [{"name": "XOR Tricks", "usecase": "Find the single non-duplicate element, swap without temp variable, detect differing bits.", "code": "int singleNumber(vector<int>& nums) { // every element appears twice except one\n    int result = 0;\n    for (int x : nums) result ^= x;\n    return result;\n}", "ref": null}, {"name": "Bitmasking", "usecase": "Represent subsets/states compactly for DP or brute-force enumeration.", "code": "for (int mask = 0; mask < (1 << n); mask++) {\n    for (int i = 0; i < n; i++)\n        if (mask & (1 << i)) { /* i is in the subset */ }\n}", "ref": null}, {"name": "Brian Kernighan's Algorithm", "usecase": "Count set bits, or clear the lowest set bit efficiently \u2014 O(number of set bits).", "code": "int countSetBits(int n) {\n    int count = 0;\n    while (n) { n &= (n - 1); count++; }\n    return count;\n}", "ref": null}, {"name": "Power of Two Tricks", "usecase": "Check/compute powers of two quickly (memory alignment, hashing table sizing).", "code": "bool isPowerOfTwo(int n) { return n > 0 && (n & (n - 1)) == 0; }\nint nextPowerOfTwo(int n) {\n    int p = 1;\n    while (p < n) p <<= 1;\n    return p;\n}", "ref": null}, {"name": "Gray Code", "usecase": "Generate sequences where consecutive values differ by exactly one bit (error correction, rotary encoders).", "code": "vector<int> grayCode(int n) {\n    vector<int> res;\n    for (int i = 0; i < (1 << n); i++) res.push_back(i ^ (i >> 1));\n    return res;\n}", "ref": null}]}, {"num": 16, "title": "Number Theory", "algos": [{"name": "GCD / LCM", "usecase": "Reduce fractions, find common cycle lengths, modular arithmetic basics.", "code": "long long gcd(long long a, long long b) { return b == 0 ? a : gcd(b, a % b); }\nlong long lcm(long long a, long long b) { return a / gcd(a, b) * b; }", "ref": null}, {"name": "Extended Euclid", "usecase": "Find x, y such that ax + by = gcd(a,b) \u2014 used for modular inverse computation.", "code": "long long extGcd(long long a, long long b, long long& x, long long& y) {\n    if (b == 0) { x = 1; y = 0; return a; }\n    long long x1, y1;\n    long long g = extGcd(b, a % b, x1, y1);\n    x = y1;\n    y = x1 - (a / b) * y1;\n    return g;\n}", "ref": null}, {"name": "Sieve of Eratosthenes", "usecase": "Precompute all primes up to N in O(N log log N) \u2014 prime queries, factorization prep.", "code": "vector<bool> sieve(int n) {\n    vector<bool> isPrime(n + 1, true);\n    isPrime[0] = isPrime[1] = false;\n    for (int i = 2; (long long)i * i <= n; i++)\n        if (isPrime[i])\n            for (int j = i * i; j <= n; j += i) isPrime[j] = false;\n    return isPrime;\n}", "ref": null}, {"name": "Prime Factorization", "usecase": "Decompose a number into prime factors (divisor counting, GCD-related problems).", "code": "vector<pair<long long,int>> primeFactorize(long long n) {\n    vector<pair<long long,int>> factors;\n    for (long long p = 2; p * p <= n; p++) {\n        if (n % p == 0) {\n            int cnt = 0;\n            while (n % p == 0) { n /= p; cnt++; }\n            factors.push_back({p, cnt});\n        }\n    }\n    if (n > 1) factors.push_back({n, 1});\n    return factors;\n}", "ref": null}, {"name": "Modular Arithmetic / Fast Exponentiation", "usecase": "Compute (base^exp) % mod in O(log exp) \u2014 used across combinatorics, cryptography.", "code": "long long power(long long base, long long exp, long long mod) {\n    long long result = 1;\n    base %= mod;\n    while (exp > 0) {\n        if (exp & 1) result = result * base % mod;\n        base = base * base % mod;\n        exp >>= 1;\n    }\n    return result;\n}", "ref": null}, {"name": "Modular Inverse", "usecase": "Compute division under a modulus (needed for modular combinatorics, e.g. nCr mod p).", "code": "long long modInverse(long long a, long long mod) { // mod must be prime (Fermat's little theorem)\n    return power(a, mod - 2, mod);\n}", "ref": null}, {"name": "Euler Totient", "usecase": "Count integers \u2264 n coprime to n \u2014 used in modular arithmetic, cryptography (RSA).", "code": "long long eulerTotient(long long n) {\n    long long result = n;\n    for (long long p = 2; p * p <= n; p++) {\n        if (n % p == 0) {\n            while (n % p == 0) n /= p;\n            result -= result / p;\n        }\n    }\n    if (n > 1) result -= result / n;\n    return result;\n}", "ref": null}, {"name": "Chinese Remainder Theorem (advanced)", "usecase": "Solve a system of congruences x \u2261 r_i (mod m_i) for pairwise coprime moduli \u2014 scheduling, cryptography.", "code": "long long crt(vector<long long>& rem, vector<long long>& mod) {\n    long long M = 1;\n    for (long long m : mod) M *= m;\n    long long result = 0;\n    for (int i = 0; i < (int)rem.size(); i++) {\n        long long Mi = M / mod[i];\n        long long x, y;\n        extGcd(Mi, mod[i], x, y);\n        result = (result + rem[i] * Mi % M * ((x % mod[i] + mod[i]) % mod[i])) % M;\n    }\n    return (result + M) % M;\n}", "ref": null}]}, {"num": 17, "title": "Geometry (Rare)", "algos": [{"name": "Orientation Test", "usecase": "Determine if three points make a clockwise, counter-clockwise, or collinear turn \u2014 building block for convex hull, line intersection.", "code": "struct Point { long long x, y; };\nint orientation(Point p, Point q, Point r) {\n    long long val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);\n    if (val == 0) return 0;      // collinear\n    return (val > 0) ? 1 : 2;    // 1 = clockwise, 2 = counter-clockwise\n}", "ref": null}, {"name": "Convex Hull (Graham Scan / Andrew's Monotone Chain)", "usecase": "Find the smallest convex polygon enclosing a set of points (collision detection, image processing).", "code": "vector<Point> convexHull(vector<Point> pts) {\n    int n = pts.size(), k = 0;\n    if (n < 3) return pts;\n    sort(pts.begin(), pts.end(), [](Point a, Point b) {\n        return a.x < b.x || (a.x == b.x && a.y < b.y);\n    });\n    vector<Point> hull(2 * n);\n    auto cross = [](Point O, Point A, Point B) {\n        return (A.x - O.x) * (B.y - O.y) - (A.y - O.y) * (B.x - O.x);\n    };\n    for (int i = 0; i < n; i++) {\n        while (k >= 2 && cross(hull[k-2], hull[k-1], pts[i]) <= 0) k--;\n        hull[k++] = pts[i];\n    }\n    int lower = k + 1;\n    for (int i = n - 2; i >= 0; i--) {\n        while (k >= lower && cross(hull[k-2], hull[k-1], pts[i]) <= 0) k--;\n        hull[k++] = pts[i];\n    }\n    hull.resize(k - 1);\n    return hull;\n}", "ref": null}, {"name": "Line Sweep (basic)", "usecase": "Process geometric events (intervals, segments) in sorted order to detect overlaps/intersections efficiently (e.g. \"meeting rooms II\", rectangle overlap area).", "code": "int minMeetingRooms(vector<pair<int,int>>& intervals) {\n    vector<int> starts, ends;\n    for (auto& [s, e] : intervals) { starts.push_back(s); ends.push_back(e); }\n    sort(starts.begin(), starts.end());\n    sort(ends.begin(), ends.end());\n    int rooms = 0, maxRooms = 0, i = 0, j = 0;\n    while (i < (int)starts.size()) {\n        if (starts[i] < ends[j]) { rooms++; i++; }\n        else { rooms--; j++; }\n        maxRooms = max(maxRooms, rooms);\n    }\n    return maxRooms;\n}", "ref": null}, {"name": "Closest Pair of Points (advanced)", "usecase": "Find the two closest points among n points in O(n log n) via divide and conquer (computational geometry, clustering).", "code": "double dist(Point a, Point b) {\n    return sqrt((double)(a.x-b.x)*(a.x-b.x) + (double)(a.y-b.y)*(a.y-b.y));\n}\ndouble closestPairRec(vector<Point>& pts, int l, int r) { // pts sorted by x\n    if (r - l <= 3) {\n        double best = DBL_MAX;\n        for (int i = l; i <= r; i++)\n            for (int j = i + 1; j <= r; j++) best = min(best, dist(pts[i], pts[j]));\n        return best;\n    }\n    int mid = (l + r) / 2;\n    long long midX = pts[mid].x;\n    double d = min(closestPairRec(pts, l, mid), closestPairRec(pts, mid + 1, r));\n    vector<Point> strip;\n    for (int i = l; i <= r; i++) if (abs(pts[i].x - midX) < d) strip.push_back(pts[i]);\n    sort(strip.begin(), strip.end(), [](Point a, Point b) { return a.y < b.y; });\n    for (int i = 0; i < (int)strip.size(); i++)\n        for (int j = i + 1; j < (int)strip.size() && strip[j].y - strip[i].y < d; j++)\n            d = min(d, dist(strip[i], strip[j]));\n    return d;\n}", "ref": null}]}, {"num": 18, "title": "Miscellaneous", "algos": [{"name": "Boyer-Moore Voting", "usecase": "Find the majority element (appears > n/2 times) in O(n) time, O(1) space.", "code": "int majorityElement(vector<int>& nums) {\n    int candidate = 0, count = 0;\n    for (int x : nums) {\n        if (count == 0) candidate = x;\n        count += (x == candidate) ? 1 : -1;\n    }\n    return candidate;\n}", "ref": null}, {"name": "Reservoir Sampling", "usecase": "Pick a uniform random sample of k items from a stream of unknown/large size, in one pass.", "code": "int reservoirSample(istream& stream) {\n    int result = -1, x, count = 0;\n    while (stream >> x) {\n        count++;\n        if (rand() % count == 0) result = x; // k=1 case\n    }\n    return result;\n}", "ref": null}, {"name": "Meet in the Middle", "usecase": "Split a problem in half to reduce exponential complexity (e.g. 2^(n/2) instead of 2^n for subset-sum on n up to ~40).", "code": "vector<long long> allSubsetSums(vector<int>& a, int l, int r) {\n    vector<long long> sums;\n    int n = r - l;\n    for (int mask = 0; mask < (1 << n); mask++) {\n        long long s = 0;\n        for (int i = 0; i < n; i++) if (mask & (1 << i)) s += a[l + i];\n        sums.push_back(s);\n    }\n    return sums;\n}\n// Split array into two halves, compute allSubsetSums for each, then combine (e.g. two-pointer or binary search).", "ref": null}, {"name": "Mo's Algorithm", "usecase": "Offline range-query processing in O((n + q) sqrt n) by reordering queries to minimize pointer movement.", "code": "struct Query { int l, r, idx; };\nint blockSize;\nvoid mosAlgorithm(vector<Query>& queries, vector<int>& a) {\n    sort(queries.begin(), queries.end(), [&](const Query& x, const Query& y) {\n        int xb = x.l / blockSize, yb = y.l / blockSize;\n        if (xb != yb) return xb < yb;\n        return (xb & 1) ? x.r > y.r : x.r < y.r; // snake ordering\n    });\n    int curL = 0, curR = -1;\n    // long long curAnswer = 0;\n    for (auto& q : queries) {\n        while (curR < q.r) { /* add a[++curR] */ curR++; }\n        while (curL > q.l) { /* add a[--curL] */ curL--; }\n        while (curR > q.r) { /* remove a[curR--] */ curR--; }\n        while (curL < q.l) { /* remove a[curL++] */ curL++; }\n        // answer[q.idx] = curAnswer;\n    }\n}", "ref": null}, {"name": "PBDS (Ordered Set / Ordered Map)", "usecase": "Set/map with O(log n) order-statistics (find k-th element, count elements less than x) \u2014 GNU-specific extension.", "code": "#include <ext/pb_ds/assoc_container.hpp>\n#include <ext/pb_ds/tree_policy.hpp>\nusing namespace __gnu_pbds;\n\ntemplate <typename T>\nusing ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;\n\n// usage:\n// ordered_set<int> s;\n// s.insert(5);\n// s.order_of_key(5);      // count of elements < 5\n// *s.find_by_order(0);    // smallest element", "ref": null}, {"name": "Sweep Line", "usecase": "", "code": "", "ref": "Line Sweep"}, {"name": "Difference Constraints", "usecase": "Solve systems of inequalities x_j - x_i <= w via shortest-path (Bellman-Ford) on a constraint graph.", "code": "// For each constraint x_j - x_i <= w, add edge i -> j with weight w.\n// Add a source node connected to all nodes with weight 0.\n// Run Bellman-Ford from source; dist[v] gives a valid assignment satisfying all constraints.", "ref": null}, {"name": "Prefix XOR", "usecase": "Answer \"XOR of subarray [l, r]\" in O(1) after O(n) preprocessing (bitwise analogue of prefix sum).", "code": "vector<int> buildPrefixXor(vector<int>& a) {\n    vector<int> pre(a.size() + 1, 0);\n    for (int i = 0; i < (int)a.size(); i++) pre[i + 1] = pre[i] ^ a[i];\n    return pre;\n}\nint rangeXor(vector<int>& pre, int l, int r) { return pre[r + 1] ^ pre[l]; }", "ref": null}]}]
+</script>
+<script>
+(function(){
+  const raw = document.getElementById('algo-data').textContent;
+  const SECTIONS = JSON.parse(raw);
+
+  const DESCRIPTIONS = {
+    1:"Manipulating contiguous ranges of numbers — running sums, windows, and two-pointer sweeps.",
+    2:"Reordering data. The workhorses every other algorithm on this atlas quietly depends on.",
+    3:"Halving the search space — on arrays, and on the answer itself.",
+    4:"Pointer-chasing structures: cycles, reversals, and O(1)-space traversal tricks.",
+    5:"LIFO and FIFO primitives, and the monotonic variants that unlock O(n) window problems.",
+    6:"Priority-ordered structures for always grabbing the min, max, or top-k in log time.",
+    7:"Mapping keys to buckets — frequency counting, compression, and fast substring comparison.",
+    8:"Recursive structures: traversal orders, ancestor queries, and subtree aggregation.",
+    9:"Structures purpose-built for fast range queries and range updates over an array.",
+    10:"Vertices and edges — traversal, shortest paths, spanning trees, and connectivity.",
+    11:"Breaking a problem into overlapping subproblems and remembering the answers.",
+    12:"Locally optimal choices that provably reach a globally optimal answer.",
+    13:"Exhaustive search with pruning — build a partial solution, abandon it the moment it fails.",
+    14:"Text as data: pattern matching, palindromes, and compact substring representations.",
+    15:"Working directly on the binary representation of a number.",
+    16:"Primes, modular arithmetic, and the arithmetic identities interview problems lean on.",
+    17:"Points, lines, and hulls — the rare interview problem that wants a ruler.",
+    18:"Everything that didn't fit a category, but shows up often enough to know cold."
+  };
+
+  let activeSection = 1;
+  let query = '';
+
+  function escapeHtml(s){
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function slug(name){
+    return name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+  }
+
+  function buildNav(){
+    const navList = document.getElementById('navList');
+    navList.innerHTML = '';
+    SECTIONS.forEach(sec => {
+      const li = document.createElement('li');
+      li.className = 'nav-item' + (sec.num === activeSection && !query ? ' active' : '');
+      li.innerHTML = `<span class="nav-num">${String(sec.num).padStart(2,'0')}</span><span class="nav-name">${sec.title}</span><span class="nav-count">${sec.algos.length}</span>`;
+      li.addEventListener('click', () => {
+        query = '';
+        document.getElementById('searchInput').value = '';
+        activeSection = sec.num;
+        render();
+        window.scrollTo({top:0, behavior:'smooth'});
+      });
+      navList.appendChild(li);
+    });
+  }
+
+  function matchesQuery(algo, q){
+    if(!q) return true;
+    const hay = (algo.name + ' ' + algo.usecase).toLowerCase();
+    return hay.includes(q);
+  }
+
+  function cardHtml(sec, algo, idx){
+    const fig = `FIG ${sec.num}.${String(idx+1).padStart(2,'0')}`;
+    let bodyExtra = '';
+    if(algo.ref){
+      bodyExtra = `<p class="card-usecase">${escapeHtml(algo.usecase)}</p>
+        <div class="card-ref" data-jump="${escapeHtml(algo.ref)}">→ See ${escapeHtml(algo.ref)}</div>`;
+    } else {
+      bodyExtra = `<p class="card-usecase">${escapeHtml(algo.usecase)}</p>
+        <div class="code-wrap">
+          <div class="code-toolbar">
+            <span>C++</span>
+            <button class="copy-btn" data-code-idx="${sec.num}-${idx}">copy</button>
+          </div>
+          <pre><code class="language-cpp" id="code-${sec.num}-${idx}">${escapeHtml(algo.code)}</code></pre>
+        </div>`;
+    }
+    return `<div class="card" id="algo-${slug(algo.name)}">
+      <div class="card-head">
+        <div class="card-title-wrap">
+          <span class="card-fig">${fig}</span>
+          <h3 class="card-title">${escapeHtml(algo.name)}</h3>
+        </div>
+        <span class="card-cat">${escapeHtml(sec.title)}</span>
+      </div>
+      <div class="card-body">${bodyExtra}</div>
+    </div>`;
+  }
+
+  function render(){
+    buildNav();
+    const grid = document.getElementById('cardGrid');
+    const header = document.getElementById('sectionHeader');
+    const crumb = document.getElementById('crumbSection');
+    const resultCount = document.getElementById('resultCount');
+
+    if(query){
+      header.style.display = 'block';
+      document.getElementById('plateLabel').textContent = 'SEARCH';
+      document.getElementById('sectionTitle').textContent = `Results for "${query}"`;
+      document.getElementById('sectionDesc').textContent = 'Matches across every plate in the atlas.';
+      crumb.textContent = 'Search';
+
+      let html = '';
+      let count = 0;
+      SECTIONS.forEach(sec => {
+        sec.algos.forEach((algo, idx) => {
+          if(matchesQuery(algo, query)){
+            html += cardHtml(sec, algo, idx);
+            count++;
+          }
+        });
+      });
+      resultCount.textContent = `${count} match${count===1?'':'es'}`;
+      grid.innerHTML = html || `<div class="empty-state">No algorithms match “${escapeHtml(query)}”. Try a shorter term.</div>`;
+    } else {
+      const sec = SECTIONS.find(s => s.num === activeSection) || SECTIONS[0];
+      document.getElementById('plateLabel').textContent = `PLATE ${String(sec.num).padStart(2,'0')} / ${sec.algos.length} FIGS`;
+      document.getElementById('sectionTitle').textContent = sec.title;
+      document.getElementById('sectionDesc').textContent = DESCRIPTIONS[sec.num] || '';
+      crumb.textContent = sec.title;
+      resultCount.textContent = '';
+      grid.innerHTML = sec.algos.map((a,i) => cardHtml(sec, a, i)).join('');
+    }
+
+    if(window.hljs){
+      grid.querySelectorAll('pre code').forEach(block => hljs.highlightElement(block));
+    }
+
+    grid.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = 'code-' + btn.getAttribute('data-code-idx');
+        const codeEl = document.getElementById(id);
+        const text = codeEl ? codeEl.textContent : '';
+        navigator.clipboard.writeText(text).then(() => {
+          btn.textContent = 'copied';
+          btn.classList.add('copied');
+          setTimeout(() => { btn.textContent = 'copy'; btn.classList.remove('copied'); }, 1400);
+        });
+      });
+    });
+
+    grid.querySelectorAll('.card-ref').forEach(el => {
+      el.addEventListener('click', () => {
+        const target = el.getAttribute('data-jump');
+        const targetId = 'algo-' + slug(target);
+        // find which section contains it and switch
+        for(const s of SECTIONS){
+          if(s.algos.some(a => slug(a.name) === slug(target))){
+            query = '';
+            document.getElementById('searchInput').value = '';
+            activeSection = s.num;
+            render();
+            requestAnimationFrame(() => {
+              const t = document.getElementById(targetId);
+              if(t){ t.scrollIntoView({behavior:'smooth', block:'center'}); t.style.borderColor = 'var(--amber)'; setTimeout(()=>{t.style.borderColor='';},1600); }
+            });
+            break;
+          }
+        }
+      });
+    });
+  }
+
+  document.getElementById('searchInput').addEventListener('input', (e) => {
+    query = e.target.value.trim().toLowerCase();
+    render();
+  });
+
+  render();
+})();
+
+</script>
+</body>
+</html>
