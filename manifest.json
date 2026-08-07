@@ -6,5 +6,13 @@
     "category": "Computer Science",
     "file": "assets/algorithm-atlas.html",
     "date": "2026-08-07"
+  },
+  {
+    "id": "operating-systems-interview-notes",
+    "title": "Operating Systems Interview Notes",
+    "description": "Detailed operating systems notes for interview and test preparation: scheduling, synchronization, deadlocks, memory, virtual memory, file systems, and high-frequency Q&A.",
+    "category": "Computer Science",
+    "file": "assets/operating-systems-interview-notes.html",
+    "date": "2026-08-07"
   }
 ]

@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Operating Systems Interview Notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bp-0:#081826; --bp-1:#0b2238; --bp-2:#0f2d4d; --bp-3:#123655;
+  --line:#7fdbff; --line-dim:rgba(127,219,255,0.16); --line-dim2:rgba(127,219,255,0.28);
+  --cyan:#7fe0ff; --amber:#f2b84b; --amber-dim:rgba(242,184,75,0.35);
+  --green:#7ee08a; --ink:#eaf4fc; --ink-dim:#9fb8cc; --ink-faint:#5f7d95;
+  --mono:'JetBrains Mono', ui-monospace, monospace;
+  --disp:'Space Grotesk', sans-serif;
+  --body:'Inter', sans-serif;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:
+    linear-gradient(var(--bp-0), var(--bp-0)) fixed,
+    repeating-linear-gradient(0deg, var(--line-dim) 0 1px, transparent 1px 40px),
+    repeating-linear-gradient(90deg, var(--line-dim) 0 1px, transparent 1px 40px);
+  background-color:var(--bp-0);
+  color:var(--ink);
+  font-family:var(--body);
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{ background:var(--amber-dim); color:var(--ink); }
+a{ color:inherit; text-decoration:none; }
+code{
+  font-family:var(--mono);
+  font-size:0.92em;
+  background:var(--bp-1);
+  border:1px solid var(--line-dim2);
+  padding:1px 6px;
+}
+.wrap{ max-width:1080px; margin:0 auto; padding:48px 22px 90px; display:grid; grid-template-columns:280px 1fr; gap:24px; }
+.side{
+  position:sticky; top:16px; align-self:start;
+  border:1px solid var(--line-dim2);
+  background:linear-gradient(180deg, rgba(15,45,77,0.45), rgba(10,31,51,0.2));
+  padding:16px;
+}
+.brand{
+  display:flex; align-items:flex-start; gap:10px; margin-bottom:10px;
+}
+.brand-mark{
+  width:34px; height:34px; border:1.5px solid var(--cyan); display:flex; align-items:center; justify-content:center;
+  font-family:var(--mono); font-size:11px; color:var(--cyan);
+}
+.brand h1{
+  margin:0; font-family:var(--disp); font-size:18px; line-height:1.15;
+}
+.brand p{
+  margin:3px 0 0; font-family:var(--mono); font-size:10px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.08em;
+}
+.back{
+  display:inline-block; margin:8px 0 14px; font-family:var(--mono); font-size:11px; color:var(--cyan);
+}
+.small{
+  font-family:var(--mono); font-size:11px; color:var(--ink-faint); margin:0 0 12px; line-height:1.6;
+}
+.toc-title{
+  font-family:var(--mono); font-size:10px; color:var(--ink-faint); letter-spacing:.12em; text-transform:uppercase; margin:0 0 8px;
+}
+.toc{ list-style:none; margin:0; padding:0; }
+.toc li{ margin:0 0 6px; }
+.toc a{
+  display:block; padding:6px 7px; font-size:12px; color:var(--ink-dim); border:1px solid transparent;
+}
+.toc a:hover{ border-color:var(--line-dim2); color:var(--ink); }
+.main{ min-width:0; }
+.hero{
+  border:1px solid var(--line-dim2);
+  background:linear-gradient(180deg, rgba(15,45,77,0.35), rgba(10,31,51,0.15));
+  padding:22px;
+  margin-bottom:18px;
+}
+.hero h2{
+  margin:0 0 8px; font-family:var(--disp); font-size:30px; line-height:1.1;
+}
+.hero p{
+  margin:0; color:var(--ink-dim); line-height:1.65; font-size:14px;
+}
+.chip-row{ margin-top:14px; display:flex; flex-wrap:wrap; gap:8px; }
+.chip{
+  font-family:var(--mono); font-size:10.5px; color:var(--amber);
+  border:1px solid var(--amber-dim); padding:4px 8px; text-transform:uppercase; letter-spacing:.05em;
+}
+.card{
+  border:1px solid var(--line-dim2);
+  background:linear-gradient(180deg, rgba(15,45,77,0.35), rgba(10,31,51,0.15));
+  margin-bottom:16px;
+}
+.card h3{
+  margin:0; padding:14px 18px; border-bottom:1px dashed var(--line-dim2);
+  font-family:var(--disp); font-size:22px;
+}
+.card .body{
+  padding:14px 18px 18px;
+}
+.card p{
+  color:var(--ink-dim); line-height:1.72; font-size:14px; margin:0 0 10px;
+}
+.card ul{
+  margin:0 0 8px; padding-left:20px; color:var(--ink-dim); line-height:1.75; font-size:14px;
+}
+.card li{ margin:0 0 6px; }
+.strong{ color:var(--ink); font-weight:600; }
+table{
+  width:100%; border-collapse:collapse; margin:10px 0 10px; font-size:13px;
+}
+th,td{
+  border:1px solid var(--line-dim2); padding:8px 9px; text-align:left; vertical-align:top;
+}
+th{
+  font-family:var(--mono); font-size:11px; color:var(--cyan); text-transform:uppercase; letter-spacing:.06em;
+}
+td{ color:var(--ink-dim); line-height:1.5; }
+.qa{
+  border-left:2px solid var(--amber); padding:8px 10px; background:rgba(242,184,75,0.07); margin:8px 0;
+}
+.qa b{ color:var(--ink); }
+.plan{
+  border:1px dashed var(--line-dim2); padding:10px 12px; margin:8px 0; font-size:13px; color:var(--ink-dim);
+}
+.green{ color:var(--green); }
+@media (max-width:980px){
+  .wrap{ grid-template-columns:1fr; }
+  .side{ position:relative; top:0; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <aside class="side">
+    <div class="brand">
+      <div class="brand-mark">OS</div>
+      <div>
+        <h1>Operating Systems</h1>
+        <p>Interview Notes</p>
+      </div>
+    </div>
+    <a class="back" href="../index.html">← Back to Learn</a>
+    <p class="small">Use this as a high-yield revision sheet for technical interviews and academic tests.</p>
+    <p class="toc-title">Jump to section</p>
+    <ul class="toc">
+      <li><a href="#basics">1. Fundamentals</a></li>
+      <li><a href="#process-thread">2. Process vs Thread</a></li>
+      <li><a href="#cpu-scheduling">3. CPU Scheduling</a></li>
+      <li><a href="#sync">4. Synchronization</a></li>
+      <li><a href="#deadlock">5. Deadlocks</a></li>
+      <li><a href="#memory">6. Memory Management</a></li>
+      <li><a href="#virtual-memory">7. Virtual Memory</a></li>
+      <li><a href="#io-fs">8. File System & I/O</a></li>
+      <li><a href="#interview-qa">9. Interview Q&A</a></li>
+      <li><a href="#test-plan">10. Test Preparation Plan</a></li>
+    </ul>
+  </aside>
+
+  <main class="main">
+    <section class="hero">
+      <h2>Operating Systems Detailed Notes</h2>
+      <p>Focus on concepts, trade-offs, and common interview explanations. In interviews, always mention <span class="strong">why a design is used</span>, not just definitions.</p>
+      <div class="chip-row">
+        <span class="chip">Core concepts</span>
+        <span class="chip">Common pitfalls</span>
+        <span class="chip">Exam-ready formulas</span>
+        <span class="chip">Interview answers</span>
+      </div>
+    </section>
+
+    <section class="card" id="basics">
+      <h3>1) Fundamentals</h3>
+      <div class="body">
+        <p>An <span class="strong">Operating System</span> is a resource manager that provides abstractions over hardware and enables safe, efficient program execution.</p>
+        <ul>
+          <li><span class="strong">Kernel mode vs User mode:</span> privileged instructions execute only in kernel mode.</li>
+          <li><span class="strong">System call:</span> controlled transition from user mode to kernel mode.</li>
+          <li><span class="strong">Interrupt:</span> asynchronous event (I/O/device/timer) that preempts normal flow.</li>
+          <li><span class="strong">Trap/Exception:</span> synchronous event caused by current instruction (e.g., divide-by-zero, page fault).</li>
+          <li><span class="strong">Context switch:</span> saving and restoring CPU state to switch runnable tasks; pure overhead.</li>
+        </ul>
+        <div class="qa"><b>Interview tip:</b> Mention that user mode improves security by preventing direct hardware access from applications.</div>
+      </div>
+    </section>
+
+    <section class="card" id="process-thread">
+      <h3>2) Process vs Thread</h3>
+      <div class="body">
+        <table>
+          <thead>
+            <tr><th>Property</th><th>Process</th><th>Thread</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Address space</td><td>Separate</td><td>Shared inside same process</td></tr>
+            <tr><td>Creation cost</td><td>Higher</td><td>Lower</td></tr>
+            <tr><td>Communication</td><td>IPC needed</td><td>Shared memory naturally</td></tr>
+            <tr><td>Fault isolation</td><td>Strong</td><td>Weak (thread crash may kill process)</td></tr>
+          </tbody>
+        </table>
+        <p><span class="strong">PCB (Process Control Block)</span> stores PID, state, registers, program counter, scheduling info, memory pointers, open files.</p>
+        <p><span class="strong">Thread states:</span> new, ready, running, blocked/waiting, terminated.</p>
+        <p><span class="strong">Concurrency vs Parallelism:</span> concurrency is progress overlap; parallelism is simultaneous execution on multiple cores.</p>
+      </div>
+    </section>
+
+    <section class="card" id="cpu-scheduling">
+      <h3>3) CPU Scheduling</h3>
+      <div class="body">
+        <p>Goal: maximize utilization and throughput, while minimizing waiting, turnaround, and response time.</p>
+        <table>
+          <thead>
+            <tr><th>Algorithm</th><th>Type</th><th>Pros</th><th>Cons</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>FCFS</td><td>Non-preemptive</td><td>Simple, fair by arrival</td><td>Convoy effect, poor response</td></tr>
+            <tr><td>SJF</td><td>Usually non-preemptive</td><td>Optimal avg waiting time</td><td>Needs burst estimate, starvation risk</td></tr>
+            <tr><td>SRTF</td><td>Preemptive SJF</td><td>Good response for short jobs</td><td>High context-switch overhead</td></tr>
+            <tr><td>Priority</td><td>Both</td><td>Supports importance</td><td>Starvation without aging</td></tr>
+            <tr><td>Round Robin</td><td>Preemptive</td><td>Good interactive response</td><td>Quantum tuning sensitive</td></tr>
+          </tbody>
+        </table>
+        <p><span class="strong">Formula reminders:</span> <code>Turnaround = Completion - Arrival</code>, <code>Waiting = Turnaround - Burst</code>, <code>Response = FirstRun - Arrival</code>.</p>
+        <div class="qa"><b>Interview tip:</b> If asked about RR quantum, explain: too small means heavy context switches; too large behaves like FCFS.</div>
+      </div>
+    </section>
+
+    <section class="card" id="sync">
+      <h3>4) Synchronization & Critical Section</h3>
+      <div class="body">
+        <p><span class="strong">Race condition:</span> output depends on interleaving of concurrent operations.</p>
+        <p>Critical-section solution requirements:</p>
+        <ul>
+          <li><span class="strong">Mutual exclusion</span></li>
+          <li><span class="strong">Progress</span></li>
+          <li><span class="strong">Bounded waiting</span></li>
+        </ul>
+        <p><span class="strong">Mechanisms:</span></p>
+        <ul>
+          <li><span class="strong">Mutex:</span> lock/unlock primitive for exclusive access.</li>
+          <li><span class="strong">Semaphore:</span> integer + wait(P)/signal(V); binary or counting.</li>
+          <li><span class="strong">Monitor + condition variables:</span> higher-level structured synchronization.</li>
+          <li><span class="strong">Spinlock:</span> busy-wait lock, useful for very short critical sections.</li>
+        </ul>
+        <p>Classic problems to practice: Producer-Consumer, Readers-Writers, Dining Philosophers.</p>
+        <div class="qa"><b>Difference:</b> Mutex has ownership (locker unlocks). Semaphore generally does not enforce ownership.</div>
+      </div>
+    </section>
+
+    <section class="card" id="deadlock">
+      <h3>5) Deadlocks</h3>
+      <div class="body">
+        <p><span class="strong">Deadlock:</span> set of processes permanently waiting for each other.</p>
+        <p>Coffman conditions (all four required):</p>
+        <ul>
+          <li>Mutual exclusion</li>
+          <li>Hold and wait</li>
+          <li>No preemption</li>
+          <li>Circular wait</li>
+        </ul>
+        <p>Handling strategies:</p>
+        <table>
+          <thead>
+            <tr><th>Strategy</th><th>Idea</th><th>Example</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Prevention</td><td>Break one Coffman condition</td><td>Resource ordering to avoid circular wait</td></tr>
+            <tr><td>Avoidance</td><td>Allocate only safe states</td><td>Banker's algorithm</td></tr>
+            <tr><td>Detection + Recovery</td><td>Allow, detect cycle, recover</td><td>Kill process / preempt resource</td></tr>
+            <tr><td>Ignore</td><td>Assume rare</td><td>Many general-purpose OS cases</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card" id="memory">
+      <h3>6) Memory Management</h3>
+      <div class="body">
+        <p><span class="strong">Contiguous allocation</span> leads to external fragmentation; paging solves external fragmentation.</p>
+        <p><span class="strong">Paging:</span> logical memory split into pages, physical memory into frames. Address = page number + offset.</p>
+        <p><span class="strong">Segmentation:</span> memory divided by logical units (code/data/stack), each with base and limit.</p>
+        <p>Fragmentation summary:</p>
+        <ul>
+          <li><span class="strong">Internal fragmentation:</span> wasted space inside allocated block/frame.</li>
+          <li><span class="strong">External fragmentation:</span> free memory exists but is non-contiguous.</li>
+        </ul>
+        <p>Page table acceleration uses <span class="strong">TLB</span> (Translation Lookaside Buffer), a small cache of page table entries.</p>
+      </div>
+    </section>
+
+    <section class="card" id="virtual-memory">
+      <h3>7) Virtual Memory & Page Replacement</h3>
+      <div class="body">
+        <p>Virtual memory allows processes to run with partial memory residency using demand paging.</p>
+        <p><span class="strong">Page fault handling:</span> trap -> validate reference -> locate page on disk -> load into free frame or replace victim -> update table -> restart instruction.</p>
+        <table>
+          <thead>
+            <tr><th>Policy</th><th>Rule</th><th>Notes</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>FIFO</td><td>Evict oldest loaded page</td><td>Simple, may show Belady's anomaly</td></tr>
+            <tr><td>LRU</td><td>Evict least recently used</td><td>Good approximation of optimal</td></tr>
+            <tr><td>Optimal</td><td>Evict farthest future use</td><td>Theoretical benchmark only</td></tr>
+            <tr><td>Clock/Second-chance</td><td>Use reference bit to approximate LRU</td><td>Practical in real systems</td></tr>
+          </tbody>
+        </table>
+        <p><span class="strong">Thrashing:</span> excessive page faults causing low CPU utilization. Mitigate by reducing multiprogramming level or using working-set / page-fault-frequency control.</p>
+      </div>
+    </section>
+
+    <section class="card" id="io-fs">
+      <h3>8) File System & I/O</h3>
+      <div class="body">
+        <p>File systems map logical files to physical blocks and maintain metadata such as size, owner, permissions, timestamps.</p>
+        <ul>
+          <li><span class="strong">Allocation methods:</span> contiguous, linked, indexed.</li>
+          <li><span class="strong">Directory structures:</span> single-level, two-level, tree, acyclic graph.</li>
+          <li><span class="strong">Access control:</span> Unix permissions (<code>rwx</code>), ACLs.</li>
+          <li><span class="strong">I/O methods:</span> programmed I/O, interrupt-driven I/O, DMA.</li>
+          <li><span class="strong">Disk scheduling:</span> FCFS, SSTF, SCAN, C-SCAN.</li>
+        </ul>
+        <p><span class="strong">Kernel buffering and caching</span> improve throughput by reducing device wait and batching operations.</p>
+      </div>
+    </section>
+
+    <section class="card" id="interview-qa">
+      <h3>9) High-Frequency Interview Q&A</h3>
+      <div class="body">
+        <div class="qa"><b>Q:</b> Why are system calls slower than normal function calls?<br><b>A:</b> They require user-kernel mode switch, validation checks, and possible scheduling/interrupt handling.</div>
+        <div class="qa"><b>Q:</b> Why are threads considered lightweight?<br><b>A:</b> They share process resources (address space, files), so create/switch overhead is lower than process switching.</div>
+        <div class="qa"><b>Q:</b> Semaphore vs Mutex?<br><b>A:</b> Mutex is ownership-based exclusive lock; semaphore is signaling/counting primitive and may allow non-owner signal in many implementations.</div>
+        <div class="qa"><b>Q:</b> Starvation vs Deadlock?<br><b>A:</b> Starvation means indefinite postponement of one process; deadlock is circular waiting where none of involved processes can proceed.</div>
+        <div class="qa"><b>Q:</b> What is a zombie process?<br><b>A:</b> A terminated child whose exit status is not yet collected by parent (<code>wait()</code> not called).</div>
+        <div class="qa"><b>Q:</b> What causes priority inversion?<br><b>A:</b> Low-priority thread holding lock needed by high-priority thread while medium-priority thread runs; mitigation: priority inheritance.</div>
+      </div>
+    </section>
+
+    <section class="card" id="test-plan">
+      <h3>10) 7-Day Test Preparation Plan</h3>
+      <div class="body">
+        <div class="plan"><span class="strong">Day 1:</span> OS basics, kernel/user mode, interrupts, system calls, process lifecycle.</div>
+        <div class="plan"><span class="strong">Day 2:</span> CPU scheduling numericals (FCFS, SJF, RR), all timing metrics.</div>
+        <div class="plan"><span class="strong">Day 3:</span> Threads, synchronization primitives, classic problems.</div>
+        <div class="plan"><span class="strong">Day 4:</span> Deadlock theory + prevention/avoidance/detection questions.</div>
+        <div class="plan"><span class="strong">Day 5:</span> Paging, segmentation, TLB, replacement algorithms, thrashing.</div>
+        <div class="plan"><span class="strong">Day 6:</span> File systems, I/O, disk scheduling, revision flashcards.</div>
+        <div class="plan"><span class="strong">Day 7:</span> Full mock interview/test. Explain each answer aloud in 60-90 seconds.</div>
+        <p class="green"><span class="strong">Execution rule:</span> Every day, solve 10 MCQs + 3 short notes + 1 long answer.</p>
+      </div>
+    </section>
+  </main>
+</div>
+</body>
+</html>
