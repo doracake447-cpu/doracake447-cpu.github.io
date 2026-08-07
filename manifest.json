@@ -14,5 +14,13 @@
     "category": "Computer Science",
     "file": "assets/operating-systems-interview-notes.html",
     "date": "2026-08-07"
+  },
+  {
+    "id": "dbms-interview-notes",
+    "title": "DBMS Interview Notes",
+    "description": "Detailed DBMS notes for interview and test preparation: normalization, SQL, indexing, transactions, isolation, recovery, query planning, and frequent Q&A.",
+    "category": "Computer Science",
+    "file": "assets/dbms-interview-notes.html",
+    "date": "2026-08-07"
   }
 ]

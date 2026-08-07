@@ -1,0 +1,528 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DBMS Master Notes — Interview + Tests</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bp-0:#081826; --bp-1:#0b2238; --bp-2:#0f2d4d;
+  --line:#7fdbff; --line-dim:rgba(127,219,255,0.16); --line-dim2:rgba(127,219,255,0.28);
+  --cyan:#7fe0ff; --amber:#f2b84b; --amber-dim:rgba(242,184,75,0.35); --green:#7ee08a;
+  --ink:#eaf4fc; --ink-dim:#9fb8cc; --ink-faint:#5f7d95;
+  --mono:'JetBrains Mono', ui-monospace, monospace; --disp:'Space Grotesk', sans-serif; --body:'Inter', sans-serif;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:
+    linear-gradient(var(--bp-0), var(--bp-0)) fixed,
+    repeating-linear-gradient(0deg, var(--line-dim) 0 1px, transparent 1px 40px),
+    repeating-linear-gradient(90deg, var(--line-dim) 0 1px, transparent 1px 40px);
+  background-color:var(--bp-0); color:var(--ink); font-family:var(--body); min-height:100vh;
+}
+::selection{ background:var(--amber-dim); color:var(--ink); }
+a{ color:inherit; text-decoration:none; }
+code{ font-family:var(--mono); font-size:.91em; background:var(--bp-1); border:1px solid var(--line-dim2); padding:1px 6px; }
+.wrap{ max-width:1240px; margin:0 auto; padding:44px 18px 88px; display:grid; grid-template-columns:310px 1fr; gap:22px; }
+.side{
+  position:sticky; top:14px; align-self:start; max-height:calc(100vh - 28px); overflow:auto;
+  border:1px solid var(--line-dim2); background:linear-gradient(180deg, rgba(15,45,77,0.45), rgba(10,31,51,0.2));
+  padding:14px;
+}
+.brand{ display:flex; align-items:flex-start; gap:10px; margin-bottom:8px; }
+.mark{
+  width:34px; height:34px; border:1.5px solid var(--cyan); color:var(--cyan); display:flex; align-items:center; justify-content:center;
+  font-family:var(--mono); font-size:11px;
+}
+.brand h1{ margin:0; font-family:var(--disp); font-size:18px; line-height:1.1; }
+.brand p{ margin:3px 0 0; font-family:var(--mono); font-size:10px; color:var(--ink-faint); letter-spacing:.08em; text-transform:uppercase; }
+.back{ display:inline-block; margin:8px 0 10px; color:var(--cyan); font-family:var(--mono); font-size:11px; }
+.small{ margin:0 0 12px; font-family:var(--mono); font-size:10.8px; color:var(--ink-faint); line-height:1.6; }
+.toc-title{ margin:0 0 8px; font-family:var(--mono); font-size:10px; color:var(--ink-faint); letter-spacing:.11em; text-transform:uppercase; }
+.toc{ list-style:none; margin:0; padding:0; }
+.toc li{ margin:0 0 5px; }
+.toc a{ display:block; padding:6px 7px; border:1px solid transparent; color:var(--ink-dim); font-size:11.9px; line-height:1.45; }
+.toc a:hover{ border-color:var(--line-dim2); color:var(--ink); }
+.main{ min-width:0; }
+.hero{
+  border:1px solid var(--line-dim2);
+  background:linear-gradient(180deg, rgba(15,45,77,0.36), rgba(10,31,51,0.15));
+  padding:22px;
+  margin-bottom:16px;
+}
+.hero h2{ margin:0 0 8px; font-family:var(--disp); font-size:31px; line-height:1.08; }
+.hero p{ margin:0; color:var(--ink-dim); font-size:14px; line-height:1.64; }
+.chip-row{ display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+.chip{
+  border:1px solid var(--amber-dim); color:var(--amber);
+  font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:.06em; padding:4px 8px;
+}
+.card{
+  border:1px solid var(--line-dim2);
+  background:linear-gradient(180deg, rgba(15,45,77,0.36), rgba(10,31,51,0.15));
+  margin-bottom:13px;
+}
+.card h3{
+  margin:0; padding:14px 16px; border-bottom:1px dashed var(--line-dim2); font-family:var(--disp); font-size:22px;
+}
+.body{ padding:12px 16px 16px; }
+.body p{ margin:0 0 9px; color:var(--ink-dim); font-size:14px; line-height:1.72; }
+.body ul{ margin:0 0 8px; padding-left:20px; color:var(--ink-dim); font-size:14px; line-height:1.75; }
+.body li{ margin:0 0 5px; }
+.strong{ color:var(--ink); font-weight:600; }
+table{ width:100%; border-collapse:collapse; margin:10px 0; font-size:13px; }
+th,td{ border:1px solid var(--line-dim2); padding:8px 8px; text-align:left; vertical-align:top; }
+th{ color:var(--cyan); font-family:var(--mono); font-size:10.8px; text-transform:uppercase; letter-spacing:.06em; }
+td{ color:var(--ink-dim); line-height:1.55; }
+.qa{ border-left:2px solid var(--amber); background:rgba(242,184,75,0.07); padding:8px 10px; margin:8px 0; }
+.qa b{ color:var(--ink); }
+.warn{ border-left:2px solid var(--cyan); background:rgba(127,224,255,0.07); padding:8px 10px; margin:8px 0; }
+.plan{ border:1px dashed var(--line-dim2); padding:9px 10px; margin:7px 0; color:var(--ink-dim); font-size:13px; line-height:1.6; }
+.green{ color:var(--green); }
+.mini{ font-size:12.5px; color:var(--ink-faint); font-family:var(--mono); }
+@media (max-width:1020px){
+  .wrap{ grid-template-columns:1fr; }
+  .side{ position:relative; top:0; max-height:none; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <aside class="side">
+    <div class="brand">
+      <div class="mark">DB</div>
+      <div>
+        <h1>DBMS Master Notes</h1>
+        <p>Interview + Test Prep</p>
+      </div>
+    </div>
+    <a class="back" href="../index.html">← Back to Learn</a>
+    <p class="small">Comprehensive sheet designed to cover complete DBMS syllabus and high-frequency interview topics.</p>
+    <p class="toc-title">Jump to section</p>
+    <ul class="toc">
+      <li><a href="#fundamentals">1. DBMS Fundamentals & Architecture</a></li>
+      <li><a href="#data-models">2. Data Models & 3-Schema Architecture</a></li>
+      <li><a href="#er-model">3. ER Model & Mapping to Tables</a></li>
+      <li><a href="#keys-constraints">4. Keys, Constraints, Dependencies</a></li>
+      <li><a href="#normalization">5. Normalization (1NF to 5NF + BCNF)</a></li>
+      <li><a href="#relational-algebra">6. Relational Algebra & Calculus</a></li>
+      <li><a href="#sql-core">7. SQL Core (DDL, DML, TCL, DCL)</a></li>
+      <li><a href="#sql-advanced">8. Advanced SQL (CTE, Windows, Views, Triggers)</a></li>
+      <li><a href="#indexing-storage">9. Indexing & File Organization</a></li>
+      <li><a href="#query-processing">10. Query Processing & Optimization</a></li>
+      <li><a href="#transactions-acid">11. Transactions, ACID, Schedules</a></li>
+      <li><a href="#concurrency">12. Concurrency Control & Isolation</a></li>
+      <li><a href="#deadlocks">13. Deadlocks, Starvation, Livelock</a></li>
+      <li><a href="#recovery">14. Recovery, WAL, Checkpointing</a></li>
+      <li><a href="#buffer-storage">15. Buffer Manager & Disk Internals</a></li>
+      <li><a href="#distributed">16. Distributed DBMS, Replication, Sharding</a></li>
+      <li><a href="#nosql">17. NoSQL, CAP, BASE</a></li>
+      <li><a href="#security">18. DB Security, Authorization, Auditing</a></li>
+      <li><a href="#backup-ha">19. Backup, Restore, High Availability</a></li>
+      <li><a href="#oltp-olap">20. OLTP vs OLAP, Warehousing</a></li>
+      <li><a href="#qa">21. High-Frequency Interview Q&A</a></li>
+      <li><a href="#numericals">22. Must-Do Numericals & Cheatsheet</a></li>
+      <li><a href="#prep-plan">23. 10-Day Master Preparation Plan</a></li>
+    </ul>
+  </aside>
+
+  <main class="main">
+    <section class="hero">
+      <h2>DBMS Complete Revision Guide</h2>
+      <p>For interviews, always answer in this pattern: <span class="strong">definition -> why needed -> example -> trade-off</span>. This page is structured in that format to help both tests and viva rounds.</p>
+      <div class="chip-row">
+        <span class="chip">Syllabus coverage</span>
+        <span class="chip">Theory + practical SQL</span>
+        <span class="chip">System design links</span>
+        <span class="chip">Interview framing</span>
+      </div>
+    </section>
+
+    <section class="card" id="fundamentals">
+      <h3>1) DBMS Fundamentals & Architecture</h3>
+      <div class="body">
+        <p><span class="strong">DBMS</span> is software that stores and manages data while ensuring consistency, concurrency, security, and recoverability.</p>
+        <ul>
+          <li><span class="strong">Why DBMS over file system:</span> avoids redundancy, inconsistent updates, weak security, and difficult concurrent access.</li>
+          <li><span class="strong">Components:</span> query processor, storage manager, transaction manager, lock manager, recovery manager, buffer manager.</li>
+          <li><span class="strong">Data dictionary/catalog:</span> metadata about schemas, constraints, indexes, users, permissions.</li>
+        </ul>
+        <div class="warn"><b>Exam angle:</b> Differentiate DBMS and RDBMS clearly. RDBMS enforces relational model principles (tables, keys, constraints, SQL).</div>
+      </div>
+    </section>
+
+    <section class="card" id="data-models">
+      <h3>2) Data Models & 3-Schema Architecture</h3>
+      <div class="body">
+        <table>
+          <thead><tr><th>Model</th><th>Description</th><th>Use case</th></tr></thead>
+          <tbody>
+            <tr><td>Hierarchical</td><td>Tree-like parent-child</td><td>Legacy systems, strict hierarchy</td></tr>
+            <tr><td>Network</td><td>Graph-based, many-to-many links</td><td>Complex relationship legacy data</td></tr>
+            <tr><td>Relational</td><td>Tables + keys + set operations</td><td>General transactional apps</td></tr>
+            <tr><td>Object-relational</td><td>Relational + object features</td><td>Complex domain models</td></tr>
+          </tbody>
+        </table>
+        <p><span class="strong">3-schema architecture:</span></p>
+        <ul>
+          <li><span class="strong">External level:</span> user-specific views.</li>
+          <li><span class="strong">Conceptual level:</span> global logical schema.</li>
+          <li><span class="strong">Internal level:</span> physical storage details.</li>
+        </ul>
+        <p><span class="strong">Data independence:</span> logical independence and physical independence are classic exam definitions.</p>
+      </div>
+    </section>
+
+    <section class="card" id="er-model">
+      <h3>3) ER Model & Mapping to Tables</h3>
+      <div class="body">
+        <p>ER modeling transforms real-world requirements into structured schema.</p>
+        <ul>
+          <li><span class="strong">Entity:</span> object (Student, Course).</li>
+          <li><span class="strong">Attribute:</span> property (name, roll_no).</li>
+          <li><span class="strong">Relationship:</span> association (Enrolls).</li>
+          <li><span class="strong">Cardinality:</span> 1:1, 1:N, M:N.</li>
+          <li><span class="strong">Participation:</span> total or partial.</li>
+          <li><span class="strong">Weak entity:</span> depends on owner entity and partial key.</li>
+        </ul>
+        <p><span class="strong">Mapping rules:</span> entity -> table, M:N relationship -> junction table, multivalued attribute -> separate table, composite attribute -> atomic columns.</p>
+      </div>
+    </section>
+
+    <section class="card" id="keys-constraints">
+      <h3>4) Keys, Constraints, Dependencies</h3>
+      <div class="body">
+        <p><span class="strong">Key taxonomy:</span> super key, candidate key, primary key, alternate key, foreign key, composite key, surrogate key.</p>
+        <p><span class="strong">Constraints:</span></p>
+        <ul>
+          <li><span class="strong">Domain constraint:</span> value type/range.</li>
+          <li><span class="strong">Entity integrity:</span> primary key cannot be NULL.</li>
+          <li><span class="strong">Referential integrity:</span> foreign key must reference existing parent (or null if allowed).</li>
+          <li><span class="strong">User-defined/business constraints:</span> salary > 0, start_date &lt; end_date.</li>
+        </ul>
+        <p><span class="strong">Functional dependency (FD):</span> X -> Y means X determines Y. Candidate key is minimal determinant for all attributes.</p>
+      </div>
+    </section>
+
+    <section class="card" id="normalization">
+      <h3>5) Normalization (1NF, 2NF, 3NF, BCNF, 4NF, 5NF)</h3>
+      <div class="body">
+        <p>Normalization removes anomalies and redundant storage by decomposition.</p>
+        <table>
+          <thead><tr><th>Normal form</th><th>Condition</th><th>Fixes</th></tr></thead>
+          <tbody>
+            <tr><td>1NF</td><td>Atomic attributes, no repeating groups</td><td>Repeating/multi-valued fields</td></tr>
+            <tr><td>2NF</td><td>1NF + no partial dependency on composite key</td><td>Partial dependency anomalies</td></tr>
+            <tr><td>3NF</td><td>2NF + no transitive dependency (non-key -> non-key)</td><td>Transitive anomalies</td></tr>
+            <tr><td>BCNF</td><td>Every determinant is a candidate key</td><td>Stronger FD anomalies</td></tr>
+            <tr><td>4NF</td><td>No non-trivial multivalued dependency</td><td>MVD-induced redundancy</td></tr>
+            <tr><td>5NF</td><td>No non-trivial join dependency</td><td>Join dependency anomalies</td></tr>
+          </tbody>
+        </table>
+        <p><span class="strong">Decomposition quality checks:</span> lossless join and dependency preservation are standard exam points.</p>
+        <div class="qa"><b>Interview answer pattern:</b> “I normalize to 3NF/BCNF for consistency, then denormalize selected areas for read-heavy workloads.”</div>
+      </div>
+    </section>
+
+    <section class="card" id="relational-algebra">
+      <h3>6) Relational Algebra & Relational Calculus</h3>
+      <div class="body">
+        <p><span class="strong">Relational algebra operators:</span> selection (sigma), projection (pi), union, set difference, cartesian product, rename, join, division.</p>
+        <p><span class="strong">Joins:</span> theta join, equi join, natural join, inner/outer join, semi join, anti join.</p>
+        <p><span class="strong">Relational calculus:</span></p>
+        <ul>
+          <li>Tuple relational calculus (TRC)</li>
+          <li>Domain relational calculus (DRC)</li>
+        </ul>
+        <p>Important property: relational algebra is procedural, relational calculus is non-procedural.</p>
+      </div>
+    </section>
+
+    <section class="card" id="sql-core">
+      <h3>7) SQL Core (DDL, DML, DCL, TCL)</h3>
+      <div class="body">
+        <p><span class="strong">DDL:</span> <code>CREATE</code>, <code>ALTER</code>, <code>DROP</code>, <code>TRUNCATE</code>.</p>
+        <p><span class="strong">DML:</span> <code>SELECT</code>, <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>, <code>MERGE</code>.</p>
+        <p><span class="strong">DCL:</span> <code>GRANT</code>, <code>REVOKE</code>.</p>
+        <p><span class="strong">TCL:</span> <code>COMMIT</code>, <code>ROLLBACK</code>, <code>SAVEPOINT</code>.</p>
+        <ul>
+          <li><span class="strong">WHERE vs HAVING:</span> row filter vs group filter.</li>
+          <li><span class="strong">GROUP BY rule:</span> all selected non-aggregated columns must be grouped.</li>
+          <li><span class="strong">NULL logic:</span> use <code>IS NULL</code>/<code>IS NOT NULL</code>, avoid <code>= NULL</code>.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="card" id="sql-advanced">
+      <h3>8) Advanced SQL (CTE, Windows, Views, Procedures, Triggers)</h3>
+      <div class="body">
+        <p><span class="strong">CTE:</span> readable multi-step query blocks; recursive CTE for hierarchy/tree traversal.</p>
+        <p><span class="strong">Window functions:</span> <code>ROW_NUMBER</code>, <code>RANK</code>, <code>DENSE_RANK</code>, <code>LAG</code>, <code>LEAD</code>, running totals.</p>
+        <p><span class="strong">Views:</span> virtual tables, help abstraction and security; materialized views store computed data physically.</p>
+        <p><span class="strong">Stored procedures:</span> server-side procedural routines; good for encapsulating data logic.</p>
+        <p><span class="strong">Triggers:</span> automatic actions on <code>INSERT/UPDATE/DELETE</code>; use carefully to avoid hidden side effects.</p>
+        <table>
+          <thead><tr><th>Need</th><th>Preferred SQL pattern</th></tr></thead>
+          <tbody>
+            <tr><td>Top N per group</td><td><code>ROW_NUMBER() OVER (PARTITION BY ... ORDER BY ...)</code></td></tr>
+            <tr><td>Find missing children</td><td><code>NOT EXISTS</code> or left anti join pattern</td></tr>
+            <tr><td>Hierarchy traversal</td><td>Recursive CTE</td></tr>
+            <tr><td>Slow aggregate refresh</td><td>Materialized view + scheduled refresh</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card" id="indexing-storage">
+      <h3>9) Indexing & File Organization</h3>
+      <div class="body">
+        <p>Indexes trade write overhead for read speed.</p>
+        <ul>
+          <li><span class="strong">B+ tree index:</span> balanced, supports equality and range queries.</li>
+          <li><span class="strong">Hash index:</span> fast point lookups, poor for range scans.</li>
+          <li><span class="strong">Clustered index:</span> table data physically ordered by key (one per table).</li>
+          <li><span class="strong">Non-clustered index:</span> separate structure with row pointers.</li>
+          <li><span class="strong">Covering index:</span> query served fully from index without table lookup.</li>
+          <li><span class="strong">Composite index:</span> follows leftmost-prefix rule.</li>
+        </ul>
+        <p><span class="strong">File organizations:</span> heap file, sequential file, hash file.</p>
+        <div class="qa"><b>Index pitfall:</b> Too many indexes can significantly slow <code>INSERT/UPDATE/DELETE</code>.</div>
+      </div>
+    </section>
+
+    <section class="card" id="query-processing">
+      <h3>10) Query Processing & Optimization</h3>
+      <div class="body">
+        <p>Query flow: parse -> rewrite -> optimize -> execute.</p>
+        <ul>
+          <li><span class="strong">Parser:</span> validates syntax/semantics.</li>
+          <li><span class="strong">Rewriter:</span> applies equivalence rules (predicate pushdown, projection pushdown).</li>
+          <li><span class="strong">Optimizer:</span> cost-based plan choice using statistics.</li>
+          <li><span class="strong">Executor:</span> runs physical operators.</li>
+        </ul>
+        <table>
+          <thead><tr><th>Join strategy</th><th>Best fit</th><th>Risk</th></tr></thead>
+          <tbody>
+            <tr><td>Nested loop</td><td>Small outer + indexed inner</td><td>Very slow without index</td></tr>
+            <tr><td>Hash join</td><td>Large equality joins</td><td>Memory pressure/spill</td></tr>
+            <tr><td>Sort-merge</td><td>Sorted inputs or range logic</td><td>Sort cost if unsorted</td></tr>
+          </tbody>
+        </table>
+        <p><span class="strong">EXPLAIN checklist:</span> full table scans, wrong cardinality estimates, missing indexes, expensive sort/hash spill.</p>
+      </div>
+    </section>
+
+    <section class="card" id="transactions-acid">
+      <h3>11) Transactions, ACID, Schedules & Serializability</h3>
+      <div class="body">
+        <p>Transaction is a unit of work that must preserve correctness under failures and concurrency.</p>
+        <p><span class="strong">ACID:</span> Atomicity, Consistency, Isolation, Durability.</p>
+        <p><span class="strong">Schedule types:</span> serial, non-serial, conflict-serializable, view-serializable.</p>
+        <p><span class="strong">Recoverability classes:</span> recoverable schedule, cascadeless schedule, strict schedule.</p>
+        <ul>
+          <li><span class="strong">Conflict equivalence:</span> based on read-write/write-read/write-write conflicts.</li>
+          <li><span class="strong">Precedence graph:</span> acyclic graph implies conflict serializability.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="card" id="concurrency">
+      <h3>12) Concurrency Control & Isolation Levels</h3>
+      <div class="body">
+        <p><span class="strong">Common anomalies:</span> dirty read, non-repeatable read, phantom read, lost update, dirty write.</p>
+        <table>
+          <thead><tr><th>Isolation</th><th>Dirty read</th><th>Non-repeatable</th><th>Phantom</th></tr></thead>
+          <tbody>
+            <tr><td>Read Uncommitted</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+            <tr><td>Read Committed</td><td>No</td><td>Yes</td><td>Yes</td></tr>
+            <tr><td>Repeatable Read</td><td>No</td><td>No</td><td>Possible (engine-specific)</td></tr>
+            <tr><td>Serializable</td><td>No</td><td>No</td><td>No</td></tr>
+          </tbody>
+        </table>
+        <p><span class="strong">Mechanisms:</span></p>
+        <ul>
+          <li><span class="strong">Lock-based:</span> shared/exclusive/intention locks, 2PL, strict 2PL.</li>
+          <li><span class="strong">Timestamp ordering:</span> enforce global transaction order by timestamps.</li>
+          <li><span class="strong">MVCC:</span> multiple row versions; readers don’t block writers in many engines.</li>
+          <li><span class="strong">Optimistic concurrency:</span> validate at commit; good when conflicts are rare.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="card" id="deadlocks">
+      <h3>13) Deadlocks, Starvation, Livelock</h3>
+      <div class="body">
+        <p><span class="strong">Deadlock:</span> cyclic waiting between transactions/resources.</p>
+        <p><span class="strong">Coffman conditions:</span> mutual exclusion, hold-and-wait, no preemption, circular wait.</p>
+        <table>
+          <thead><tr><th>Problem</th><th>Meaning</th><th>Mitigation</th></tr></thead>
+          <tbody>
+            <tr><td>Deadlock</td><td>Circular wait</td><td>Detection + victim rollback, lock ordering</td></tr>
+            <tr><td>Starvation</td><td>One txn waits indefinitely</td><td>Fair scheduling, aging</td></tr>
+            <tr><td>Livelock</td><td>Constant retries, no progress</td><td>Random backoff, retry caps</td></tr>
+          </tbody>
+        </table>
+        <p><span class="strong">Deadlock handling:</span> prevention, avoidance, detection and recovery (most practical DBs use detection+recovery).</p>
+      </div>
+    </section>
+
+    <section class="card" id="recovery">
+      <h3>14) Recovery, WAL, Checkpointing</h3>
+      <div class="body">
+        <p>Goal: return DB to consistent state after crash/media/system failure.</p>
+        <ul>
+          <li><span class="strong">WAL rule:</span> log record reaches stable storage before corresponding data page.</li>
+          <li><span class="strong">ARIES ideas:</span> analysis, redo, undo phases with log sequence numbers (LSN).</li>
+          <li><span class="strong">Checkpoint:</span> bounds amount of log scanning during recovery.</li>
+          <li><span class="strong">Undo/Redo matrix:</span> depends on no-force/steal policy combinations.</li>
+        </ul>
+        <div class="qa"><b>Interview tip:</b> Durability is largely achieved via WAL + fsync + replication, not only by writing table pages immediately.</div>
+      </div>
+    </section>
+
+    <section class="card" id="buffer-storage">
+      <h3>15) Buffer Manager, Pages, and Disk Internals</h3>
+      <div class="body">
+        <p>DBMS works page-by-page, not row-by-row at disk level.</p>
+        <ul>
+          <li><span class="strong">Page:</span> fixed-size block (e.g., 8KB, 16KB).</li>
+          <li><span class="strong">Buffer pool:</span> in-memory cache of pages.</li>
+          <li><span class="strong">Replacement policies:</span> LRU, clock variants, MRU in specific workloads.</li>
+          <li><span class="strong">Pin/unpin:</span> prevents eviction of in-use pages.</li>
+          <li><span class="strong">Dirty page:</span> modified page requiring flush.</li>
+        </ul>
+        <p><span class="strong">Disk-aware design:</span> sequential I/O is cheaper than random I/O; optimizer and index design exploit this.</p>
+      </div>
+    </section>
+
+    <section class="card" id="distributed">
+      <h3>16) Distributed DBMS, Replication, Sharding</h3>
+      <div class="body">
+        <p><span class="strong">Replication:</span> copies same data across nodes for availability/read scaling.</p>
+        <p><span class="strong">Sharding/partitioning:</span> split data across nodes by key/range/hash.</p>
+        <ul>
+          <li><span class="strong">Horizontal partitioning:</span> rows divided by predicate/key.</li>
+          <li><span class="strong">Vertical partitioning:</span> columns split across tables/services.</li>
+          <li><span class="strong">2PC:</span> distributed transaction protocol (prepare/commit); consistency vs latency trade-off.</li>
+          <li><span class="strong">Consensus links:</span> leader election and log agreement often rely on raft/paxos-style systems.</li>
+        </ul>
+        <p><span class="strong">Common challenge:</span> cross-shard joins and transactions are expensive.</p>
+      </div>
+    </section>
+
+    <section class="card" id="nosql">
+      <h3>17) NoSQL, CAP, BASE</h3>
+      <div class="body">
+        <table>
+          <thead><tr><th>Type</th><th>Examples</th><th>Best for</th></tr></thead>
+          <tbody>
+            <tr><td>Key-Value</td><td>Redis, Dynamo-style</td><td>Caching, session storage</td></tr>
+            <tr><td>Document</td><td>MongoDB</td><td>Flexible schema data</td></tr>
+            <tr><td>Column-family</td><td>Cassandra, HBase</td><td>Wide-column/time-series scale</td></tr>
+            <tr><td>Graph</td><td>Neo4j</td><td>Relationship-heavy queries</td></tr>
+          </tbody>
+        </table>
+        <p><span class="strong">CAP theorem:</span> under network partition, choose consistency or availability (cannot guarantee both fully).</p>
+        <p><span class="strong">BASE:</span> Basically Available, Soft state, Eventual consistency.</p>
+        <div class="warn"><b>Interview framing:</b> NoSQL is not “better than SQL”; it is better for specific access patterns and scale constraints.</div>
+      </div>
+    </section>
+
+    <section class="card" id="security">
+      <h3>18) DB Security, Authorization, Auditing</h3>
+      <div class="body">
+        <ul>
+          <li><span class="strong">Authentication:</span> verifies identity.</li>
+          <li><span class="strong">Authorization:</span> controls what identity can do (RBAC/ABAC).</li>
+          <li><span class="strong">Encryption:</span> at rest (disk), in transit (TLS), and field-level where needed.</li>
+          <li><span class="strong">Auditing:</span> track who changed what and when.</li>
+          <li><span class="strong">Least privilege:</span> grant minimal required permissions.</li>
+        </ul>
+        <p><span class="strong">SQL injection prevention:</span> parameterized queries/prepared statements, never string-concatenate user inputs into SQL.</p>
+      </div>
+    </section>
+
+    <section class="card" id="backup-ha">
+      <h3>19) Backup, Restore, and High Availability</h3>
+      <div class="body">
+        <p><span class="strong">Backup types:</span> full, differential, incremental, snapshot-based.</p>
+        <ul>
+          <li><span class="strong">RPO (Recovery Point Objective):</span> acceptable data loss window.</li>
+          <li><span class="strong">RTO (Recovery Time Objective):</span> acceptable restoration time.</li>
+          <li><span class="strong">PITR:</span> point-in-time recovery using base backup + WAL logs.</li>
+          <li><span class="strong">HA setup:</span> primary-replica, failover automation, health checks.</li>
+        </ul>
+        <p><span class="strong">Best practice:</span> backups are useful only if restore drills are tested regularly.</p>
+      </div>
+    </section>
+
+    <section class="card" id="oltp-olap">
+      <h3>20) OLTP vs OLAP, Data Warehousing</h3>
+      <div class="body">
+        <table>
+          <thead><tr><th>Dimension</th><th>OLTP</th><th>OLAP</th></tr></thead>
+          <tbody>
+            <tr><td>Goal</td><td>Fast transactions</td><td>Analytical queries</td></tr>
+            <tr><td>Workload</td><td>Insert/update/read few rows</td><td>Read large volumes, aggregates</td></tr>
+            <tr><td>Schema style</td><td>Highly normalized</td><td>Star/snowflake denormalized</td></tr>
+            <tr><td>Users</td><td>Applications/end users</td><td>Analysts/BI systems</td></tr>
+          </tbody>
+        </table>
+        <p><span class="strong">Warehouse concepts:</span> fact table, dimension tables, ETL/ELT, slowly changing dimensions.</p>
+      </div>
+    </section>
+
+    <section class="card" id="qa">
+      <h3>21) High-Frequency Interview Q&A</h3>
+      <div class="body">
+        <div class="qa"><b>Q:</b> Why is normalization needed?<br><b>A:</b> It reduces redundancy and anomalies; improves consistency and maintainability.</div>
+        <div class="qa"><b>Q:</b> 3NF vs BCNF?<br><b>A:</b> BCNF is stricter; every determinant must be a candidate key.</div>
+        <div class="qa"><b>Q:</b> Clustered vs non-clustered index?<br><b>A:</b> Clustered determines physical row order; non-clustered is separate pointer structure.</div>
+        <div class="qa"><b>Q:</b> Why can phantom reads occur?<br><b>A:</b> Range query re-executed sees newly inserted/deleted rows matching predicate.</div>
+        <div class="qa"><b>Q:</b> Why is WAL important?<br><b>A:</b> Ensures redo/undo information survives crash before dirty pages flush.</div>
+        <div class="qa"><b>Q:</b> Repeatable Read vs Serializable?<br><b>A:</b> Serializable prevents phantoms and emulates serial execution, at higher concurrency cost.</div>
+        <div class="qa"><b>Q:</b> SQL join faster with FK index?<br><b>A:</b> Yes, because lookup on referenced rows avoids full scans for join/filter paths.</div>
+        <div class="qa"><b>Q:</b> What is denormalization and when to use it?<br><b>A:</b> Intentional redundancy to reduce joins in read-heavy paths after measuring bottlenecks.</div>
+      </div>
+    </section>
+
+    <section class="card" id="numericals">
+      <h3>22) Must-Do Numericals & Cheatsheet</h3>
+      <div class="body">
+        <p>For tests, practice these repeatedly:</p>
+        <ul>
+          <li>FD closure and candidate key finding (<code>X+</code> computation).</li>
+          <li>Normalization decomposition with lossless/dependency-preserving proof.</li>
+          <li>Conflict serializability using precedence graph cycle detection.</li>
+          <li>Recoverable/cascadeless/strict schedule classification.</li>
+          <li>Transaction anomaly identification under each isolation level.</li>
+          <li>Index selection reasoning for query workload.</li>
+        </ul>
+        <p class="mini">Memory line: <b>DDL defines, DML manipulates, TCL controls transaction, DCL controls permission.</b></p>
+      </div>
+    </section>
+
+    <section class="card" id="prep-plan">
+      <h3>23) 10-Day Master Preparation Plan</h3>
+      <div class="body">
+        <div class="plan"><span class="strong">Day 1:</span> Fundamentals, architecture, data models, 3-schema architecture.</div>
+        <div class="plan"><span class="strong">Day 2:</span> ER model + mapping, keys, constraints, FD basics.</div>
+        <div class="plan"><span class="strong">Day 3:</span> Normalization deep practice (1NF to BCNF) and decomposition proofs.</div>
+        <div class="plan"><span class="strong">Day 4:</span> SQL core + joins + group by/having + subqueries.</div>
+        <div class="plan"><span class="strong">Day 5:</span> Advanced SQL (CTE, windows, views, triggers, procedures).</div>
+        <div class="plan"><span class="strong">Day 6:</span> Indexes, storage, query optimizer, EXPLAIN plans.</div>
+        <div class="plan"><span class="strong">Day 7:</span> Transactions, schedules, serializability numericals.</div>
+        <div class="plan"><span class="strong">Day 8:</span> Concurrency control, locks, isolation levels, deadlocks.</div>
+        <div class="plan"><span class="strong">Day 9:</span> Recovery, WAL, checkpoints, backup/HA, distributed DB and CAP.</div>
+        <div class="plan"><span class="strong">Day 10:</span> Full mock interview + previous year papers + revision sheet.</div>
+        <p class="green"><span class="strong">Daily rule:</span> 20 MCQs + 4 long answers + 3 SQL questions + 1 schedule/normalization numerical.</p>
+      </div>
+    </section>
+  </main>
+</div>
+</body>
+</html>
