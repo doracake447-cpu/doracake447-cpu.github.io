@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Add material — Learn</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bp-0:#081826; --bp-1:#0b2238; --bp-2:#0f2d4d; --bp-3:#123655;
+  --line:#7fdbff; --line-dim:rgba(127,219,255,0.16); --line-dim2:rgba(127,219,255,0.28);
+  --cyan:#7fe0ff; --amber:#f2b84b; --amber-dim:rgba(242,184,75,0.35);
+  --green:#7ee08a; --red:#f27a7a;
+  --ink:#eaf4fc; --ink-dim:#9fb8cc; --ink-faint:#5f7d95;
+  --mono:'JetBrains Mono', ui-monospace, monospace;
+  --disp:'Space Grotesk', sans-serif;
+  --body:'Inter', sans-serif;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:
+    linear-gradient(var(--bp-0), var(--bp-0)) fixed,
+    repeating-linear-gradient(0deg, var(--line-dim) 0 1px, transparent 1px 40px),
+    repeating-linear-gradient(90deg, var(--line-dim) 0 1px, transparent 1px 40px);
+  background-color:var(--bp-0); color:var(--ink); font-family:var(--body); min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+a{ color:var(--cyan); }
+code{ font-family:var(--mono); background:var(--bp-1); padding:1px 5px; border:1px solid var(--line-dim2); font-size:0.92em; }
+.wrap{ max-width:760px; margin:0 auto; padding:56px 26px 100px; }
+
+.back{ font-family:var(--mono); font-size:11.5px; color:var(--ink-faint); display:inline-block; margin-bottom:22px; }
+.back:hover{ color:var(--cyan); }
+
+h1{ font-family:var(--disp); font-size:30px; margin:0 0 8px; }
+.sub{ font-family:var(--body); font-size:14px; color:var(--ink-dim); margin:0 0 34px; line-height:1.6; max-width:600px; }
+
+.panel{
+  border:1px solid var(--line-dim2); background:linear-gradient(180deg, rgba(15,45,77,0.35), rgba(10,31,51,0.15));
+  position:relative; margin-bottom:26px;
+}
+.panel::before{ content:""; position:absolute; top:-1px; left:-1px; width:9px; height:9px; border-top:1.5px solid var(--cyan); border-left:1.5px solid var(--cyan); }
+.panel::after{ content:""; position:absolute; bottom:-1px; right:-1px; width:9px; height:9px; border-bottom:1.5px solid var(--cyan); border-right:1.5px solid var(--cyan); }
+.panel-head{ padding:16px 22px; border-bottom:1px dashed var(--line-dim2); display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; }
+.panel-head h2{ font-family:var(--disp); font-size:17px; margin:0; font-weight:600; }
+.panel-tag{ font-family:var(--mono); font-size:9.5px; color:var(--amber); text-transform:uppercase; letter-spacing:.1em; border:1px solid var(--amber-dim); padding:3px 8px; }
+.panel-body{ padding:20px 22px 24px; }
+.panel-body p{ font-size:13.3px; color:var(--ink-dim); line-height:1.65; margin:0 0 14px; }
+.panel-body ol, .panel-body ul{ font-size:13.3px; color:var(--ink-dim); line-height:1.8; margin:0 0 14px; padding-left:20px; }
+
+label{ display:block; font-family:var(--mono); font-size:10.5px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.07em; margin:0 0 6px; }
+.field{ margin-bottom:16px; }
+input[type=text], textarea, select{
+  width:100%; background:var(--bp-1); border:1px solid var(--line-dim2); color:var(--ink);
+  font-family:var(--mono); font-size:13px; padding:10px 12px; outline:none; transition:border-color .15s;
+}
+input[type=text]:focus, textarea:focus, select:focus{ border-color:var(--cyan); }
+textarea{ resize:vertical; min-height:60px; font-family:var(--body); }
+
+.file-drop{
+  border:1.5px dashed var(--line-dim2); padding:26px; text-align:center; cursor:pointer; transition:all .15s;
+  font-family:var(--mono); font-size:12.5px; color:var(--ink-faint);
+}
+.file-drop:hover, .file-drop.drag{ border-color:var(--cyan); color:var(--ink); }
+.file-drop.has-file{ border-color:var(--green); color:var(--ink); border-style:solid; }
+input[type=file]{ display:none; }
+
+.btn{
+  font-family:var(--mono); font-size:12.5px; letter-spacing:.03em; text-transform:uppercase;
+  border:1px solid var(--cyan); color:var(--cyan); background:transparent; padding:11px 20px; cursor:pointer;
+  transition:all .12s;
+}
+.btn:hover{ background:rgba(127,224,255,0.1); }
+.btn:disabled{ opacity:0.4; cursor:not-allowed; }
+.btn.primary{ border-color:var(--amber); color:var(--amber); }
+.btn.primary:hover{ background:rgba(242,184,75,0.1); }
+.btn-row{ display:flex; gap:12px; flex-wrap:wrap; margin-top:8px; }
+
+.snippet-box{ position:relative; }
+pre{
+  margin:0; background:var(--bp-0); border:1px solid var(--line-dim); padding:14px 16px;
+  overflow-x:auto; font-family:var(--mono); font-size:12px; line-height:1.6; color:var(--ink-dim);
+}
+.copy-btn{
+  position:absolute; top:8px; right:8px; font-family:var(--mono); font-size:10px; color:var(--ink-faint);
+  background:var(--bp-1); border:1px solid var(--line-dim2); padding:4px 9px; cursor:pointer;
+}
+.copy-btn:hover{ color:var(--cyan); border-color:var(--cyan); }
+
+.log{
+  font-family:var(--mono); font-size:11.5px; line-height:1.8; margin-top:14px; max-height:220px; overflow-y:auto;
+}
+.log div{ padding:2px 0; }
+.log .ok{ color:var(--green); }
+.log .err{ color:var(--red); }
+.log .info{ color:var(--ink-faint); }
+
+.toggle-row{ display:flex; align-items:center; gap:10px; font-family:var(--mono); font-size:12px; color:var(--ink-dim); cursor:pointer; margin-bottom:16px; }
+.toggle-row input{ accent-color:var(--cyan); width:15px; height:15px; }
+
+.hidden{ display:none !important; }
+.warn{
+  border-left:2px solid var(--amber); padding:10px 14px; background:rgba(242,184,75,0.06);
+  font-size:12.5px; color:var(--ink-dim); line-height:1.6; margin-bottom:16px;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="index.html">← Back to Learn</a>
+  <h1>Add material</h1>
+  <p class="sub">Upload an HTML file, describe it, and either publish it straight to GitHub or grab the file + a snippet to add manually. Nothing here requires a server — this page is just JavaScript.</p>
+
+  <div class="panel">
+    <div class="panel-head"><h2>1 · Choose file &amp; details</h2></div>
+    <div class="panel-body">
+      <div class="field">
+        <label>HTML file</label>
+        <div class="file-drop" id="fileDrop">Click to choose, or drag an .html file here</div>
+        <input type="file" id="fileInput" accept=".html,.htm" />
+      </div>
+      <div class="field">
+        <label>Title</label>
+        <input type="text" id="titleInput" placeholder="e.g. Algorithm Atlas" />
+      </div>
+      <div class="field">
+        <label>Description</label>
+        <textarea id="descInput" placeholder="One or two sentences about what this covers."></textarea>
+      </div>
+      <div class="field">
+        <label>Category</label>
+        <input type="text" id="catInput" placeholder="e.g. Computer Science" list="catList" />
+        <datalist id="catList"></datalist>
+      </div>
+      <div class="field">
+        <label>Filename in /assets</label>
+        <input type="text" id="filenameInput" placeholder="auto-generated-from-title.html" />
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <h2>2 · Publish</h2>
+      <span class="panel-tag" id="modeTag">Manual mode</span>
+    </div>
+    <div class="panel-body">
+      <div class="toggle-row" id="connectToggle">
+        <input type="checkbox" id="connectCheck" />
+        <span>Connect to GitHub for one-click publish (optional)</span>
+      </div>
+
+      <div id="githubSettings" class="hidden">
+        <div class="warn">
+          Use a <b>fine-grained Personal Access Token</b> scoped to only this one repository, with
+          <b>Contents: Read and write</b> permission and nothing else. It's stored only in this browser's
+          local storage — never committed, never sent anywhere except api.github.com. Don't share this page's
+          URL with the token saved on a shared computer.
+          <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">Create a token →</a>
+        </div>
+        <div class="field"><label>GitHub username</label><input type="text" id="ghOwner" placeholder="e.g. yourname" /></div>
+        <div class="field"><label>Repository name</label><input type="text" id="ghRepo" placeholder="e.g. yourname.github.io" /></div>
+        <div class="field"><label>Branch</label><input type="text" id="ghBranch" placeholder="main" value="main" /></div>
+        <div class="field"><label>Personal access token</label><input type="text" id="ghToken" placeholder="github_pat_…" /></div>
+        <div class="btn-row"><button class="btn" id="saveSettings">Save connection</button></div>
+      </div>
+
+      <div id="manualBlock">
+        <p>No setup needed. This generates the file and the exact snippet to add — you place both by hand.</p>
+        <div class="btn-row">
+          <button class="btn" id="downloadFileBtn" disabled>Download HTML file</button>
+        </div>
+      </div>
+
+      <div id="publishBlock" class="hidden">
+        <p>This will commit the file to <code id="pathPreview">assets/…</code> and add an entry to <code>manifest.json</code> directly in your repo.</p>
+        <div class="btn-row">
+          <button class="btn primary" id="publishBtn" disabled>Publish to GitHub</button>
+        </div>
+        <div class="log" id="publishLog"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel" id="manualStepsPanel">
+    <div class="panel-head"><h2>3 · Manifest snippet</h2></div>
+    <div class="panel-body">
+      <p>Paste this into the array inside <code>manifest.json</code>, then commit the downloaded file into <code>/assets</code>. Either via <code>git add / commit / push</code>, or GitHub's web UI: open the repo → <code>assets</code> folder → "Add file" → "Upload files".</p>
+      <div class="snippet-box">
+        <button class="copy-btn" id="copySnippet">copy</button>
+        <pre id="snippetOut">// fill in the fields above</pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const fileInput = document.getElementById('fileInput');
+  const fileDrop = document.getElementById('fileDrop');
+  const titleInput = document.getElementById('titleInput');
+  const descInput = document.getElementById('descInput');
+  const catInput = document.getElementById('catInput');
+  const filenameInput = document.getElementById('filenameInput');
+  const downloadFileBtn = document.getElementById('downloadFileBtn');
+  const publishBtn = document.getElementById('publishBtn');
+  const snippetOut = document.getElementById('snippetOut');
+  const pathPreview = document.getElementById('pathPreview');
+  const connectCheck = document.getElementById('connectCheck');
+  const githubSettings = document.getElementById('githubSettings');
+  const manualBlock = document.getElementById('manualBlock');
+  const publishBlock = document.getElementById('publishBlock');
+  const modeTag = document.getElementById('modeTag');
+  const publishLog = document.getElementById('publishLog');
+  const catList = document.getElementById('catList');
+
+  let fileObj = null;
+  let fileDataUrl = null; // data:...;base64,....
+
+  function slugify(s){
+    return (s||'').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'') || 'material';
+  }
+
+  function todayStr(){
+    return new Date().toISOString().slice(0,10);
+  }
+
+  function currentEntry(){
+    const title = titleInput.value.trim() || 'Untitled';
+    const filename = filenameInput.value.trim() || (slugify(title) + '.html');
+    return {
+      id: slugify(title),
+      title,
+      description: descInput.value.trim(),
+      category: catInput.value.trim() || 'General',
+      file: 'assets/' + filename,
+      date: todayStr()
+    };
+  }
+
+  function refreshSnippet(){
+    const entry = currentEntry();
+    pathPreview.textContent = entry.file;
+    snippetOut.textContent = JSON.stringify(entry, null, 2) + ',';
+    downloadFileBtn.disabled = !fileObj;
+    publishBtn.disabled = !fileObj;
+  }
+
+  [titleInput, descInput, catInput, filenameInput].forEach(el => el.addEventListener('input', refreshSnippet));
+
+  fileDrop.addEventListener('click', () => fileInput.click());
+  fileDrop.addEventListener('dragover', e => { e.preventDefault(); fileDrop.classList.add('drag'); });
+  fileDrop.addEventListener('dragleave', () => fileDrop.classList.remove('drag'));
+  fileDrop.addEventListener('drop', e => {
+    e.preventDefault(); fileDrop.classList.remove('drag');
+    if(e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+  });
+  fileInput.addEventListener('change', () => { if(fileInput.files.length) handleFile(fileInput.files[0]); });
+
+  function handleFile(f){
+    fileObj = f;
+    fileDrop.textContent = `✓ ${f.name} (${Math.round(f.size/1024)} KB)`;
+    fileDrop.classList.add('has-file');
+    if(!titleInput.value) titleInput.value = f.name.replace(/\.html?$/i,'').replace(/[-_]+/g,' ').replace(/\b\w/g, c=>c.toUpperCase());
+    if(!filenameInput.value) filenameInput.value = slugify(titleInput.value || f.name.replace(/\.html?$/i,'')) + '.html';
+    const reader = new FileReader();
+    reader.onload = () => { fileDataUrl = reader.result; refreshSnippet(); };
+    reader.readAsDataURL(f);
+  }
+
+  downloadFileBtn.addEventListener('click', () => {
+    if(!fileObj) return;
+    const entry = currentEntry();
+    const a = document.createElement('a');
+    a.href = fileDataUrl;
+    a.download = entry.file.split('/').pop();
+    a.click();
+  });
+
+  document.getElementById('copySnippet').addEventListener('click', (e) => {
+    navigator.clipboard.writeText(snippetOut.textContent).then(() => {
+      e.target.textContent = 'copied'; setTimeout(() => e.target.textContent = 'copy', 1300);
+    });
+  });
+
+  // ---- category autocomplete from existing manifest ----
+  fetch('manifest.json').then(r => r.ok ? r.json() : []).then(data => {
+    const cats = Array.from(new Set((data||[]).map(m => m.category).filter(Boolean)));
+    catList.innerHTML = cats.map(c => `<option value="${c}">`).join('');
+  }).catch(()=>{});
+
+  // ---- GitHub connect mode ----
+  const ghOwner = document.getElementById('ghOwner');
+  const ghRepo = document.getElementById('ghRepo');
+  const ghBranch = document.getElementById('ghBranch');
+  const ghToken = document.getElementById('ghToken');
+
+  function loadSettings(){
+    try {
+      const s = JSON.parse(localStorage.getItem('learn_gh_settings') || 'null');
+      if(s){
+        ghOwner.value = s.owner || ''; ghRepo.value = s.repo || '';
+        ghBranch.value = s.branch || 'main'; ghToken.value = s.token || '';
+        return s;
+      }
+    } catch(e){}
+    return null;
+  }
+  const savedSettings = loadSettings();
+  if(savedSettings && savedSettings.owner){ connectCheck.checked = true; }
+
+  function applyMode(){
+    const connected = connectCheck.checked;
+    githubSettings.classList.toggle('hidden', !connected);
+    manualBlock.classList.toggle('hidden', connected);
+    publishBlock.classList.toggle('hidden', !connected);
+    document.getElementById('manualStepsPanel').classList.toggle('hidden', connected);
+    modeTag.textContent = connected ? 'Connected mode' : 'Manual mode';
+  }
+  connectCheck.addEventListener('change', applyMode);
+  applyMode();
+
+  document.getElementById('saveSettings').addEventListener('click', () => {
+    const s = { owner: ghOwner.value.trim(), repo: ghRepo.value.trim(), branch: ghBranch.value.trim() || 'main', token: ghToken.value.trim() };
+    localStorage.setItem('learn_gh_settings', JSON.stringify(s));
+    logMsg('Connection saved to this browser.', 'ok');
+  });
+
+  function logMsg(msg, cls){
+    const div = document.createElement('div');
+    div.className = cls || 'info';
+    div.textContent = msg;
+    publishLog.appendChild(div);
+    publishLog.scrollTop = publishLog.scrollHeight;
+  }
+
+  async function ghRequest(path, options){
+    const s = loadSettings();
+    if(!s || !s.owner || !s.repo || !s.token) throw new Error('GitHub connection not configured.');
+    const url = `https://api.github.com/repos/${s.owner}/${s.repo}/contents/${path}`;
+    const res = await fetch(url, Object.assign({
+      headers: {
+        'Authorization': `Bearer ${s.token}`,
+        'Accept': 'application/vnd.github+json'
+      }
+    }, options));
+    return res;
+  }
+
+  publishBtn.addEventListener('click', async () => {
+    if(!fileObj || !fileDataUrl) return;
+    publishBtn.disabled = true;
+    publishLog.innerHTML = '';
+    const s = loadSettings();
+    const entry = currentEntry();
+    const base64Content = fileDataUrl.split(',')[1];
+
+    try {
+      logMsg(`Uploading ${entry.file} …`);
+      const putFileRes = await ghRequest(entry.file, {
+        method: 'PUT',
+        body: JSON.stringify({
+          message: `Add material: ${entry.title}`,
+          content: base64Content,
+          branch: s.branch
+        })
+      });
+      if(!putFileRes.ok){
+        const errBody = await putFileRes.json().catch(()=>({}));
+        throw new Error(`File upload failed (${putFileRes.status}): ${errBody.message || putFileRes.statusText}`);
+      }
+      logMsg(`File committed: ${entry.file}`, 'ok');
+
+      logMsg('Fetching current manifest.json …');
+      const getManifestRes = await ghRequest(`manifest.json?ref=${encodeURIComponent(s.branch)}`, { method: 'GET' });
+      if(!getManifestRes.ok) throw new Error(`Could not read manifest.json (${getManifestRes.status})`);
+      const manifestMeta = await getManifestRes.json();
+      const currentJson = JSON.parse(decodeURIComponent(escape(atob(manifestMeta.content.replace(/\n/g,'')))));
+      currentJson.push(entry);
+      const newContent = btoa(unescape(encodeURIComponent(JSON.stringify(currentJson, null, 2) + '\n')));
+
+      logMsg('Updating manifest.json …');
+      const putManifestRes = await ghRequest('manifest.json', {
+        method: 'PUT',
+        body: JSON.stringify({
+          message: `Index material: ${entry.title}`,
+          content: newContent,
+          sha: manifestMeta.sha,
+          branch: s.branch
+        })
+      });
+      if(!putManifestRes.ok){
+        const errBody = await putManifestRes.json().catch(()=>({}));
+        throw new Error(`manifest.json update failed (${putManifestRes.status}): ${errBody.message || putManifestRes.statusText}`);
+      }
+      logMsg('manifest.json updated.', 'ok');
+      logMsg(`Done. It'll appear on your site once GitHub Pages rebuilds (~1 min).`, 'ok');
+    } catch(err){
+      logMsg(String(err.message || err), 'err');
+    } finally {
+      publishBtn.disabled = false;
+    }
+  });
+
+  refreshSnippet();
+})();
+</script>
+</body>
+</html>
