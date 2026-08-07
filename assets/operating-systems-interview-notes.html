@@ -12,7 +12,7 @@
   --bp-0:#081826; --bp-1:#0b2238; --bp-2:#0f2d4d; --bp-3:#123655;
   --line:#7fdbff; --line-dim:rgba(127,219,255,0.16); --line-dim2:rgba(127,219,255,0.28);
   --cyan:#7fe0ff; --amber:#f2b84b; --amber-dim:rgba(242,184,75,0.35);
-  --green:#7ee08a; --ink:#eaf4fc; --ink-dim:#9fb8cc; --ink-faint:#5f7d95;
+  --green:#7ee08a; --pink:#f2789f; --violet:#b39bf0; --ink:#eaf4fc; --ink-dim:#9fb8cc; --ink-faint:#5f7d95;
   --mono:'JetBrains Mono', ui-monospace, monospace;
   --disp:'Space Grotesk', sans-serif;
   --body:'Inter', sans-serif;
@@ -38,20 +38,23 @@ code{
   background:var(--bp-1);
   border:1px solid var(--line-dim2);
   padding:1px 6px;
+  color:var(--amber);
 }
-.wrap{ max-width:1080px; margin:0 auto; padding:48px 22px 90px; display:grid; grid-template-columns:280px 1fr; gap:24px; }
+.wrap{ max-width:1120px; margin:0 auto; padding:48px 22px 90px; display:grid; grid-template-columns:280px 1fr; gap:24px; }
 .side{
   position:sticky; top:16px; align-self:start;
   border:1px solid var(--line-dim2);
   background:linear-gradient(180deg, rgba(15,45,77,0.45), rgba(10,31,51,0.2));
   padding:16px;
+  max-height:calc(100vh - 32px);
+  overflow-y:auto;
 }
 .brand{
   display:flex; align-items:flex-start; gap:10px; margin-bottom:10px;
 }
 .brand-mark{
   width:34px; height:34px; border:1.5px solid var(--cyan); display:flex; align-items:center; justify-content:center;
-  font-family:var(--mono); font-size:11px; color:var(--cyan);
+  font-family:var(--mono); font-size:11px; color:var(--cyan); flex-shrink:0;
 }
 .brand h1{
   margin:0; font-family:var(--disp); font-size:18px; line-height:1.15;
@@ -59,19 +62,17 @@ code{
 .brand p{
   margin:3px 0 0; font-family:var(--mono); font-size:10px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.08em;
 }
-.back{
-  display:inline-block; margin:8px 0 14px; font-family:var(--mono); font-size:11px; color:var(--cyan);
-}
 .small{
   font-family:var(--mono); font-size:11px; color:var(--ink-faint); margin:0 0 12px; line-height:1.6;
 }
 .toc-title{
-  font-family:var(--mono); font-size:10px; color:var(--ink-faint); letter-spacing:.12em; text-transform:uppercase; margin:0 0 8px;
+  font-family:var(--mono); font-size:10px; color:var(--ink-faint); letter-spacing:.12em; text-transform:uppercase; margin:14px 0 8px;
 }
+.toc-title:first-of-type{ margin-top:0; }
 .toc{ list-style:none; margin:0; padding:0; }
-.toc li{ margin:0 0 6px; }
+.toc li{ margin:0 0 4px; }
 .toc a{
-  display:block; padding:6px 7px; font-size:12px; color:var(--ink-dim); border:1px solid transparent;
+  display:block; padding:5px 7px; font-size:12px; color:var(--ink-dim); border:1px solid transparent;
 }
 .toc a:hover{ border-color:var(--line-dim2); color:var(--ink); }
 .main{ min-width:0; }
@@ -96,24 +97,33 @@ code{
   border:1px solid var(--line-dim2);
   background:linear-gradient(180deg, rgba(15,45,77,0.35), rgba(10,31,51,0.15));
   margin-bottom:16px;
+  scroll-margin-top:16px;
 }
 .card h3{
   margin:0; padding:14px 18px; border-bottom:1px dashed var(--line-dim2);
   font-family:var(--disp); font-size:22px;
+  display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
+}
+.card h3 .tag{
+  font-family:var(--mono); font-size:10px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.08em; font-weight:500;
 }
 .card .body{
   padding:14px 18px 18px;
 }
+.card h4{
+  font-family:var(--disp); font-size:15px; color:var(--cyan); margin:18px 0 8px; letter-spacing:.01em;
+}
+.card h4:first-child{ margin-top:0; }
 .card p{
   color:var(--ink-dim); line-height:1.72; font-size:14px; margin:0 0 10px;
 }
-.card ul{
+.card ul, .card ol{
   margin:0 0 8px; padding-left:20px; color:var(--ink-dim); line-height:1.75; font-size:14px;
 }
 .card li{ margin:0 0 6px; }
 .strong{ color:var(--ink); font-weight:600; }
 table{
-  width:100%; border-collapse:collapse; margin:10px 0 10px; font-size:13px;
+  width:100%; border-collapse:collapse; margin:10px 0 14px; font-size:13px;
 }
 th,td{
   border:1px solid var(--line-dim2); padding:8px 9px; text-align:left; vertical-align:top;
@@ -130,9 +140,55 @@ td{ color:var(--ink-dim); line-height:1.5; }
   border:1px dashed var(--line-dim2); padding:10px 12px; margin:8px 0; font-size:13px; color:var(--ink-dim);
 }
 .green{ color:var(--green); }
+
+/* code blocks */
+.codeblock{
+  position:relative;
+  margin:10px 0 16px;
+  border:1px solid var(--line-dim2);
+  background:#061320;
+  overflow:hidden;
+}
+.codeblock .cb-head{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:6px 12px;
+  background:var(--bp-1);
+  border-bottom:1px solid var(--line-dim2);
+  font-family:var(--mono); font-size:10.5px; color:var(--ink-faint);
+  text-transform:uppercase; letter-spacing:.08em;
+}
+.codeblock .cb-head span.lang{ color:var(--cyan); }
+.codeblock pre{
+  margin:0; padding:14px 16px; overflow-x:auto;
+  font-family:var(--mono); font-size:12.5px; line-height:1.65; color:var(--ink-dim);
+}
+.codeblock pre code{
+  background:none; border:none; padding:0; color:inherit; font-size:1em;
+}
+.tk-kw{ color:var(--pink); }
+.tk-type{ color:var(--cyan); }
+.tk-str{ color:var(--green); }
+.tk-com{ color:var(--ink-faint); font-style:italic; }
+.tk-num{ color:var(--amber); }
+.tk-fn{ color:var(--violet); }
+
+.worked{
+  border:1px solid var(--line-dim2);
+  background:rgba(127,224,255,0.05);
+  padding:12px 14px;
+  margin:10px 0;
+  font-size:13px;
+  color:var(--ink-dim);
+  line-height:1.7;
+}
+.worked b{ color:var(--ink); }
+.formula{
+  font-family:var(--mono); font-size:12.5px; color:var(--amber);
+  background:var(--bp-1); border:1px solid var(--line-dim2); padding:8px 10px; margin:6px 0; display:block;
+}
 @media (max-width:980px){
   .wrap{ grid-template-columns:1fr; }
-  .side{ position:relative; top:0; }
+  .side{ position:relative; top:0; max-height:none; }
 }
 </style>
 </head>
@@ -146,52 +202,132 @@ td{ color:var(--ink-dim); line-height:1.5; }
         <p>Interview Notes</p>
       </div>
     </div>
-    <a class="back" href="../index.html">← Back to Learn</a>
-    <p class="small">Use this as a high-yield revision sheet for technical interviews and academic tests.</p>
+    <p class="small">A self-contained revision sheet for technical interviews and academic tests — concepts, formulas, worked examples, and runnable code.</p>
     <p class="toc-title">Jump to section</p>
     <ul class="toc">
       <li><a href="#basics">1. Fundamentals</a></li>
-      <li><a href="#process-thread">2. Process vs Thread</a></li>
-      <li><a href="#cpu-scheduling">3. CPU Scheduling</a></li>
-      <li><a href="#sync">4. Synchronization</a></li>
-      <li><a href="#deadlock">5. Deadlocks</a></li>
-      <li><a href="#memory">6. Memory Management</a></li>
-      <li><a href="#virtual-memory">7. Virtual Memory</a></li>
-      <li><a href="#io-fs">8. File System & I/O</a></li>
-      <li><a href="#interview-qa">9. Interview Q&A</a></li>
-      <li><a href="#test-plan">10. Test Preparation Plan</a></li>
+      <li><a href="#boot">2. Boot & System Calls</a></li>
+      <li><a href="#process-thread">3. Process vs Thread</a></li>
+      <li><a href="#ipc">4. Inter-Process Communication</a></li>
+      <li><a href="#cpu-scheduling">5. CPU Scheduling</a></li>
+      <li><a href="#sync">6. Synchronization</a></li>
+      <li><a href="#classic-problems">7. Classic Sync Problems</a></li>
+      <li><a href="#deadlock">8. Deadlocks</a></li>
+      <li><a href="#memory">9. Memory Management</a></li>
+      <li><a href="#virtual-memory">10. Virtual Memory</a></li>
+      <li><a href="#io-fs">11. File System & I/O</a></li>
+      <li><a href="#disk-sched">12. Disk Scheduling</a></li>
+      <li><a href="#interview-qa">13. Interview Q&A</a></li>
+      <li><a href="#pitfalls">14. Common Pitfalls</a></li>
+      <li><a href="#test-plan">15. 7-Day Test Plan</a></li>
     </ul>
   </aside>
 
   <main class="main">
     <section class="hero">
       <h2>Operating Systems Detailed Notes</h2>
-      <p>Focus on concepts, trade-offs, and common interview explanations. In interviews, always mention <span class="strong">why a design is used</span>, not just definitions.</p>
+      <p>Focus on concepts, trade-offs, and common interview explanations. In interviews, always mention <span class="strong">why a design is used</span>, not just definitions — and be ready to sketch the code that implements the idea, not just describe it.</p>
       <div class="chip-row">
         <span class="chip">Core concepts</span>
-        <span class="chip">Common pitfalls</span>
+        <span class="chip">Worked examples</span>
+        <span class="chip">Runnable code</span>
         <span class="chip">Exam-ready formulas</span>
         <span class="chip">Interview answers</span>
       </div>
     </section>
 
     <section class="card" id="basics">
-      <h3>1) Fundamentals</h3>
+      <h3>1) Fundamentals <span class="tag">Concepts</span></h3>
       <div class="body">
-        <p>An <span class="strong">Operating System</span> is a resource manager that provides abstractions over hardware and enables safe, efficient program execution.</p>
+        <p>An <span class="strong">Operating System</span> is a resource manager that provides abstractions over hardware and enables safe, efficient program execution. It sits between applications and hardware, multiplexing CPU, memory, storage, and devices among competing programs.</p>
         <ul>
-          <li><span class="strong">Kernel mode vs User mode:</span> privileged instructions execute only in kernel mode.</li>
-          <li><span class="strong">System call:</span> controlled transition from user mode to kernel mode.</li>
-          <li><span class="strong">Interrupt:</span> asynchronous event (I/O/device/timer) that preempts normal flow.</li>
-          <li><span class="strong">Trap/Exception:</span> synchronous event caused by current instruction (e.g., divide-by-zero, page fault).</li>
-          <li><span class="strong">Context switch:</span> saving and restoring CPU state to switch runnable tasks; pure overhead.</li>
+          <li><span class="strong">Kernel mode vs User mode:</span> privileged instructions (I/O ports, MMU control, halting the CPU) execute only in kernel mode. User processes run in a restricted mode so a bug or malicious program cannot directly touch hardware.</li>
+          <li><span class="strong">System call:</span> a controlled transition from user mode to kernel mode, triggered by a software interrupt/trap instruction (e.g. <code>int 0x80</code> on old x86 Linux, <code>syscall</code> on x86-64).</li>
+          <li><span class="strong">Interrupt:</span> an asynchronous event (I/O completion, timer tick, device signal) that preempts normal flow regardless of what the CPU is doing.</li>
+          <li><span class="strong">Trap/Exception:</span> a synchronous event caused by the currently executing instruction (e.g. divide-by-zero, illegal opcode, page fault).</li>
+          <li><span class="strong">Context switch:</span> saving and restoring CPU state (registers, program counter, stack pointer, page table pointer) to switch which task the CPU runs; pure overhead — no useful work is done during the switch itself.</li>
         </ul>
-        <div class="qa"><b>Interview tip:</b> Mention that user mode improves security by preventing direct hardware access from applications.</div>
+        <h4>How a system call actually flows</h4>
+        <ol>
+          <li>User code calls a wrapper (e.g. libc's <code>read()</code>), which loads the syscall number and arguments into registers.</li>
+          <li>The wrapper executes a trap instruction, raising the privilege level to kernel mode.</li>
+          <li>The kernel's syscall dispatcher validates arguments and looks up the handler by syscall number.</li>
+          <li>The handler runs in kernel mode, touching hardware or kernel data structures as needed.</li>
+          <li>The kernel returns a result and drops the privilege level back to user mode.</li>
+        </ol>
+        <div class="codeblock">
+          <div class="cb-head"><span>Minimal syscall wrapper — x86-64 Linux</span><span class="lang">C / inline asm</span></div>
+          <pre><code><span class="tk-com">// A tiny illustration of what read()/write() wrappers do under the hood.
+// Real libc uses a vDSO/optimized path; this shows the raw mechanism.</span>
+<span class="tk-type">long</span> <span class="tk-fn">raw_write</span>(<span class="tk-type">int</span> fd, <span class="tk-type">const void</span> *buf, <span class="tk-type">unsigned long</span> count) {
+    <span class="tk-type">long</span> ret;
+    <span class="tk-kw">asm</span> <span class="tk-kw">volatile</span> (
+        <span class="tk-str">"syscall"</span>
+        : <span class="tk-str">"=a"</span>(ret)                    <span class="tk-com">// output: rax holds return value</span>
+        : <span class="tk-str">"a"</span>(<span class="tk-num">1</span>),                       <span class="tk-com">// syscall number for write() = 1</span>
+          <span class="tk-str">"D"</span>(fd), <span class="tk-str">"S"</span>(buf), <span class="tk-str">"d"</span>(count) <span class="tk-com">// rdi, rsi, rdx = args</span>
+        : <span class="tk-str">"rcx"</span>, <span class="tk-str">"r11"</span>, <span class="tk-str">"memory"</span>   <span class="tk-com">// clobbered by syscall instruction</span>
+    );
+    <span class="tk-kw">return</span> ret;
+}</code></pre>
+        </div>
+        <div class="qa"><b>Interview tip:</b> Explain that user mode improves security and stability by preventing applications from directly issuing privileged instructions — the kernel is the only trusted arbiter of shared hardware.</div>
+      </div>
+    </section>
+
+    <section class="card" id="boot">
+      <h3>2) Boot Process & System Call Categories <span class="tag">Concepts</span></h3>
+      <div class="body">
+        <h4>Simplified boot sequence</h4>
+        <ol>
+          <li><span class="strong">Firmware (BIOS/UEFI):</span> runs power-on self-test, initializes basic hardware, locates a bootable device.</li>
+          <li><span class="strong">Bootloader</span> (e.g. GRUB): loads the kernel image and an initial RAM disk into memory, passes control to the kernel entry point.</li>
+          <li><span class="strong">Kernel init:</span> sets up memory management, interrupt tables, device drivers, and mounts the root file system.</li>
+          <li><span class="strong">Init process</span> (PID 1, e.g. systemd/init): starts user-space services and eventually a login/shell.</li>
+        </ol>
+        <h4>System call categories to know</h4>
+        <table>
+          <thead><tr><th>Category</th><th>Examples</th><th>Purpose</th></tr></thead>
+          <tbody>
+            <tr><td>Process control</td><td><code>fork</code>, <code>exec</code>, <code>exit</code>, <code>wait</code></td><td>Create, replace, terminate, reap processes</td></tr>
+            <tr><td>File management</td><td><code>open</code>, <code>read</code>, <code>write</code>, <code>close</code></td><td>Manipulate files and descriptors</td></tr>
+            <tr><td>Device management</td><td><code>ioctl</code>, <code>read</code>/<code>write</code> on device files</td><td>Configure and use devices</td></tr>
+            <tr><td>Information maintenance</td><td><code>getpid</code>, <code>alarm</code>, <code>sleep</code></td><td>Query/set system or process data</td></tr>
+            <tr><td>Communication</td><td><code>pipe</code>, <code>shmget</code>, <code>mmap</code>, <code>socket</code></td><td>IPC and networking</td></tr>
+          </tbody>
+        </table>
+        <div class="codeblock">
+          <div class="cb-head"><span>fork() + exec() + wait() — the classic process-creation pattern</span><span class="lang">C</span></div>
+          <pre><code><span class="tk-kw">#include</span> <span class="tk-str">&lt;stdio.h&gt;</span>
+<span class="tk-kw">#include</span> <span class="tk-str">&lt;unistd.h&gt;</span>
+<span class="tk-kw">#include</span> <span class="tk-str">&lt;sys/wait.h&gt;</span>
+
+<span class="tk-type">int</span> <span class="tk-fn">main</span>(<span class="tk-type">void</span>) {
+    pid_t pid = <span class="tk-fn">fork</span>();  <span class="tk-com">// duplicates the calling process (copy-on-write)</span>
+
+    <span class="tk-kw">if</span> (pid &lt; <span class="tk-num">0</span>) {
+        <span class="tk-fn">perror</span>(<span class="tk-str">"fork failed"</span>);
+        <span class="tk-kw">return</span> <span class="tk-num">1</span>;
+    } <span class="tk-kw">else if</span> (pid == <span class="tk-num">0</span>) {
+        <span class="tk-com">// Child process: pid == 0 here</span>
+        <span class="tk-fn">execlp</span>(<span class="tk-str">"ls"</span>, <span class="tk-str">"ls"</span>, <span class="tk-str">"-l"</span>, <span class="tk-type">NULL</span>); <span class="tk-com">// replaces child's image</span>
+        <span class="tk-fn">perror</span>(<span class="tk-str">"exec failed"</span>);  <span class="tk-com">// only reached if exec fails</span>
+        _exit(<span class="tk-num">1</span>);
+    } <span class="tk-kw">else</span> {
+        <span class="tk-com">// Parent process: pid is the child's PID</span>
+        <span class="tk-type">int</span> status;
+        <span class="tk-fn">waitpid</span>(pid, &amp;status, <span class="tk-num">0</span>);  <span class="tk-com">// reap child, avoid a zombie</span>
+        <span class="tk-fn">printf</span>(<span class="tk-str">"child exited with %d\n"</span>, WEXITSTATUS(status));
+    }
+    <span class="tk-kw">return</span> <span class="tk-num">0</span>;
+}</code></pre>
+        </div>
+        <p><span class="strong">Copy-on-write (COW):</span> modern <code>fork()</code> does not physically copy the parent's memory. Both processes share the same physical pages marked read-only; a page is duplicated lazily only when either process writes to it. This makes <code>fork()</code> cheap even for large processes.</p>
       </div>
     </section>
 
     <section class="card" id="process-thread">
-      <h3>2) Process vs Thread</h3>
+      <h3>3) Process vs Thread <span class="tag">Concepts</span></h3>
       <div class="body">
         <table>
           <thead>
@@ -204,14 +340,77 @@ td{ color:var(--ink-dim); line-height:1.5; }
             <tr><td>Fault isolation</td><td>Strong</td><td>Weak (thread crash may kill process)</td></tr>
           </tbody>
         </table>
-        <p><span class="strong">PCB (Process Control Block)</span> stores PID, state, registers, program counter, scheduling info, memory pointers, open files.</p>
+        <p><span class="strong">PCB (Process Control Block)</span> stores PID, state, registers, program counter, scheduling info, memory pointers, open file table.</p>
         <p><span class="strong">Thread states:</span> new, ready, running, blocked/waiting, terminated.</p>
-        <p><span class="strong">Concurrency vs Parallelism:</span> concurrency is progress overlap; parallelism is simultaneous execution on multiple cores.</p>
+        <p><span class="strong">Concurrency vs Parallelism:</span> concurrency is progress overlap (may still run on one core, interleaved); parallelism is simultaneous execution on multiple cores.</p>
+        <div class="codeblock">
+          <div class="cb-head"><span>Creating two threads with POSIX pthreads</span><span class="lang">C</span></div>
+          <pre><code><span class="tk-kw">#include</span> <span class="tk-str">&lt;stdio.h&gt;</span>
+<span class="tk-kw">#include</span> <span class="tk-str">&lt;pthread.h&gt;</span>
+
+<span class="tk-type">void</span> *<span class="tk-fn">worker</span>(<span class="tk-type">void</span> *arg) {
+    <span class="tk-type">int</span> id = *(<span class="tk-type">int</span> *)arg;
+    <span class="tk-fn">printf</span>(<span class="tk-str">"thread %d running\n"</span>, id);
+    <span class="tk-kw">return</span> <span class="tk-type">NULL</span>;
+}
+
+<span class="tk-type">int</span> <span class="tk-fn">main</span>(<span class="tk-type">void</span>) {
+    pthread_t t1, t2;
+    <span class="tk-type">int</span> a = <span class="tk-num">1</span>, b = <span class="tk-num">2</span>;
+
+    <span class="tk-fn">pthread_create</span>(&amp;t1, <span class="tk-type">NULL</span>, worker, &amp;a); <span class="tk-com">// shares heap/globals with main</span>
+    <span class="tk-fn">pthread_create</span>(&amp;t2, <span class="tk-type">NULL</span>, worker, &amp;b);
+
+    <span class="tk-fn">pthread_join</span>(t1, <span class="tk-type">NULL</span>);  <span class="tk-com">// block until t1 finishes</span>
+    <span class="tk-fn">pthread_join</span>(t2, <span class="tk-type">NULL</span>);
+    <span class="tk-kw">return</span> <span class="tk-num">0</span>;
+}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" id="ipc">
+      <h3>4) Inter-Process Communication <span class="tag">Concepts + Code</span></h3>
+      <div class="body">
+        <p>Processes don't share memory by default, so the OS provides IPC mechanisms:</p>
+        <ul>
+          <li><span class="strong">Pipes:</span> unidirectional byte stream between related processes (e.g. parent/child).</li>
+          <li><span class="strong">Named pipes (FIFOs):</span> like pipes but have a path in the file system, so unrelated processes can use them.</li>
+          <li><span class="strong">Shared memory:</span> fastest IPC — a memory region mapped into multiple address spaces; needs external synchronization.</li>
+          <li><span class="strong">Message queues:</span> kernel-managed queue of discrete messages.</li>
+          <li><span class="strong">Sockets:</span> works across machines, not just same-host processes.</li>
+          <li><span class="strong">Signals:</span> asynchronous notification of an event (e.g. <code>SIGKILL</code>, <code>SIGCHLD</code>).</li>
+        </ul>
+        <div class="codeblock">
+          <div class="cb-head"><span>Anonymous pipe between parent and child</span><span class="lang">C</span></div>
+          <pre><code><span class="tk-kw">#include</span> <span class="tk-str">&lt;stdio.h&gt;</span>
+<span class="tk-kw">#include</span> <span class="tk-str">&lt;unistd.h&gt;</span>
+<span class="tk-kw">#include</span> <span class="tk-str">&lt;string.h&gt;</span>
+
+<span class="tk-type">int</span> <span class="tk-fn">main</span>(<span class="tk-type">void</span>) {
+    <span class="tk-type">int</span> fd[<span class="tk-num">2</span>];
+    <span class="tk-fn">pipe</span>(fd);                 <span class="tk-com">// fd[0] = read end, fd[1] = write end</span>
+
+    <span class="tk-kw">if</span> (<span class="tk-fn">fork</span>() == <span class="tk-num">0</span>) {
+        <span class="tk-fn">close</span>(fd[<span class="tk-num">0</span>]);         <span class="tk-com">// child only writes</span>
+        <span class="tk-fn">write</span>(fd[<span class="tk-num">1</span>], <span class="tk-str">"hi parent"</span>, <span class="tk-num">9</span>);
+        <span class="tk-fn">close</span>(fd[<span class="tk-num">1</span>]);
+    } <span class="tk-kw">else</span> {
+        <span class="tk-type">char</span> buf[<span class="tk-num">16</span>] = {<span class="tk-num">0</span>};
+        <span class="tk-fn">close</span>(fd[<span class="tk-num">1</span>]);         <span class="tk-com">// parent only reads</span>
+        <span class="tk-fn">read</span>(fd[<span class="tk-num">0</span>], buf, <span class="tk-kw">sizeof</span>(buf));
+        <span class="tk-fn">printf</span>(<span class="tk-str">"parent got: %s\n"</span>, buf);
+        <span class="tk-fn">close</span>(fd[<span class="tk-num">0</span>]);
+    }
+    <span class="tk-kw">return</span> <span class="tk-num">0</span>;
+}</code></pre>
+        </div>
+        <div class="qa"><b>Interview tip:</b> If asked "fastest IPC mechanism", say shared memory — but note it trades safety for speed since the OS does not serialize access; you must add your own mutex/semaphore.</div>
       </div>
     </section>
 
     <section class="card" id="cpu-scheduling">
-      <h3>3) CPU Scheduling</h3>
+      <h3>5) CPU Scheduling <span class="tag">Concepts + Numericals</span></h3>
       <div class="body">
         <p>Goal: maximize utilization and throughput, while minimizing waiting, turnaround, and response time.</p>
         <table>
@@ -224,40 +423,185 @@ td{ color:var(--ink-dim); line-height:1.5; }
             <tr><td>SRTF</td><td>Preemptive SJF</td><td>Good response for short jobs</td><td>High context-switch overhead</td></tr>
             <tr><td>Priority</td><td>Both</td><td>Supports importance</td><td>Starvation without aging</td></tr>
             <tr><td>Round Robin</td><td>Preemptive</td><td>Good interactive response</td><td>Quantum tuning sensitive</td></tr>
+            <tr><td>Multilevel Feedback Queue</td><td>Preemptive</td><td>Adapts to burst behavior</td><td>Complex, many tunable params</td></tr>
           </tbody>
         </table>
-        <p><span class="strong">Formula reminders:</span> <code>Turnaround = Completion - Arrival</code>, <code>Waiting = Turnaround - Burst</code>, <code>Response = FirstRun - Arrival</code>.</p>
-        <div class="qa"><b>Interview tip:</b> If asked about RR quantum, explain: too small means heavy context switches; too large behaves like FCFS.</div>
+        <p><span class="strong">Formula reminders:</span></p>
+        <span class="formula">Turnaround = Completion − Arrival</span>
+        <span class="formula">Waiting = Turnaround − Burst</span>
+        <span class="formula">Response = FirstRun − Arrival</span>
+        <div class="worked">
+          <b>Worked example — FCFS:</b> Processes P1(burst 5, arrival 0), P2(burst 3, arrival 1), P3(burst 8, arrival 2).<br>
+          Execution order by arrival: P1 runs 0–5, P2 runs 5–8, P3 runs 8–16.<br>
+          Waiting: P1 = 0, P2 = 5−1 = 4, P3 = 8−2 = 6. <b>Average waiting = (0+4+6)/3 = 3.33</b>.
+        </div>
+        <div class="codeblock">
+          <div class="cb-head"><span>Round Robin simulator (quantum-based)</span><span class="lang">Python</span></div>
+          <pre><code><span class="tk-kw">from</span> collections <span class="tk-kw">import</span> deque
+
+<span class="tk-kw">def</span> <span class="tk-fn">round_robin</span>(burst, quantum):
+    n = <span class="tk-fn">len</span>(burst)
+    remaining = <span class="tk-fn">list</span>(burst)
+    queue = deque(<span class="tk-fn">range</span>(n))
+    t = <span class="tk-num">0</span>
+    waiting = [<span class="tk-num">0</span>] * n
+    last_run = [<span class="tk-num">0</span>] * n
+
+    <span class="tk-kw">while</span> queue:
+        i = queue.popleft()
+        run = <span class="tk-fn">min</span>(quantum, remaining[i])
+        waiting[i] += t - last_run[i]
+        t += run
+        remaining[i] -= run
+        last_run[i] = t
+        <span class="tk-kw">if</span> remaining[i] &gt; <span class="tk-num">0</span>:
+            queue.append(i)   <span class="tk-com"># not done — go to back of the ready queue</span>
+
+    <span class="tk-kw">return</span> waiting
+
+<span class="tk-com"># burst times for P1, P2, P3; quantum = 4</span>
+<span class="tk-fn">print</span>(round_robin([<span class="tk-num">10</span>, <span class="tk-num">5</span>, <span class="tk-num">8</span>], <span class="tk-num">4</span>))</code></pre>
+        </div>
+        <div class="qa"><b>Interview tip:</b> If asked about RR quantum size, explain: too small means heavy context-switch overhead approaching processor-sharing; too large behaves like FCFS and hurts interactive response.</div>
       </div>
     </section>
 
     <section class="card" id="sync">
-      <h3>4) Synchronization & Critical Section</h3>
+      <h3>6) Synchronization & Critical Section <span class="tag">Concepts + Code</span></h3>
       <div class="body">
-        <p><span class="strong">Race condition:</span> output depends on interleaving of concurrent operations.</p>
+        <p><span class="strong">Race condition:</span> output depends on the interleaving of concurrent operations on shared state.</p>
         <p>Critical-section solution requirements:</p>
         <ul>
-          <li><span class="strong">Mutual exclusion</span></li>
-          <li><span class="strong">Progress</span></li>
-          <li><span class="strong">Bounded waiting</span></li>
+          <li><span class="strong">Mutual exclusion:</span> only one process/thread in the critical section at a time.</li>
+          <li><span class="strong">Progress:</span> selection of who enters next cannot be postponed indefinitely.</li>
+          <li><span class="strong">Bounded waiting:</span> a limit exists on how many times others enter before a waiting process gets its turn.</li>
         </ul>
-        <p><span class="strong">Mechanisms:</span></p>
+        <h4>Mechanisms</h4>
         <ul>
-          <li><span class="strong">Mutex:</span> lock/unlock primitive for exclusive access.</li>
-          <li><span class="strong">Semaphore:</span> integer + wait(P)/signal(V); binary or counting.</li>
-          <li><span class="strong">Monitor + condition variables:</span> higher-level structured synchronization.</li>
-          <li><span class="strong">Spinlock:</span> busy-wait lock, useful for very short critical sections.</li>
+          <li><span class="strong">Mutex:</span> lock/unlock primitive for exclusive access; has ownership — the locker must unlock.</li>
+          <li><span class="strong">Semaphore:</span> integer counter with atomic <code>wait()</code>/<code>signal()</code> (a.k.a. P/V); binary (0/1) or counting.</li>
+          <li><span class="strong">Monitor + condition variables:</span> a higher-level structured construct that bundles a lock with wait/notify.</li>
+          <li><span class="strong">Spinlock:</span> busy-wait lock; useful only for very short critical sections on multiprocessors, since it wastes CPU while waiting.</li>
         </ul>
-        <p>Classic problems to practice: Producer-Consumer, Readers-Writers, Dining Philosophers.</p>
-        <div class="qa"><b>Difference:</b> Mutex has ownership (locker unlocks). Semaphore generally does not enforce ownership.</div>
+        <div class="codeblock">
+          <div class="cb-head"><span>Mutex-protected shared counter</span><span class="lang">C / pthreads</span></div>
+          <pre><code>pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
+<span class="tk-type">long</span> counter = <span class="tk-num">0</span>;
+
+<span class="tk-type">void</span> *<span class="tk-fn">increment</span>(<span class="tk-type">void</span> *arg) {
+    <span class="tk-kw">for</span> (<span class="tk-type">int</span> i = <span class="tk-num">0</span>; i &lt; <span class="tk-num">100000</span>; i++) {
+        <span class="tk-fn">pthread_mutex_lock</span>(&amp;lock);    <span class="tk-com">// enter critical section</span>
+        counter++;                        <span class="tk-com">// safe: only one thread here</span>
+        <span class="tk-fn">pthread_mutex_unlock</span>(&amp;lock);  <span class="tk-com">// leave critical section</span>
+    }
+    <span class="tk-kw">return</span> <span class="tk-type">NULL</span>;
+}</code></pre>
+        </div>
+        <div class="codeblock">
+          <div class="cb-head"><span>Counting semaphore — limiting concurrent access</span><span class="lang">C / POSIX semaphores</span></div>
+          <pre><code><span class="tk-kw">#include</span> <span class="tk-str">&lt;semaphore.h&gt;</span>
+
+sem_t pool;               <span class="tk-com">// e.g. limit to 3 concurrent DB connections</span>
+<span class="tk-fn">sem_init</span>(&amp;pool, <span class="tk-num">0</span>, <span class="tk-num">3</span>);   <span class="tk-com">// 0 = shared between threads, initial count = 3</span>
+
+<span class="tk-type">void</span> <span class="tk-fn">use_resource</span>(<span class="tk-type">void</span>) {
+    <span class="tk-fn">sem_wait</span>(&amp;pool);      <span class="tk-com">// P(): decrement; blocks if count == 0</span>
+    <span class="tk-com">// ... use the limited resource ...</span>
+    <span class="tk-fn">sem_post</span>(&amp;pool);      <span class="tk-com">// V(): increment; wakes a waiter if any</span>
+}</code></pre>
+        </div>
+        <div class="qa"><b>Difference:</b> Mutex has ownership (the thread that locks must unlock). Semaphore generally does not enforce ownership — any thread can signal — which is why semaphores are also used for signaling between threads, not just exclusion.</div>
+      </div>
+    </section>
+
+    <section class="card" id="classic-problems">
+      <h3>7) Classic Synchronization Problems <span class="tag">Code</span></h3>
+      <div class="body">
+        <p>These three appear constantly in interviews — know the shared state and where each semaphore/lock goes.</p>
+        <h4>Producer–Consumer (bounded buffer)</h4>
+        <div class="codeblock">
+          <div class="cb-head"><span>Producer-Consumer with counting semaphores</span><span class="lang">C-like pseudocode</span></div>
+          <pre><code><span class="tk-type">int</span> BUF_SIZE = <span class="tk-num">10</span>;
+sem_t empty, full;      <span class="tk-com">// counts free slots / filled slots</span>
+pthread_mutex_t mutex;  <span class="tk-com">// protects the buffer itself</span>
+
+<span class="tk-fn">sem_init</span>(&amp;empty, <span class="tk-num">0</span>, BUF_SIZE); <span class="tk-com">// starts full of empty slots</span>
+<span class="tk-fn">sem_init</span>(&amp;full,  <span class="tk-num">0</span>, <span class="tk-num">0</span>);        <span class="tk-com">// starts with zero items</span>
+
+<span class="tk-fn">producer</span>() {
+    <span class="tk-kw">while</span> (<span class="tk-num">1</span>) {
+        item = <span class="tk-fn">produce_item</span>();
+        <span class="tk-fn">sem_wait</span>(&amp;empty);          <span class="tk-com">// wait for a free slot</span>
+        <span class="tk-fn">pthread_mutex_lock</span>(&amp;mutex);
+        <span class="tk-fn">insert_into_buffer</span>(item);
+        <span class="tk-fn">pthread_mutex_unlock</span>(&amp;mutex);
+        <span class="tk-fn">sem_post</span>(&amp;full);           <span class="tk-com">// signal an item is available</span>
+    }
+}
+
+<span class="tk-fn">consumer</span>() {
+    <span class="tk-kw">while</span> (<span class="tk-num">1</span>) {
+        <span class="tk-fn">sem_wait</span>(&amp;full);            <span class="tk-com">// wait for an item</span>
+        <span class="tk-fn">pthread_mutex_lock</span>(&amp;mutex);
+        item = <span class="tk-fn">remove_from_buffer</span>();
+        <span class="tk-fn">pthread_mutex_unlock</span>(&amp;mutex);
+        <span class="tk-fn">sem_post</span>(&amp;empty);          <span class="tk-com">// signal a free slot</span>
+        <span class="tk-fn">consume_item</span>(item);
+    }
+}</code></pre>
+        </div>
+        <h4>Readers–Writers (readers-preference variant)</h4>
+        <div class="codeblock">
+          <div class="cb-head"><span>Readers-Writers with a read count</span><span class="lang">C-like pseudocode</span></div>
+          <pre><code><span class="tk-type">int</span> read_count = <span class="tk-num">0</span>;
+pthread_mutex_t rc_lock;   <span class="tk-com">// protects read_count</span>
+sem_t rw_lock;             <span class="tk-com">// binary: exclusive access for a writer</span>
+
+<span class="tk-fn">reader</span>() {
+    <span class="tk-fn">pthread_mutex_lock</span>(&amp;rc_lock);
+    read_count++;
+    <span class="tk-kw">if</span> (read_count == <span class="tk-num">1</span>) <span class="tk-fn">sem_wait</span>(&amp;rw_lock); <span class="tk-com">// first reader locks out writers</span>
+    <span class="tk-fn">pthread_mutex_unlock</span>(&amp;rc_lock);
+
+    <span class="tk-fn">read_data</span>();
+
+    <span class="tk-fn">pthread_mutex_lock</span>(&amp;rc_lock);
+    read_count--;
+    <span class="tk-kw">if</span> (read_count == <span class="tk-num">0</span>) <span class="tk-fn">sem_post</span>(&amp;rw_lock); <span class="tk-com">// last reader unlocks writers</span>
+    <span class="tk-fn">pthread_mutex_unlock</span>(&amp;rc_lock);
+}
+
+<span class="tk-fn">writer</span>() {
+    <span class="tk-fn">sem_wait</span>(&amp;rw_lock);   <span class="tk-com">// exclusive access</span>
+    <span class="tk-fn">write_data</span>();
+    <span class="tk-fn">sem_post</span>(&amp;rw_lock);
+}</code></pre>
+        </div>
+        <h4>Dining Philosophers (deadlock-safe: asymmetric ordering)</h4>
+        <div class="codeblock">
+          <div class="cb-head"><span>Avoid circular wait by picking up the lower-numbered fork first</span><span class="lang">C-like pseudocode</span></div>
+          <pre><code><span class="tk-com">// N forks/philosophers around a table; classic deadlock if everyone
+// grabs their left fork first. Fix: break circular wait by ordering.</span>
+<span class="tk-fn">philosopher</span>(<span class="tk-type">int</span> i) {
+    <span class="tk-type">int</span> first  = <span class="tk-fn">min</span>(i, (i + <span class="tk-num">1</span>) % N);
+    <span class="tk-type">int</span> second = <span class="tk-fn">max</span>(i, (i + <span class="tk-num">1</span>) % N);
+
+    <span class="tk-fn">sem_wait</span>(&amp;fork[first]);   <span class="tk-com">// always take the lower-numbered fork first</span>
+    <span class="tk-fn">sem_wait</span>(&amp;fork[second]);
+    <span class="tk-fn">eat</span>();
+    <span class="tk-fn">sem_post</span>(&amp;fork[second]);
+    <span class="tk-fn">sem_post</span>(&amp;fork[first]);
+}</code></pre>
+        </div>
+        <div class="qa"><b>Interview tip:</b> For dining philosophers, naming the fix ("break the circular-wait condition via a resource ordering") is worth more than reciting the code — it shows you understand <em>why</em> it prevents deadlock, not just <em>that</em> it does.</div>
       </div>
     </section>
 
     <section class="card" id="deadlock">
-      <h3>5) Deadlocks</h3>
+      <h3>8) Deadlocks <span class="tag">Concepts + Code</span></h3>
       <div class="body">
-        <p><span class="strong">Deadlock:</span> set of processes permanently waiting for each other.</p>
-        <p>Coffman conditions (all four required):</p>
+        <p><span class="strong">Deadlock:</span> a set of processes are permanently blocked, each waiting for a resource held by another in the set.</p>
+        <p>Coffman conditions (all four required simultaneously):</p>
         <ul>
           <li>Mutual exclusion</li>
           <li>Hold and wait</li>
@@ -271,87 +615,232 @@ td{ color:var(--ink-dim); line-height:1.5; }
           </thead>
           <tbody>
             <tr><td>Prevention</td><td>Break one Coffman condition</td><td>Resource ordering to avoid circular wait</td></tr>
-            <tr><td>Avoidance</td><td>Allocate only safe states</td><td>Banker's algorithm</td></tr>
-            <tr><td>Detection + Recovery</td><td>Allow, detect cycle, recover</td><td>Kill process / preempt resource</td></tr>
-            <tr><td>Ignore</td><td>Assume rare</td><td>Many general-purpose OS cases</td></tr>
+            <tr><td>Avoidance</td><td>Allocate only if the resulting state is safe</td><td>Banker's algorithm</td></tr>
+            <tr><td>Detection + Recovery</td><td>Allow deadlock, detect cycle, recover</td><td>Kill a process / preempt a resource</td></tr>
+            <tr><td>Ignore</td><td>Assume rare, restart if it happens</td><td>Most general-purpose OSes (the "ostrich algorithm")</td></tr>
           </tbody>
         </table>
+        <div class="codeblock">
+          <div class="cb-head"><span>Banker's Algorithm — safety check</span><span class="lang">Python</span></div>
+          <pre><code><span class="tk-kw">def</span> <span class="tk-fn">is_safe</span>(available, max_need, allocation):
+    n_procs = <span class="tk-fn">len</span>(allocation)
+    n_res = <span class="tk-fn">len</span>(available)
+    need = [[max_need[i][j] - allocation[i][j] <span class="tk-kw">for</span> j <span class="tk-kw">in</span> <span class="tk-fn">range</span>(n_res)]
+            <span class="tk-kw">for</span> i <span class="tk-kw">in</span> <span class="tk-fn">range</span>(n_procs)]
+
+    work = <span class="tk-fn">list</span>(available)
+    finished = [<span class="tk-type">False</span>] * n_procs
+    safe_sequence = []
+
+    <span class="tk-kw">for</span> _ <span class="tk-kw">in</span> <span class="tk-fn">range</span>(n_procs):
+        <span class="tk-kw">for</span> i <span class="tk-kw">in</span> <span class="tk-fn">range</span>(n_procs):
+            <span class="tk-kw">if</span> <span class="tk-kw">not</span> finished[i] <span class="tk-kw">and</span> <span class="tk-fn">all</span>(need[i][j] &lt;= work[j] <span class="tk-kw">for</span> j <span class="tk-kw">in</span> <span class="tk-fn">range</span>(n_res)):
+                <span class="tk-com"># process i can finish with what's currently available</span>
+                work = [work[j] + allocation[i][j] <span class="tk-kw">for</span> j <span class="tk-kw">in</span> <span class="tk-fn">range</span>(n_res)]
+                finished[i] = <span class="tk-type">True</span>
+                safe_sequence.append(i)
+                <span class="tk-kw">break</span>
+
+    <span class="tk-kw">return</span> (<span class="tk-fn">all</span>(finished), safe_sequence)
+
+<span class="tk-com"># Example: 3 processes, 3 resource types (A, B, C)</span>
+available   = [<span class="tk-num">3</span>, <span class="tk-num">3</span>, <span class="tk-num">2</span>]
+max_need    = [[<span class="tk-num">7</span>,<span class="tk-num">5</span>,<span class="tk-num">3</span>], [<span class="tk-num">3</span>,<span class="tk-num">2</span>,<span class="tk-num">2</span>], [<span class="tk-num">9</span>,<span class="tk-num">0</span>,<span class="tk-num">2</span>]]
+allocation  = [[<span class="tk-num">0</span>,<span class="tk-num">1</span>,<span class="tk-num">0</span>], [<span class="tk-num">2</span>,<span class="tk-num">0</span>,<span class="tk-num">0</span>], [<span class="tk-num">3</span>,<span class="tk-num">0</span>,<span class="tk-num">2</span>]]
+
+<span class="tk-fn">print</span>(is_safe(available, max_need, allocation))
+<span class="tk-com"># -> (True, [1, 0, 2])  — a safe sequence exists</span></code></pre>
+        </div>
+        <div class="worked">
+          <b>How to reason about it out loud:</b> at each step, find any process whose <em>remaining need</em> can be satisfied by what's currently <em>available</em>. Let it finish and release its resources back into <em>available</em>, then repeat. If every process eventually finishes, the state is safe.
+        </div>
       </div>
     </section>
 
     <section class="card" id="memory">
-      <h3>6) Memory Management</h3>
+      <h3>9) Memory Management <span class="tag">Concepts + Worked Example</span></h3>
       <div class="body">
-        <p><span class="strong">Contiguous allocation</span> leads to external fragmentation; paging solves external fragmentation.</p>
-        <p><span class="strong">Paging:</span> logical memory split into pages, physical memory into frames. Address = page number + offset.</p>
-        <p><span class="strong">Segmentation:</span> memory divided by logical units (code/data/stack), each with base and limit.</p>
+        <p><span class="strong">Contiguous allocation</span> leads to external fragmentation; paging solves external fragmentation by allocating in fixed-size chunks.</p>
+        <p><span class="strong">Paging:</span> logical memory is split into pages, physical memory into frames of the same size. A logical address = page number + offset.</p>
+        <p><span class="strong">Segmentation:</span> memory divided by logical units (code/data/stack), each with a base and limit register.</p>
         <p>Fragmentation summary:</p>
         <ul>
-          <li><span class="strong">Internal fragmentation:</span> wasted space inside allocated block/frame.</li>
-          <li><span class="strong">External fragmentation:</span> free memory exists but is non-contiguous.</li>
+          <li><span class="strong">Internal fragmentation:</span> wasted space inside an allocated block/frame (the last page of a process is rarely full).</li>
+          <li><span class="strong">External fragmentation:</span> free memory exists in total but is scattered in non-contiguous chunks too small individually to satisfy a request.</li>
         </ul>
-        <p>Page table acceleration uses <span class="strong">TLB</span> (Translation Lookaside Buffer), a small cache of page table entries.</p>
+        <p>Page table lookups are accelerated by the <span class="strong">TLB</span> (Translation Lookaside Buffer), a small hardware cache of recent page table entries.</p>
+        <div class="worked">
+          <b>Worked address translation:</b> page size = 4 KB (2<sup>12</sup>), so the low 12 bits of a virtual address are the offset and the rest is the page number.<br>
+          Virtual address <code>0x2050</code> → page number = <code>0x2050 &gt;&gt; 12 = 2</code>, offset = <code>0x2050 &amp; 0xFFF = 0x050</code>.<br>
+          If page table says page 2 → frame 7, physical address = <code>(7 &lt;&lt; 12) | 0x050 = 0x7050</code>.
+        </div>
+        <div class="codeblock">
+          <div class="cb-head"><span>Virtual → physical address translation</span><span class="lang">Python</span></div>
+          <pre><code><span class="tk-kw">def</span> <span class="tk-fn">translate</span>(vaddr, page_table, page_size=<span class="tk-num">4096</span>):
+    offset_bits = page_size.bit_length() - <span class="tk-num">1</span>
+    page_number = vaddr &gt;&gt; offset_bits
+    offset = vaddr &amp; (page_size - <span class="tk-num">1</span>)
+
+    <span class="tk-kw">if</span> page_number <span class="tk-kw">not</span> <span class="tk-kw">in</span> page_table:
+        <span class="tk-kw">raise</span> <span class="tk-fn">Exception</span>(<span class="tk-str">"Page fault: page not resident"</span>)
+
+    frame_number = page_table[page_number]
+    <span class="tk-kw">return</span> (frame_number &lt;&lt; offset_bits) | offset
+
+page_table = {<span class="tk-num">0</span>: <span class="tk-num">5</span>, <span class="tk-num">1</span>: <span class="tk-num">9</span>, <span class="tk-num">2</span>: <span class="tk-num">7</span>}
+<span class="tk-fn">print</span>(<span class="tk-fn">hex</span>(translate(<span class="tk-num">0x2050</span>, page_table)))  <span class="tk-com"># -> 0x7050</span></code></pre>
+        </div>
       </div>
     </section>
 
     <section class="card" id="virtual-memory">
-      <h3>7) Virtual Memory & Page Replacement</h3>
+      <h3>10) Virtual Memory & Page Replacement <span class="tag">Concepts + Code</span></h3>
       <div class="body">
-        <p>Virtual memory allows processes to run with partial memory residency using demand paging.</p>
-        <p><span class="strong">Page fault handling:</span> trap -> validate reference -> locate page on disk -> load into free frame or replace victim -> update table -> restart instruction.</p>
+        <p>Virtual memory lets processes run with only part of their address space resident in RAM, via demand paging.</p>
+        <p><span class="strong">Page fault handling:</span> trap → validate the reference → locate the page on disk → load it into a free frame or evict a victim → update the page table → restart the faulting instruction.</p>
         <table>
           <thead>
             <tr><th>Policy</th><th>Rule</th><th>Notes</th></tr>
           </thead>
           <tbody>
-            <tr><td>FIFO</td><td>Evict oldest loaded page</td><td>Simple, may show Belady's anomaly</td></tr>
-            <tr><td>LRU</td><td>Evict least recently used</td><td>Good approximation of optimal</td></tr>
-            <tr><td>Optimal</td><td>Evict farthest future use</td><td>Theoretical benchmark only</td></tr>
-            <tr><td>Clock/Second-chance</td><td>Use reference bit to approximate LRU</td><td>Practical in real systems</td></tr>
+            <tr><td>FIFO</td><td>Evict the oldest loaded page</td><td>Simple, but can exhibit Belady's anomaly (more frames → more faults)</td></tr>
+            <tr><td>LRU</td><td>Evict the least-recently-used page</td><td>Good approximation of optimal, but costly to implement exactly</td></tr>
+            <tr><td>Optimal</td><td>Evict the page used farthest in the future</td><td>Theoretical benchmark only — needs future knowledge</td></tr>
+            <tr><td>Clock / Second-chance</td><td>Use a reference bit to approximate LRU cheaply</td><td>Practical choice in real systems</td></tr>
           </tbody>
         </table>
-        <p><span class="strong">Thrashing:</span> excessive page faults causing low CPU utilization. Mitigate by reducing multiprogramming level or using working-set / page-fault-frequency control.</p>
+        <div class="worked">
+          <b>Worked example — FIFO with 3 frames:</b> reference string <code>1 2 3 4 1 2 5</code>.<br>
+          1,2,3 load into empty frames (3 faults). 4 evicts 1 (fault). 1 faults again, evicts 2. 2 faults again, evicts 3. 5 faults, evicts 4.<br>
+          <b>Total faults = 7</b> out of 7 references — every reference after the frames fill causes a fault here, illustrating a weak reference pattern for FIFO.
+        </div>
+        <div class="codeblock">
+          <div class="cb-head"><span>LRU page replacement simulator</span><span class="lang">Python</span></div>
+          <pre><code><span class="tk-kw">def</span> <span class="tk-fn">lru</span>(pages, n_frames):
+    frames = []
+    faults = <span class="tk-num">0</span>
+    <span class="tk-kw">for</span> p <span class="tk-kw">in</span> pages:
+        <span class="tk-kw">if</span> p <span class="tk-kw">in</span> frames:
+            frames.remove(p)     <span class="tk-com"># move to "most recently used" end</span>
+            frames.append(p)
+        <span class="tk-kw">else</span>:
+            faults += <span class="tk-num">1</span>
+            <span class="tk-kw">if</span> <span class="tk-fn">len</span>(frames) == n_frames:
+                frames.pop(<span class="tk-num">0</span>)     <span class="tk-com"># evict least-recently-used (front)</span>
+            frames.append(p)
+    <span class="tk-kw">return</span> faults
+
+<span class="tk-fn">print</span>(lru([<span class="tk-num">1</span>,<span class="tk-num">2</span>,<span class="tk-num">3</span>,<span class="tk-num">4</span>,<span class="tk-num">1</span>,<span class="tk-num">2</span>,<span class="tk-num">5</span>], <span class="tk-num">3</span>))  <span class="tk-com"># -> 6 faults with LRU</span></code></pre>
+        </div>
+        <p><span class="strong">Thrashing:</span> excessive page faulting drives CPU utilization down because most time is spent swapping pages in/out rather than executing. Mitigate by lowering the multiprogramming level, or using the working-set model / page-fault-frequency control to give each process enough frames.</p>
       </div>
     </section>
 
     <section class="card" id="io-fs">
-      <h3>8) File System & I/O</h3>
+      <h3>11) File System & I/O <span class="tag">Concepts + Code</span></h3>
       <div class="body">
-        <p>File systems map logical files to physical blocks and maintain metadata such as size, owner, permissions, timestamps.</p>
+        <p>File systems map logical files to physical blocks and maintain metadata such as size, owner, permissions, and timestamps.</p>
         <ul>
-          <li><span class="strong">Allocation methods:</span> contiguous, linked, indexed.</li>
+          <li><span class="strong">Allocation methods:</span> contiguous, linked, indexed (e.g. inodes with direct/indirect blocks).</li>
           <li><span class="strong">Directory structures:</span> single-level, two-level, tree, acyclic graph.</li>
-          <li><span class="strong">Access control:</span> Unix permissions (<code>rwx</code>), ACLs.</li>
-          <li><span class="strong">I/O methods:</span> programmed I/O, interrupt-driven I/O, DMA.</li>
-          <li><span class="strong">Disk scheduling:</span> FCFS, SSTF, SCAN, C-SCAN.</li>
+          <li><span class="strong">Access control:</span> Unix permissions (<code>rwx</code> for owner/group/other), ACLs for finer-grained control.</li>
+          <li><span class="strong">I/O methods:</span> programmed I/O (CPU polls), interrupt-driven I/O (device signals completion), DMA (device transfers directly to memory, freeing the CPU).</li>
         </ul>
-        <p><span class="strong">Kernel buffering and caching</span> improve throughput by reducing device wait and batching operations.</p>
+        <p><span class="strong">Kernel buffering and caching</span> improve throughput by reducing device wait time and batching small operations into larger ones.</p>
+        <div class="codeblock">
+          <div class="cb-head"><span>Basic file I/O via syscalls</span><span class="lang">C</span></div>
+          <pre><code><span class="tk-kw">#include</span> <span class="tk-str">&lt;fcntl.h&gt;</span>
+<span class="tk-kw">#include</span> <span class="tk-str">&lt;unistd.h&gt;</span>
+
+<span class="tk-type">int</span> <span class="tk-fn">main</span>(<span class="tk-type">void</span>) {
+    <span class="tk-type">int</span> fd = <span class="tk-fn">open</span>(<span class="tk-str">"notes.txt"</span>, O_WRONLY | O_CREAT | O_TRUNC, <span class="tk-num">0644</span>);
+    <span class="tk-kw">if</span> (fd &lt; <span class="tk-num">0</span>) <span class="tk-kw">return</span> <span class="tk-num">1</span>;
+
+    <span class="tk-type">const</span> <span class="tk-type">char</span> *msg = <span class="tk-str">"paging beats segmentation for fragmentation\n"</span>;
+    <span class="tk-fn">write</span>(fd, msg, <span class="tk-fn">strlen</span>(msg));  <span class="tk-com">// buffered by the kernel, flushed later</span>
+    <span class="tk-fn">close</span>(fd);                    <span class="tk-com">// releases the file descriptor</span>
+    <span class="tk-kw">return</span> <span class="tk-num">0</span>;
+}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" id="disk-sched">
+      <h3>12) Disk Scheduling <span class="tag">Concepts + Worked Example</span></h3>
+      <div class="body">
+        <table>
+          <thead><tr><th>Algorithm</th><th>Idea</th></tr></thead>
+          <tbody>
+            <tr><td>FCFS</td><td>Serve requests in arrival order</td></tr>
+            <tr><td>SSTF</td><td>Serve the closest request to the current head position next</td></tr>
+            <tr><td>SCAN</td><td>Sweep head in one direction servicing requests, reverse at the end ("elevator")</td></tr>
+            <tr><td>C-SCAN</td><td>Like SCAN, but jumps back to the start after reaching the end, servicing only one direction — more uniform wait times</td></tr>
+          </tbody>
+        </table>
+        <div class="worked">
+          <b>Worked example — SSTF:</b> head starts at cylinder 50, requests = [98, 183, 37, 122, 14, 124, 65, 67].<br>
+          Nearest to 50 is 65 → 67 → 37 → 14 → 98 → 122 → 124 → 183.<br>
+          Total head movement = |50-65| + |65-67| + |67-37| + |37-14| + |14-98| + |98-122| + |122-124| + |124-183| = 15+2+30+23+84+24+2+59 = <b>239 cylinders</b>.
+        </div>
+        <div class="codeblock">
+          <div class="cb-head"><span>SSTF total seek distance</span><span class="lang">Python</span></div>
+          <pre><code><span class="tk-kw">def</span> <span class="tk-fn">sstf</span>(start, requests):
+    requests = <span class="tk-fn">list</span>(requests)
+    head = start
+    total = <span class="tk-num">0</span>
+    order = []
+    <span class="tk-kw">while</span> requests:
+        nxt = <span class="tk-fn">min</span>(requests, key=<span class="tk-kw">lambda</span> r: <span class="tk-fn">abs</span>(r - head))
+        total += <span class="tk-fn">abs</span>(nxt - head)
+        head = nxt
+        order.append(nxt)
+        requests.remove(nxt)
+    <span class="tk-kw">return</span> order, total
+
+<span class="tk-fn">print</span>(sstf(<span class="tk-num">50</span>, [<span class="tk-num">98</span>,<span class="tk-num">183</span>,<span class="tk-num">37</span>,<span class="tk-num">122</span>,<span class="tk-num">14</span>,<span class="tk-num">124</span>,<span class="tk-num">65</span>,<span class="tk-num">67</span>]))</code></pre>
+        </div>
       </div>
     </section>
 
     <section class="card" id="interview-qa">
-      <h3>9) High-Frequency Interview Q&A</h3>
+      <h3>13) High-Frequency Interview Q&A</h3>
       <div class="body">
-        <div class="qa"><b>Q:</b> Why are system calls slower than normal function calls?<br><b>A:</b> They require user-kernel mode switch, validation checks, and possible scheduling/interrupt handling.</div>
-        <div class="qa"><b>Q:</b> Why are threads considered lightweight?<br><b>A:</b> They share process resources (address space, files), so create/switch overhead is lower than process switching.</div>
-        <div class="qa"><b>Q:</b> Semaphore vs Mutex?<br><b>A:</b> Mutex is ownership-based exclusive lock; semaphore is signaling/counting primitive and may allow non-owner signal in many implementations.</div>
-        <div class="qa"><b>Q:</b> Starvation vs Deadlock?<br><b>A:</b> Starvation means indefinite postponement of one process; deadlock is circular waiting where none of involved processes can proceed.</div>
-        <div class="qa"><b>Q:</b> What is a zombie process?<br><b>A:</b> A terminated child whose exit status is not yet collected by parent (<code>wait()</code> not called).</div>
-        <div class="qa"><b>Q:</b> What causes priority inversion?<br><b>A:</b> Low-priority thread holding lock needed by high-priority thread while medium-priority thread runs; mitigation: priority inheritance.</div>
+        <div class="qa"><b>Q:</b> Why are system calls slower than normal function calls?<br><b>A:</b> They require a user-to-kernel mode switch, argument validation, and possibly scheduling or interrupt handling — a normal call is just a jump on the same stack.</div>
+        <div class="qa"><b>Q:</b> Why are threads considered lightweight?<br><b>A:</b> They share the process's address space, file descriptors, and other resources, so creation and context-switch overhead is lower than for a full process.</div>
+        <div class="qa"><b>Q:</b> Semaphore vs Mutex?<br><b>A:</b> Mutex is an ownership-based exclusive lock (only the locker unlocks); semaphore is a more general signaling/counting primitive and often allows a non-owner to signal it.</div>
+        <div class="qa"><b>Q:</b> Starvation vs Deadlock?<br><b>A:</b> Starvation is indefinite postponement of one process (others keep progressing); deadlock is circular waiting where none of the involved processes can proceed at all.</div>
+        <div class="qa"><b>Q:</b> What is a zombie process?<br><b>A:</b> A terminated child whose exit status hasn't been collected by its parent yet (parent hasn't called <code>wait()</code>); its PCB lingers until reaped.</div>
+        <div class="qa"><b>Q:</b> What causes priority inversion?<br><b>A:</b> A low-priority thread holds a lock needed by a high-priority thread, while an unrelated medium-priority thread preempts the low-priority one and runs instead — inverting the intended priority order. Mitigate with priority inheritance.</div>
+        <div class="qa"><b>Q:</b> What's the difference between a hard link and a symbolic link?<br><b>A:</b> A hard link is another directory entry pointing to the same inode (same data, indistinguishable from the "original"); a symlink is a separate file containing a path, which breaks if the target moves.</div>
+        <div class="qa"><b>Q:</b> Why does <code>fork()</code> return twice?<br><b>A:</b> It creates a near-identical copy of the calling process; execution resumes in both parent and child right after the call, distinguished only by the return value (0 in child, child's PID in parent, negative on error).</div>
+      </div>
+    </section>
+
+    <section class="card" id="pitfalls">
+      <h3>14) Common Pitfalls to Avoid</h3>
+      <div class="body">
+        <ul>
+          <li><span class="strong">Confusing concurrency with parallelism</span> — concurrency is about structure (interleaved progress), parallelism is about execution (simultaneous on multiple cores). You can have one without the other.</li>
+          <li><span class="strong">Saying "semaphore = mutex"</span> — they overlap in use but differ in ownership semantics and intended purpose (exclusion vs signaling).</li>
+          <li><span class="strong">Forgetting to release locks on early return / exception paths</span> — a common source of deadlock in real code; always match every <code>lock()</code> with an <code>unlock()</code> on every path.</li>
+          <li><span class="strong">Assuming more page frames always means fewer faults</span> — Belady's anomaly shows FIFO can violate this intuition.</li>
+          <li><span class="strong">Ignoring the ABA problem</span> in lock-free code — a value changing from A to B and back to A can fool a naive compare-and-swap check.</li>
+          <li><span class="strong">Not reaping child processes</span> — leads to zombie accumulation until the parent exits or calls <code>wait()</code>.</li>
+        </ul>
       </div>
     </section>
 
     <section class="card" id="test-plan">
-      <h3>10) 7-Day Test Preparation Plan</h3>
+      <h3>15) 7-Day Test Preparation Plan</h3>
       <div class="body">
-        <div class="plan"><span class="strong">Day 1:</span> OS basics, kernel/user mode, interrupts, system calls, process lifecycle.</div>
-        <div class="plan"><span class="strong">Day 2:</span> CPU scheduling numericals (FCFS, SJF, RR), all timing metrics.</div>
-        <div class="plan"><span class="strong">Day 3:</span> Threads, synchronization primitives, classic problems.</div>
-        <div class="plan"><span class="strong">Day 4:</span> Deadlock theory + prevention/avoidance/detection questions.</div>
-        <div class="plan"><span class="strong">Day 5:</span> Paging, segmentation, TLB, replacement algorithms, thrashing.</div>
+        <div class="plan"><span class="strong">Day 1:</span> OS basics, kernel/user mode, interrupts, system calls, boot sequence, process lifecycle.</div>
+        <div class="plan"><span class="strong">Day 2:</span> CPU scheduling numericals (FCFS, SJF, RR) — practice all timing-metric formulas by hand and by code.</div>
+        <div class="plan"><span class="strong">Day 3:</span> Threads, IPC mechanisms, synchronization primitives, and the three classic problems — write the pseudocode from memory.</div>
+        <div class="plan"><span class="strong">Day 4:</span> Deadlock theory + prevention/avoidance/detection questions; trace the Banker's algorithm by hand.</div>
+        <div class="plan"><span class="strong">Day 5:</span> Paging, segmentation, TLB, address translation, replacement algorithms, thrashing.</div>
         <div class="plan"><span class="strong">Day 6:</span> File systems, I/O, disk scheduling, revision flashcards.</div>
-        <div class="plan"><span class="strong">Day 7:</span> Full mock interview/test. Explain each answer aloud in 60-90 seconds.</div>
-        <p class="green"><span class="strong">Execution rule:</span> Every day, solve 10 MCQs + 3 short notes + 1 long answer.</p>
+        <div class="plan"><span class="strong">Day 7:</span> Full mock interview/test. Explain each answer aloud in 60–90 seconds, then sketch the relevant code snippet from memory.</div>
+        <p class="green"><span class="strong">Execution rule:</span> Every day, solve 10 MCQs + 3 short notes + 1 long answer + 1 code snippet written from scratch.</p>
       </div>
     </section>
   </main>
